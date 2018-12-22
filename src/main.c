@@ -5,7 +5,6 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
 #include <time.h>
-#include <stdbool.h>
 
 #include "view.h"
 #include "physics.h"
@@ -35,15 +34,10 @@ int main(int argc, char *argv[]) {
 
     srand (time (0));
     tank_1->x = rand() % (MAP_WIDTH - 2 * radius) + radius ;
-    srand (time (0));
     tank_1->y = rand() % (MAP_HEIGHT - 2 * radius) + radius;
-    srand (time (0));
     tank_1->r = rand() % 255;
-    srand (time (0));
     tank_1->g = rand() % 255;
-    srand (time (0));
     tank_1->b = rand() % 255;
-    srand (time (0));
     tank_1->angle = rand() % 360;
 
     bullet->boolian = false;

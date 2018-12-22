@@ -61,7 +61,7 @@ void move_bullet(Bullet *bullet) {
     bullet->x += step * cos(180 / M_PI * bullet->angle);
     bullet->y -= step * sin(180 / M_PI * bullet->angle);
     n++;
-    if (n == 10) {
+    if (n == 50) {
         bullet->boolian = false;
         n = 0;
     }
