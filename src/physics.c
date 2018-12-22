@@ -14,20 +14,7 @@
 #define radius 15
 #define shooter 20
 
-void move_bullet(Bullet *bullet) {
-    if (bullet->boolian) {
-        static int n = 0;
-        bullet->x += step * cos(180 / M_PI * bullet->angle);
-        bullet->y -= step * sin(180 / M_PI * bullet->angle);
-        n++;
-        if (n == 10) {
-            bullet->boolian = false;
-            n = 0;
-        }
-    }
-}
-
-void move_tank(Tank* tank) {
+void move_tank(Tank *tank) {
     int tempx = tank->x;
     int tempy = tank->y;
     switch (keycode){
@@ -58,7 +45,7 @@ void move_tank(Tank* tank) {
     }
 }
 
-void turn_tank(Tank* tank) {
+void turn_tank(Tank *tank) {
     switch (keycode){
         case SDLK_RIGHT:
             tank->angle -= degree;
@@ -69,12 +56,22 @@ void turn_tank(Tank* tank) {
     }
 }
 
+void move_bullet(Bullet *bullet) {
+    static int n = 0;
+    bullet->x += step * cos(180 / M_PI * bullet->angle);
+    bullet->y -= step * sin(180 / M_PI * bullet->angle);
+    n++;
+    if (n == 10) {
+        bullet->boolian = false;
+        n = 0;
+    }
+}
+
 void fire(Tank *tank) {
     if (keycode == SDLK_SPACE) {
         tank->bullets->boolian = true;
         tank->bullets->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
         tank->bullets->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
         tank->bullets->angle = tank->angle;
-        draw_bullet(tank->bullets);
     }
 }

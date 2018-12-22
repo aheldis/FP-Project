@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
 #include <stdbool.h>
+
 #include "structs.h"
 #include "physics.h"
 
@@ -32,10 +33,9 @@ void quit_window()
     SDL_Quit();
 }
 
-void handle_events(Map* map){
+void handle_events(Map *map){
     SDL_Event event;
-    int flag = 1;
-    while (SDL_PollEvent(&event) && flag) {
+    while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
                 quit_window();
@@ -58,7 +58,7 @@ void draw_tank(Tank *tank) {
     filledCircleRGBA(renderer, tank->x + shooter * cos(180 / M_PI * tank->angle), tank->y - shooter * sin(180 / M_PI * tank->angle), radius_shooter, tank->r, tank->g, tank->b, 255);
 }
 
-void draw_bullet(Bullet* bullet) {
+void draw_bullet(Bullet *bullet) {
     if (bullet->boolian){
         filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 0, 0, 0, 255);
         move_bullet(bullet);

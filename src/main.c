@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     map->tanks = tank_1;
 
     init_window();
-    while(1) {8
+    while(1) {
         SDL_SetRenderDrawColor(renderer, red, green, blue, a);
         SDL_RenderClear(renderer);
         draw_tank(map->tanks);
