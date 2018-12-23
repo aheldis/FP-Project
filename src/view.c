@@ -2,12 +2,13 @@
 #include <SDL2_gfxPrimitives.h>
 #include <stdbool.h>
 
+#include "logic.h"
 #include "structs.h"
 #include "physics.h"
 
-#define red 80
-#define green 80
-#define blue 80
+#define red 50
+#define green 50
+#define blue 50
 #define a 255
 #define MAP_WIDTH 600
 #define MAP_HEIGHT 700
@@ -16,6 +17,7 @@
 #define radius_shooter 5
 #define radius_bullet 3
 #define house 100
+#define thick 3
 
 SDL_Window *window;
 SDL_Renderer *renderer;
@@ -51,23 +53,24 @@ void handle_events(Map *map){
                 break;
         }
         fire(map->tanks);
-        move_tank(map->tanks);
+        if (movement_collids_walls(map->tanks, map))
+            move_tank(map->tanks);
         turn_tank(map->tanks);
     }
 }
 
 void draw_tank(Tank *tank) {
     filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, 255);
-    filledCircleRGBA(renderer, tank->x + shooter * cos(180 / M_PI * tank->angle), tank->y - shooter * sin(180 / M_PI * tank->angle), radius_shooter, tank->r, tank->g, tank->b, 255);
+    filledCircleRGBA(renderer, tank->x + shooter * cos(180 / M_PI * tank->angle), tank->y  - shooter * sin(180 / M_PI * tank->angle), radius_shooter, 100, 100, 100, 255);
 }
 
 void draw_bullet(Bullet *bullet) {
     if (bullet->boolian){
-        filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 0, 0, 0, 255);
+        filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 150, 150, 150, 255);
         move_bullet(bullet);
     }
 }
 
 void draw_walls(Wall* walls) {
-    thickLineRGBA(renderer, walls->x1 * house, walls->y1 * house, walls->x2 * house, walls->y2 * house, 3, 200, 200, 200, 255);
+    thickLineRGBA(renderer, walls->x1, walls->y1, walls->x2, walls->y2, thick, 200, 200, 200, 255);
 }
