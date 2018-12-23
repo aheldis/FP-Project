@@ -16,46 +16,54 @@
 #define blue 255
 #define a 255
 #define FPS 25
-#define MAP_WIDTH 700
+#define MAP_WIDTH 600
 #define MAP_HEIGHT 700
 #define radius 15
 #define house 70
 #define numberofBullets 5
-#define numberofWalls 22
+#define numberofWalls 36
+#define numberofMaps 3
 
 #ifdef main
 #undef main
 #endif
 
-void read_map_array(Wall *walls) {
-    int r = rand() % 2;
-    int i1 = rand() % (MAP_WIDTH / house + 1);
-    int j1 = rand() % (MAP_HEIGHT / house + 1);
-    int i2, j2;
-    if (r) {
-        i2 = rand() % (MAP_WIDTH / house + 1);
-        if (j1) j2 = j1;
-        else j2 = j1 = rand() % (MAP_HEIGHT / house + 1);
-    }
-    else if (i1){
-        j2 = rand() % (MAP_HEIGHT / house + 1);
-        if (i1)
-            i2 = i1;
-        else
-            i2 = i1 = rand() % (MAP_HEIGHT / house + 1);
-    }
+//void read_map_array(Wall *walls) {
+//    int r = rand() % 2;
+//    int i1 = rand() % (MAP_WIDTH / house) + 1;
+//    int j1 = rand() % (MAP_HEIGHT / house) + 1;
+//    int i2, j2;
+//    if (r) {
+//        i2 = rand() % (MAP_WIDTH / house + 1);
+//        j2 = j1;
+//    }
+//    else if (i1){
+//        j2 = rand() % (MAP_HEIGHT / house + 1);
+//        i2 = i1;
+//    }
+//
+//    walls->x1 = i1 * house;
+//    walls->y1 = j1 * house;
+//    walls->x2 = i2 * house;
+//    walls->y2 = j2 * house;
+//}
 
-    walls->x1 = i1 * house;
-    walls->y1 = j1 * house;
-    walls->x2 = i2 * house;
-    walls->y2 = j2 * house;
+
+void read_map_file(Map* map, char* file_path){
+    FILE *file1 = fopen(file_path, "r");
+    int n;
+    fscanf(file1, "%d\n", &n);
+    for (int i = 0; i < n; i++) {
+        fscanf(file1, "%d %d %d %d\n", &((map->walls + i)->x1), &((map->walls + i)->y1), &((map->walls + i)->x2), &((map->walls + i)->y2));
+    }
+    fclose(file1);
 }
 
 
 int main(int argc, char *argv[]) {
     Bullet *bullet = malloc(sizeof(Bullet) * numberofBullets);
     Tank *tank_1 = malloc(sizeof(Tank) * 1);
-    Map *map = malloc(sizeof(Map) * 1);
+    Map *map = malloc(sizeof(Map) * numberofMaps);
     Wall *walls = malloc(sizeof(Wall) * numberofWalls);
 
     srand (time (0));
@@ -71,9 +79,7 @@ int main(int argc, char *argv[]) {
     map->tanks = tank_1;
     map->walls = walls;
 
-    for (int i = 0; i < numberofWalls; i++) {
-        read_map_array(map->walls + i);
-    }
+    read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
     init_window();
     while(1) {

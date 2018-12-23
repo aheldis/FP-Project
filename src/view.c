@@ -5,16 +5,17 @@
 #include "structs.h"
 #include "physics.h"
 
-#define red 255
-#define green 255
-#define blue 255
+#define red 80
+#define green 80
+#define blue 80
 #define a 255
-#define MAP_WIDTH 700
+#define MAP_WIDTH 600
 #define MAP_HEIGHT 700
 #define radius_circle 15
 #define shooter 20
 #define radius_shooter 5
 #define radius_bullet 3
+#define house 100
 
 SDL_Window *window;
 SDL_Renderer *renderer;
@@ -68,5 +69,5 @@ void draw_bullet(Bullet *bullet) {
 }
 
 void draw_walls(Wall* walls) {
-    lineRGBA(renderer, walls->x1, walls->y1, walls->x2, walls->y2, 0, 0, 0, 255);
+    thickLineRGBA(renderer, walls->x1 * house, walls->y1 * house, walls->x2 * house, walls->y2 * house, 3, 200, 200, 200, 255);
 }
