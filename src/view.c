@@ -68,5 +68,5 @@ void draw_bullet(Bullet *bullet) {
 }
 
 void draw_walls(Wall* walls) {
-    lineRGBA(renderer, walls->x, walls->y, 0, 0, 0, 255);
+    lineRGBA(renderer, walls->x1, walls->y1, walls->x2, walls->y2, 0, 0, 0, 255);
 }

@@ -14,7 +14,7 @@
 #define radius 15
 #define shooter 20
 #define numberofBullets 5
-#define distanceofBullets 50
+#define distanceofBullets 200
 
 void move_tank(Tank *tank) {
     int tempx = tank->x;
@@ -71,13 +71,13 @@ void move_bullet(Bullet *bullet) {
 
 void fire(Tank *tank) {
     if (keycode == SDLK_SPACE) {
-        static int n = 0;
-        if (n < numberofBullets) {
-            tank->bullets->boolian = true;
-            tank->bullets->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
-            tank->bullets->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
-            tank->bullets->angle = tank->angle;
-            n++;
+        static int i = 0;
+        if (i < numberofBullets) {
+            (tank->bullets + i)->boolian = true;
+            (tank->bullets + i)->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
+            (tank->bullets + i)->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
+            (tank->bullets + i)->angle = tank->angle;
+            i++;
         }
     }
 }
