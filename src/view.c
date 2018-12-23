@@ -35,6 +35,8 @@ void quit_window()
 
 void handle_events(Map *map){
     SDL_Event event;
+    SDL_SetRenderDrawColor(renderer, red, green, blue, a);
+    SDL_RenderClear(renderer);
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
@@ -47,10 +49,10 @@ void handle_events(Map *map){
                 keycode = 0;
                 break;
         }
+        fire(map->tanks);
+        move_tank(map->tanks);
+        turn_tank(map->tanks);
     }
-    move_tank(map->tanks);
-    turn_tank(map->tanks);
-    fire(map->tanks);
 }
 
 void draw_tank(Tank *tank) {
@@ -63,4 +65,8 @@ void draw_bullet(Bullet *bullet) {
         filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 0, 0, 0, 255);
         move_bullet(bullet);
     }
+}
+
+void draw_walls(Wall* walls) {
+    lineRGBA(renderer, walls->x, walls->y, 0, 0, 0, 255);
 }

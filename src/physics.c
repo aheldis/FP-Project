@@ -13,6 +13,8 @@
 #define MAP_HEIGHT 700
 #define radius 15
 #define shooter 20
+#define numberofBullets 5
+#define distanceofBullets 50
 
 void move_tank(Tank *tank) {
     int tempx = tank->x;
@@ -61,7 +63,7 @@ void move_bullet(Bullet *bullet) {
     bullet->x += step * cos(180 / M_PI * bullet->angle);
     bullet->y -= step * sin(180 / M_PI * bullet->angle);
     n++;
-    if (n == 50) {
+    if (n == distanceofBullets) {
         bullet->boolian = false;
         n = 0;
     }
@@ -69,9 +71,13 @@ void move_bullet(Bullet *bullet) {
 
 void fire(Tank *tank) {
     if (keycode == SDLK_SPACE) {
-        tank->bullets->boolian = true;
-        tank->bullets->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
-        tank->bullets->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
-        tank->bullets->angle = tank->angle;
+        static int n = 0;
+        if (n < numberofBullets) {
+            tank->bullets->boolian = true;
+            tank->bullets->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
+            tank->bullets->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
+            tank->bullets->angle = tank->angle;
+            n++;
+        }
     }
 }

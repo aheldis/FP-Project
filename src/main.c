@@ -19,9 +19,24 @@
 #define MAP_WIDTH 700
 #define MAP_HEIGHT 700
 #define radius 15
+#define house 28
+#define numberofBullets 5
 
-void read_map_array(Map* map, Wall* saved_walls);
-void read_map_file(Map* map, char* file_path);
+//void read_map_array(Map* map, Wall* saved_walls) {
+//    for(int i=1; i<25; i++){
+//        for(int j=1; j<25 ;j++){
+//            r=rand()%4;
+//            saved_walls->x1 = i * house;
+//            saved_walls->y1 = j * house;
+//            saved_walls->x2 = i * house;
+//            saved_walls->y2 = j * house;
+//            setcolor(3);
+//            rectangle(i*100,j*100,i*100+100,j*100+100);
+//            a[i][j] = 1;
+//        }
+//    }
+//}
+
 
 #ifdef main
 #undef main
@@ -46,11 +61,10 @@ int main(int argc, char *argv[]) {
 
     init_window();
     while(1) {
-        SDL_SetRenderDrawColor(renderer, red, green, blue, a);
-        SDL_RenderClear(renderer);
-        draw_tank(map->tanks);
         handle_events(map);
+        draw_walls(map->walls);
         draw_bullet(map->tanks->bullets);
+        draw_tank(map->tanks);
         SDL_RenderPresent(renderer);
         SDL_Delay(1000/FPS);
     }
