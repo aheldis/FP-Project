@@ -15,11 +15,11 @@
 #define green 255
 #define blue 255
 #define a 255
-#define FPS 50
+#define FPS 60
 #define MAP_WIDTH 600
 #define MAP_HEIGHT 700
 #define radius 15
-#define house 70
+#define house 100
 #define numberofBullets 5
 #define numberofWalls 36
 #define numberofMaps 3
@@ -49,18 +49,16 @@
 //}
 
 
-void read_map_file(Map* map, char* file_path){
+void read_map_file(Map *map, char *file_path){
     FILE *file1 = fopen(file_path, "r");
     int n, x1, y1, x2, y2;
-    for (int j = 0; j < numberofWalls; j++) {
         fscanf(file1, "%d\n", &n);
         for (int i = 0; i < n; i++) {
             fscanf(file1, "%d %d %d %d\n", &x1, &y1, &x2, &y2);
-            ((map + j)->walls + i)->x1 = x1 * house;
-            ((map + j)->walls + i)->y1 = y1 * house;
-            ((map + j)->walls + i)->x2 = x2 * house;
-            ((map + j)->walls + i)->y2 = y2 * house;
-        }
+            (map->walls + i)->x1 = x1 * house;
+            (map->walls + i)->y1 = y1 * house;
+            (map->walls + i)->x2 = x2 * house;
+            (map->walls + i)->y2 = y2 * house;
     }
     fclose(file1);
 }
@@ -69,11 +67,11 @@ void read_map_file(Map* map, char* file_path){
 int main(int argc, char *argv[]) {
     Bullet *bullet = malloc(sizeof(Bullet) * numberofBullets);
     Tank *tank_1 = malloc(sizeof(Tank) * 1);
-    Map *map = malloc(sizeof(Map) * numberofMaps);
+    Map *map = malloc(sizeof(Map) * 1);
     Wall *walls = malloc(sizeof(Wall) * numberofWalls);
 
     srand(time(0));
-    for (int j = 0; j < numberofWalls; j++) {
+//    for (int j = 0; j < numberofMaps; j++) {
         tank_1->x = rand() % (MAP_WIDTH - 2 * radius) + radius;
         tank_1->y = rand() % (MAP_HEIGHT - 2 * radius) + radius;
         tank_1->r = rand() % 255;
@@ -83,20 +81,20 @@ int main(int argc, char *argv[]) {
 
         bullet->boolian = false;
         tank_1->bullets = bullet;
-        (map + j)->tanks = tank_1;
-        (map + j)->walls = walls;
+        map->tanks = tank_1;
+        map->walls = walls;
 
-        read_map_file(map + j, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+        read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
         init_window();
         while (1) {
             handle_events(map);
-            for (int i = 0; i < numberofWalls; i++) draw_walls((map + j)->walls + i);
-            for (int i = 0; i < numberofBullets; i++) draw_bullet((map + j)->tanks->bullets + i);
-            draw_tank((map + j)->tanks);
+            for (int i = 0; i < numberofWalls; i++) draw_walls(map->walls + i);
+            for (int i = 0; i < numberofBullets; i++) draw_bullet(map->tanks->bullets + i);
+            draw_tank(map->tanks);
             SDL_RenderPresent(renderer);
             SDL_Delay(1000 / FPS);
         }
-    }
+//    }
     quit_window();
 }

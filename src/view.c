@@ -53,8 +53,9 @@ void handle_events(Map *map){
                 break;
         }
         fire(map->tanks);
-        if (movement_collids_walls(map->tanks, map))
+        if (movement_collids_walls(map->tanks, map)) {
             move_tank(map->tanks);
+        }
         turn_tank(map->tanks);
     }
 }
