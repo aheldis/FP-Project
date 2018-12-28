@@ -43,6 +43,9 @@ void handle_events(Map *map){
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
+                free(map->tanks->bullets);
+                free(map->tanks);
+                free(map);
                 quit_window();
                 break;
             case SDL_KEYDOWN:
@@ -55,14 +58,14 @@ void handle_events(Map *map){
         fire(map->tanks);
         if (movement_collids_walls(map->tanks, map)) {
             move_tank(map->tanks);
+            turn_tank(map->tanks);
         }
-        turn_tank(map->tanks);
     }
 }
 
 void draw_tank(Tank *tank) {
     filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, 255);
-    filledCircleRGBA(renderer, tank->x + shooter * cos(180 / M_PI * tank->angle), tank->y  - shooter * sin(180 / M_PI * tank->angle), radius_shooter, 100, 100, 100, 255);
+    filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y  - shooter * sin(tank->angle), radius_shooter, 100, 100, 100, 255);
 }
 
 void draw_bullet(Bullet *bullet) {

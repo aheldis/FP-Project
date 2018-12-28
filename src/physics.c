@@ -7,8 +7,8 @@
 #include "structs.h"
 #include "view.h"
 
-#define step 5
-#define degree 1
+#define step 6
+#define degree 0.4
 #define MAP_WIDTH 700
 #define MAP_HEIGHT 700
 #define radius 15
@@ -21,12 +21,12 @@ void move_tank(Tank *tank) {
     int tempy = tank->y;
     switch (keycode){
         case SDLK_UP:
-            tank->y -= step * sin(180 / M_PI * tank->angle);
-            tank->x += step * cos(180 / M_PI * tank->angle);
+            tank->y -= step * sin(tank->angle);
+            tank->x += step * cos(tank->angle);
             break;
         case SDLK_DOWN:
-            tank->y += step * sin(180 / M_PI * tank->angle);
-            tank->x -= step * cos(180 / M_PI * tank->angle);
+            tank->y += step * sin(tank->angle);
+            tank->x -= step * cos(tank->angle);
             break;
     }
     if (tank->x < radius) {
@@ -60,8 +60,8 @@ void turn_tank(Tank *tank) {
 
 void move_bullet(Bullet *bullet) {
     static int n = 0;
-    bullet->x += step * cos(180 / M_PI * bullet->angle);
-    bullet->y -= step * sin(180 / M_PI * bullet->angle);
+    bullet->x += step * cos(bullet->angle);
+    bullet->y -= step * sin(bullet->angle);
     n++;
     if (n == distanceofBullets) {
         bullet->boolian = false;
@@ -70,12 +70,12 @@ void move_bullet(Bullet *bullet) {
 }
 
 void fire(Tank *tank) {
-    if (keycode == SDLK_SPACE) {
+    if (keycode == SDLK_m) {
         static int i = 0;
         if (i < numberofBullets) {
             (tank->bullets + i)->boolian = true;
-            (tank->bullets + i)->x = tank->x + shooter * cos(180 / M_PI * tank->angle);
-            (tank->bullets + i)->y = tank->y - shooter * sin(180 / M_PI * tank->angle);
+            (tank->bullets + i)->x = tank->x + shooter * cos(tank->angle);
+            (tank->bullets + i)->y = tank->y - shooter * sin(tank->angle);
             (tank->bullets + i)->angle = tank->angle;
             i++;
         }

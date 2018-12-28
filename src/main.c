@@ -15,7 +15,7 @@
 #define green 255
 #define blue 255
 #define a 255
-#define FPS 60
+#define FPS 5000
 #define MAP_WIDTH 600
 #define MAP_HEIGHT 700
 #define radius 15
@@ -72,8 +72,8 @@ int main(int argc, char *argv[]) {
 
     srand(time(0));
 //    for (int j = 0; j < numberofMaps; j++) {
-        tank_1->x = rand() % (MAP_WIDTH - 2 * radius) + radius;
-        tank_1->y = rand() % (MAP_HEIGHT - 2 * radius) + radius;
+        tank_1->x = rand() % 6 * 100 + 50;
+        tank_1->y = rand() % 7 * 100 + 50;
         tank_1->r = rand() % 255;
         tank_1->g = rand() % 255;
         tank_1->b = rand() % 255;
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < numberofBullets; i++) draw_bullet(map->tanks->bullets + i);
             draw_tank(map->tanks);
             SDL_RenderPresent(renderer);
-            SDL_Delay(1000 / FPS);
+            SDL_Delay(1 / (float)FPS);
         }
 //    }
     quit_window();
