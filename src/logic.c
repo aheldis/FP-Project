@@ -44,15 +44,15 @@ bool movement_collids_walls(Tank *tank, Map *map) {
                 (tank->y - radius_circle * sign_y <= min((map->walls + i)->y1, (map->walls + i)->y2))) ||
                 ((tank->y - radius_circle * sign_y - step * sin(tank->angle) <= max((map->walls + i)->y1, (map->walls + i)->y2)) &&
                 (tank->y - radius_circle * sign_y >= max((map->walls + i)->y1, (map->walls + i)->y2)))) && (state[SDL_SCANCODE_UP]) ||
-                ((abs(tank->y + radius_circle * sign_y + step * sin(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
-                (abs(tank->x - (map->walls + i)->x1) <= thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0))
+                ((abs(tank->y + radius_circle * sign_y + step * sin(tank->angle) - (map->walls + i)->y1) <= step) && (state[SDL_SCANCODE_DOWN]))) &&
+                (abs(tank->x - (map->walls + i)->x1) <= step) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0))
             return false;
         if (((((tank->x + radius_circle * sign_x + step * cos(tank->angle) >= min((map->walls + i)->x1, (map->walls + i)->x2)) &&
                 (tank->x + radius_circle * sign_x <= min((map->walls + i)->x1, (map->walls + i)->x2))) ||
                 ((tank->x + radius_circle * sign_x + step * cos(tank->angle) <= max((map->walls + i)->x1, (map->walls + i)->x2)) &&
                 (tank->x + radius_circle * sign_x >= max((map->walls + i)->x1, (map->walls + i)->x2))) && (state[SDL_SCANCODE_UP])) ||
-                ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
-                (abs(tank->y - (map->walls + i)->y1) <= thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0))
+                ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= step) && (state[SDL_SCANCODE_DOWN]))) &&
+                (abs(tank->y - (map->walls + i)->y1) <= step) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0))
             return false;
 
         ////////////////////
