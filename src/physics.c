@@ -7,7 +7,7 @@
 #include "structs.h"
 #include "view.h"
 
-#define step 6
+#define step 5
 #define degree 0.1
 #define MAP_WIDTH 700
 #define MAP_HEIGHT 700

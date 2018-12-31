@@ -11,7 +11,7 @@
 #define radius_shooter 5
 #define thick 3
 #define numberofWalls 36
-#define step 6
+#define step 5
 #define degree 0.4
 
 #define max(a, b) (a >= b) * a + (a < b) * b
@@ -31,22 +31,28 @@ bool movement_collids_walls(Tank *tank, Map *map) {
         if ((((abs(tank->x + max_x + step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_UP])) ||
                 ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_DOWN])))  &&
                 (((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
-                (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <= abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
+                (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <= abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_circle + thick / 2))
                 )
             return false;
         if ((((abs(tank->y - max_y - step * sin(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_UP])) ||
                 ((abs(tank->y + radius_circle * sign_y + step * cos(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
                 ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
-                (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <= abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
+                (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <= abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_circle + thick / 2))
             return false;
 
-        if ((abs(tank->y - max_y + step * sin(tank->angle) - (map->walls + i)->y1) <= thick)  && (state[SDL_SCANCODE_UP]) &&
-            (abs(tank->x - (map->walls + i)->x1) <= radius_circle) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
-            ((tank->y >= max((map->walls + i)->y1, (map->walls + i)->y2)) || (tank->y <= min((map->walls + i)->y1, (map->walls + i)->y2))))
+        if (((((tank->y - radius_circle * sign_y - step * sin(tank->angle) >= min((map->walls + i)->y1, (map->walls + i)->y2)) &&
+                (tank->y - radius_circle * sign_y <= min((map->walls + i)->y1, (map->walls + i)->y2))) ||
+                ((tank->y - radius_circle * sign_y - step * sin(tank->angle) <= max((map->walls + i)->y1, (map->walls + i)->y2)) &&
+                (tank->y - radius_circle * sign_y >= max((map->walls + i)->y1, (map->walls + i)->y2)))) && (state[SDL_SCANCODE_UP]) ||
+                ((abs(tank->y + radius_circle * sign_y + step * sin(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
+                (abs(tank->x - (map->walls + i)->x1) <= thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0))
             return false;
-        if ((abs(tank->x + max_x + step * cos(tank->angle) - (map->walls + i)->x1) <= thick)  && (state[SDL_SCANCODE_UP]) &&
-                (abs(tank->y - (map->walls + i)->y1) <= radius_circle) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
-                ((tank->x >= max((map->walls + i)->x1, (map->walls + i)->x2)) || (tank->x <= min((map->walls + i)->x1, (map->walls + i)->x2))))
+        if (((((tank->x + radius_circle * sign_x + step * cos(tank->angle) >= min((map->walls + i)->x1, (map->walls + i)->x2)) &&
+                (tank->x + radius_circle * sign_x <= min((map->walls + i)->x1, (map->walls + i)->x2))) ||
+                ((tank->x + radius_circle * sign_x + step * cos(tank->angle) <= max((map->walls + i)->x1, (map->walls + i)->x2)) &&
+                (tank->x + radius_circle * sign_x >= max((map->walls + i)->x1, (map->walls + i)->x2))) && (state[SDL_SCANCODE_UP])) ||
+                ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
+                (abs(tank->y - (map->walls + i)->y1) <= thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0))
             return false;
 
         ////////////////////
