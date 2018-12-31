@@ -3,7 +3,7 @@
 #define PROJECT_VIEW_H
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Keycode keycode;
+extern const Uint8 *state;
 void init_window();
 void quit_window();
 void draw_tank(Tank *tank);

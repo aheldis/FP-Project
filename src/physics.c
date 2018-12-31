@@ -8,7 +8,7 @@
 #include "view.h"
 
 #define step 6
-#define degree 0.4
+#define degree 0.1
 #define MAP_WIDTH 700
 #define MAP_HEIGHT 700
 #define radius 15
@@ -19,15 +19,13 @@
 void move_tank(Tank *tank) {
     int tempx = tank->x;
     int tempy = tank->y;
-    switch (keycode){
-        case SDLK_UP:
-            tank->y -= step * sin(tank->angle);
-            tank->x += step * cos(tank->angle);
-            break;
-        case SDLK_DOWN:
-            tank->y += step * sin(tank->angle);
-            tank->x -= step * cos(tank->angle);
-            break;
+    if (state[SDL_SCANCODE_UP]) {
+        tank->y -= step * sin(tank->angle);
+        tank->x += step * cos(tank->angle);
+    }
+    if (state[SDL_SCANCODE_DOWN]) {
+        tank->y += step * sin(tank->angle);
+        tank->x -= step * cos(tank->angle);
     }
     if (tank->x < radius) {
         tank->x = radius;
@@ -48,14 +46,8 @@ void move_tank(Tank *tank) {
 }
 
 void turn_tank(Tank *tank) {
-    switch (keycode){
-        case SDLK_RIGHT:
-            tank->angle -= degree;
-            break;
-        case SDLK_LEFT:
-            tank->angle += degree;
-            break;
-    }
+    if (state[SDL_SCANCODE_RIGHT]) tank->angle -= degree;
+    if (state[SDL_SCANCODE_LEFT]) tank->angle += degree;
 }
 
 void move_bullet(Bullet *bullet) {
@@ -70,7 +62,7 @@ void move_bullet(Bullet *bullet) {
 }
 
 void fire(Tank *tank) {
-    if (keycode == SDLK_m) {
+    if (state[SDL_SCANCODE_M]) {
         static int i = 0;
         if (i < numberofBullets) {
             (tank->bullets + i)->boolian = true;

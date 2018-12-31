@@ -14,6 +14,9 @@
 #define step 6
 #define degree 0.4
 
+#define max(a, b) (a >= b) * a + (a < b) * b
+#define min(a, b) (a >= b) * b + (a < b) * a
+
 bool movement_collids_walls(Tank *tank, Map *map) {
     for (int i = 0; i < numberofWalls; i++) {
         int max_x, max_y;
@@ -25,25 +28,35 @@ bool movement_collids_walls(Tank *tank, Map *map) {
         else max_y = radius_circle * sign_y;
 
         ////////////////////
-        if ((((abs(tank->x + max_x + step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (keycode == SDLK_UP)) ||
-                ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (keycode == SDLK_DOWN))) &&
+        if ((((abs(tank->x + max_x + step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_UP])) ||
+                ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_DOWN])))  &&
                 (((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <= abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
                 )
             return false;
-        if ((((abs(tank->y - max_y - step * sin(tank->angle) - (map->walls + i)->y1) <= thick) && (keycode == SDLK_UP)) ||
-                ((abs(tank->y + radius_circle * sign_y + step * cos(tank->angle) - (map->walls + i)->y1) <= thick) && (keycode == SDLK_DOWN))) &&
+        if ((((abs(tank->y - max_y - step * sin(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_UP])) ||
+                ((abs(tank->y + radius_circle * sign_y + step * cos(tank->angle) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_DOWN]))) &&
                 ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <= abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
             return false;
+
+        if ((abs(tank->y - max_y + step * sin(tank->angle) - (map->walls + i)->y1) <= thick)  && (state[SDL_SCANCODE_UP]) &&
+            (abs(tank->x - (map->walls + i)->x1) <= radius_circle) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
+            ((tank->y >= max((map->walls + i)->y1, (map->walls + i)->y2)) || (tank->y <= min((map->walls + i)->y1, (map->walls + i)->y2))))
+            return false;
+        if ((abs(tank->x + max_x + step * cos(tank->angle) - (map->walls + i)->x1) <= thick)  && (state[SDL_SCANCODE_UP]) &&
+                (abs(tank->y - (map->walls + i)->y1) <= radius_circle) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                ((tank->x >= max((map->walls + i)->x1, (map->walls + i)->x2)) || (tank->x <= min((map->walls + i)->x1, (map->walls + i)->x2))))
+            return false;
+
         ////////////////////
-        if ((((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) - (map->walls + i)->x1) <= thick) && (keycode == SDLK_RIGHT)) ||
-                ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <= thick) && (keycode == SDLK_LEFT))) &&
+        if ((((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_RIGHT])) ||
+                ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <= thick) && (state[SDL_SCANCODE_LEFT]))) &&
                 ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <= abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
             return false;
-        if ((((abs(tank->y - (shooter + radius_shooter) * sin(tank->angle - degree) - (map->walls + i)->y1) <= thick) && (keycode == SDLK_RIGHT)) ||
-                ((abs(tank->y - (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <= thick) && (keycode == SDLK_LEFT))) &&
+        if ((((abs(tank->y - (shooter + radius_shooter) * sin(tank->angle - degree) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_RIGHT])) ||
+                ((abs(tank->y - (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <= thick) && (state[SDL_SCANCODE_LEFT]))) &&
                 ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <= abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
             return false;

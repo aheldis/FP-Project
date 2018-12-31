@@ -21,7 +21,7 @@
 
 SDL_Window *window;
 SDL_Renderer *renderer;
-SDL_Keycode keycode;
+const Uint8 *state;
 
 void init_window() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -37,35 +37,28 @@ void quit_window()
 }
 
 void handle_events(Map *map){
-    SDL_Event event;
     SDL_SetRenderDrawColor(renderer, red, green, blue, a);
     SDL_RenderClear(renderer);
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                free(map->tanks->bullets);
-                free(map->tanks);
-                free(map);
-                quit_window();
-                break;
-            case SDL_KEYDOWN:
-                keycode = event.key.keysym.sym;
-                break;
-            default:
-                keycode = 0;
-                break;
+    SDL_Event event;
+    while( SDL_PollEvent(&event) != 0 ) {
+        if (event.type == SDL_QUIT) {
+            free(map->tanks->bullets);
+            free(map->tanks);
+            free(map);
+            quit_window();
         }
-        fire(map->tanks);
-        if (movement_collids_walls(map->tanks, map)) {
-            move_tank(map->tanks);
-            turn_tank(map->tanks);
-        }
+    }
+    state = SDL_GetKeyboardState(NULL);
+    fire(map->tanks);
+    if (movement_collids_walls(map->tanks, map)) {
+        move_tank(map->tanks);
+        turn_tank(map->tanks);
     }
 }
 
 void draw_tank(Tank *tank) {
     filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, 255);
-    filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y  - shooter * sin(tank->angle), radius_shooter, 100, 100, 100, 255);
+    filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y - shooter * sin(tank->angle), radius_shooter, 100, 100, 100, 255);
 }
 
 void draw_bullet(Bullet *bullet) {
