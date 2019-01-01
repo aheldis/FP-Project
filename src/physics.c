@@ -21,11 +21,11 @@ static bool flag = true;
 void move_tank(Tank *tank) {
     int tempx = tank->x;
     int tempy = tank->y;
-    if (state[SDL_SCANCODE_UP]) {
+    if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
         tank->y -= step * sin(tank->angle);
         tank->x += step * cos(tank->angle);
     }
-    if (state[SDL_SCANCODE_DOWN]) {
+    if (state[SDL_SCANCODE_DOWN] && !state[SDL_SCANCODE_UP]) {
         tank->y += step * sin(tank->angle);
         tank->x -= step * cos(tank->angle);
     }
@@ -48,8 +48,8 @@ void move_tank(Tank *tank) {
 }
 
 void turn_tank(Tank *tank) {
-    if (state[SDL_SCANCODE_RIGHT]) tank->angle -= degree;
-    if (state[SDL_SCANCODE_LEFT]) tank->angle += degree;
+    if (state[SDL_SCANCODE_RIGHT] && !state[SDL_SCANCODE_LEFT]) tank->angle -= degree;
+    if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) tank->angle += degree;
 }
 
 void move_bullet(Bullet *bullet) {
