@@ -41,7 +41,7 @@ bool movement_collids_walls(Tank *tank, Map *map) {
                 (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <= abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_circle + thick / 2))
             return false;
 
-        if (!(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_RIGHT])) {
+        if (!(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_LEFT])) {
             if (((((tank->y - radius_circle * sign_y - step * sin(tank->angle) >
                     min((map->walls + i)->y1, (map->walls + i)->y2)) &&
                    (tank->y - radius_circle * sign_y <= min((map->walls + i)->y1, (map->walls + i)->y2))) ||
