@@ -40,6 +40,7 @@ void handle_events(Map *map){
     SDL_SetRenderDrawColor(renderer, red, green, blue, a);
     SDL_RenderClear(renderer);
     SDL_Event event;
+    state = SDL_GetKeyboardState(NULL);
     while( SDL_PollEvent(&event) != 0 ) {
         if (event.type == SDL_QUIT) {
             free(map->tanks->bullets);
@@ -48,7 +49,6 @@ void handle_events(Map *map){
             quit_window();
         }
     }
-    state = SDL_GetKeyboardState(NULL);
     fire(map->tanks);
     if (movement_collids_walls(map->tanks, map)) {
         move_tank(map->tanks);

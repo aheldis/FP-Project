@@ -16,6 +16,8 @@
 #define numberofBullets 5
 #define distanceofBullets 200
 
+static bool flag = true;
+
 void move_tank(Tank *tank) {
     int tempx = tank->x;
     int tempy = tank->y;
@@ -62,7 +64,14 @@ void move_bullet(Bullet *bullet) {
 }
 
 void fire(Tank *tank) {
-    if (state[SDL_SCANCODE_M]) {
+    flag = false;
+    static int n = 0;
+    n++;
+    if (n == 6) {
+        flag = true;
+        n = 0;
+    }
+    if (state[SDL_SCANCODE_M] && flag) {
         static int i = 0;
         if (i < numberofBullets) {
             (tank->bullets + i)->boolian = true;
@@ -70,6 +79,7 @@ void fire(Tank *tank) {
             (tank->bullets + i)->y = tank->y - shooter * sin(tank->angle);
             (tank->bullets + i)->angle = tank->angle;
             i++;
+            printf ("%d\n", i);
         }
     }
 }
