@@ -10,7 +10,7 @@
 #define shooter 20
 #define radius_circle 15
 #define radius_shooter 5
-#define thick 3
+#define thick 2
 #define numberofWalls 36
 #define step 5
 #define degree 0.4

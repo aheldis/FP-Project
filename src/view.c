@@ -17,7 +17,7 @@
 #define radius_shooter 5
 #define radius_bullet 3
 #define house 100
-#define thick 3
+#define thick 2
 
 SDL_Window *window;
 SDL_Renderer *renderer;

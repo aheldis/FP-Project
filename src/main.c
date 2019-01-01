@@ -15,7 +15,7 @@
 #define green 255
 #define blue 255
 #define a 255
-#define FPS 150
+#define FPS 50
 #define MAP_WIDTH 600
 #define MAP_HEIGHT 700
 #define radius 15
