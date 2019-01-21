@@ -1,23 +1,4 @@
-#include <SDL.h>
-#include <SDL2_gfxPrimitives.h>
-#include <stdbool.h>
-
-#include "logic.h"
 #include "structs.h"
-#include "physics.h"
-
-#define red 50
-#define green 50
-#define blue 50
-#define a 255
-#define MAP_WIDTH 600
-#define MAP_HEIGHT 700
-#define radius_circle 15
-#define shooter 20
-#define radius_shooter 5
-#define radius_bullet 3
-#define house 100
-#define thick 2
 
 SDL_Window *window;
 SDL_Renderer *renderer;
@@ -37,7 +18,7 @@ void quit_window()
 }
 
 void handle_events(Map *map){
-    SDL_SetRenderDrawColor(renderer, red, green, blue, a);
+    SDL_SetRenderDrawColor(renderer, red - 200, green - 200, blue - 200, a);
     SDL_RenderClear(renderer);
     SDL_Event event;
     state = SDL_GetKeyboardState(NULL);

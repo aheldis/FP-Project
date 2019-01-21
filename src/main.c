@@ -1,55 +1,118 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <math.h>
-#include <SDL.h>
-#include <SDL2_gfxPrimitives.h>
-#include <time.h>
-
-#include "view.h"
-#include "physics.h"
-#include "logic.h"
 #include "structs.h"
-
-#define red 255
-#define green 255
-#define blue 255
-#define a 255
-#define FPS 50
-#define MAP_WIDTH 600
-#define MAP_HEIGHT 700
-#define radius 15
-#define house 100
-#define numberofBullets 5
-#define numberofWalls 36
-#define numberofMaps 3
 
 #ifdef main
 #undef main
 #endif
 
-//void read_map_array(Wall *walls) {
-//    int r = rand() % 2;
-//    int i1 = rand() % (MAP_WIDTH / house) + 1;
-//    int j1 = rand() % (MAP_HEIGHT / house) + 1;
-//    int i2, j2;
-//    if (r) {
-//        i2 = rand() % (MAP_WIDTH / house + 1);
-//        j2 = j1;
-//    }
-//    else if (i1){
-//        j2 = rand() % (MAP_HEIGHT / house + 1);
-//        i2 = i1;
-//    }
-//
-//    walls->x1 = i1 * house;
-//    walls->y1 = j1 * house;
-//    walls->x2 = i2 * house;
-//    walls->y2 = j2 * house;
-//}
+
+struct node {
+    short int vertex;
+    struct node *next;
+};
+
+struct node *createNode(int v) {
+    struct node *newNode = malloc(sizeof(struct node));
+    newNode->vertex = v;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct Graph {
+    short int numVertices;
+    short int *visited;
+    struct node **adjLists; // we need int** to store a two dimensional array. Similary, we need struct node** to store an array of Linked lists
+};
+
+struct Graph *createGraph(int vertices) {
+    struct Graph *graph = malloc(sizeof(struct Graph));
+    graph->numVertices = vertices;
+    graph->adjLists = malloc(vertices * sizeof(struct node *));
+    graph->visited = malloc(vertices * sizeof(int));
+
+    for (int i = 0; i < vertices; i++) {
+        graph->adjLists[i] = NULL;
+        graph->visited[i] = 0;
+    }
+    return graph;
+}
+
+void addEdge(struct Graph *graph, int src, int dest) {
+    // Add edge from src to dest
+    struct node *newNode = createNode(dest);
+    newNode->next = graph->adjLists[src];
+    graph->adjLists[src] = newNode;
+
+    // Add edge from dest to src
+    newNode = createNode(src);
+    newNode->next = graph->adjLists[dest];
+    graph->adjLists[dest] = newNode;
+}
+
+void DFS(struct Graph *graph, int vertex, Wall *walls) {
+    struct node *adjList = graph->adjLists[vertex];
+    struct node *temp = adjList;
+
+    graph->visited[vertex] = 1;
+    //printf("Visited %d \n", vertex);
+
+    while (temp != NULL) {
+        short int connectedVertex = temp->vertex;
+
+        if (graph->visited[connectedVertex] == 0) {
+            int i = max(connectedVertex, vertex);
+            if (abs(connectedVertex - vertex) == 1)  (walls + i % numberofColumns + i / numberofColumns * (numberofColumns + 1))->boolian = false;
+            else  (walls + i + numberofRows * (numberofColumns + 1))->boolian = false;
+            DFS(graph, connectedVertex, walls);
+        }
+        temp = temp->next;
+    }
+}
+
+void read_map_array(Map *map) {
+    short int n = 0;
+    /////////amoodi
+    for (int i = 0; i < numberofRows; i++) {
+        for (int j = 0; j <= numberofColumns; j++) {
+            int rend = rand() % 4;
+            (map->walls + n)->x1 = j * house + house / 2;
+            (map->walls + n)->y1 = i * house + house / 2;
+            (map->walls + n)->x2 = j * house + house / 2;
+            (map->walls + n)->y2 = (i + 1) * house + house / 2;
+            if (rend == 1 && j != 0 && j != numberofColumns)   (map->walls + n)->boolian = false;
+            else  (map->walls + n)->boolian = true;
+            n++;
+        }
+    }
+    /////////ofoghi
+    for (int i = 0; i <= numberofRows; i++) {
+        for (int j = 0; j < numberofColumns; j++) {
+            int rend = rand() % 4;
+            (map->walls + n)->x1 = j * house + house / 2;
+            (map->walls + n)->y1 = i * house + house / 2;
+            (map->walls + n)->x2 = (j + 1) * house + house / 2;
+            (map->walls + n)->y2 = i * house + house / 2;
+            if(rend == 1 && i != 0 && i != numberofRows)    (map->walls + n)->boolian = false;
+            else  (map->walls + n)->boolian = true;
+            n++;
+        }
+    }
+    struct Graph *graph = createGraph(numberofRows * numberofColumns);
+    for (int j = 0; j < numberofRows; j++) {
+        for (int i = j * numberofColumns; i < (j + 1) * numberofColumns; i++) {
+            if (i != (j + 1) * numberofColumns - 1) addEdge(graph, i, i + 1);
+            if (j != numberofRows - 1) addEdge(graph, i, i + numberofColumns);
+        }
+    }
+
+    int rend = rand() % 64;
+    DFS(graph, rend, map->walls);
+
+}
 
 
-void read_map_file(Map *map, char *file_path){
+//////////////for reading from file. it works correctly
+
+/*void read_map_file(Map *map, char *file_path) {
     FILE *file1 = fopen(file_path, "r");
     int n, x1, y1, x2, y2;
     fscanf(file1, "%d\n", &n);
@@ -61,7 +124,7 @@ void read_map_file(Map *map, char *file_path){
         (map->walls + i)->y2 = y2 * house;
     }
     fclose(file1);
-}
+}*/
 
 
 int main(int argc, char *argv[]) {
@@ -71,8 +134,8 @@ int main(int argc, char *argv[]) {
     Wall *walls = malloc(sizeof(Wall) * numberofWalls);
 
     srand(time(0));
-    tank_1->x = rand() % 6 * 100 + 50;
-    tank_1->y = rand() % 7 * 100 + 50;
+    tank_1->x = rand() % numberofRows * house + house;
+    tank_1->y = rand() % numberofColumns * house + house;
     tank_1->r = rand() % 255;
     tank_1->g = rand() % 255;
     tank_1->b = rand() % 255;
@@ -83,12 +146,17 @@ int main(int argc, char *argv[]) {
     map->tanks = tank_1;
     map->walls = walls;
 
-    read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+    ///////////////for reading from file. it works correctly
+    //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+
+    read_map_array(map);
 
     init_window();
     while (1) {
         handle_events(map);
-        for (int i = 0; i < numberofWalls; i++) draw_walls(map->walls + i);
+        for (int i = 0; i < numberofWalls; i++)
+            if ((map->walls + i)->boolian)
+                draw_walls(map->walls + i);
         for (int i = 0; i < numberofBullets; i++) draw_bullet(map->tanks->bullets + i);
         draw_tank(map->tanks);
         SDL_RenderPresent(renderer);

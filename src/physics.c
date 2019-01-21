@@ -1,20 +1,4 @@
-#include <SDL.h>
-#include <SDL2_gfxPrimitives.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdbool.h>
-
 #include "structs.h"
-#include "view.h"
-
-#define step 5
-#define degree 0.1
-#define MAP_WIDTH 700
-#define MAP_HEIGHT 700
-#define radius 15
-#define shooter 20
-#define numberofBullets 5
-#define distanceofBullets 200
 
 static bool flag = true;
 
@@ -54,12 +38,12 @@ void turn_tank(Tank *tank) {
 
 void move_bullet(Bullet *bullet) {
     static int n = 0;
-    bullet->x += step * cos(bullet->angle);
-    bullet->y -= step * sin(bullet->angle);
-    n++;
-    if (n == distanceofBullets) {
+    bullet->x += step_bullet * cos(bullet->angle);
+    bullet->y -= step_bullet * sin(bullet->angle);
+    bullet->n++;
+    if (bullet->n == distanceofBullets) {
         bullet->boolian = false;
-        n = 0;
+        bullet->n = 0;
     }
 }
 
@@ -78,6 +62,7 @@ void fire(Tank *tank) {
             (tank->bullets + i)->x = tank->x + shooter * cos(tank->angle);
             (tank->bullets + i)->y = tank->y - shooter * sin(tank->angle);
             (tank->bullets + i)->angle = tank->angle;
+            (tank->bullets + i)->n = 0;
             i++;
             printf ("%d\n", i);
         }

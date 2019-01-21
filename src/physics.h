@@ -1,3 +1,4 @@
+#include "structs.h"
 #ifndef PROJECT_PHYSICS_H
 #define PROJECT_PHYSICS_H
 //int event(Tank* tank);
