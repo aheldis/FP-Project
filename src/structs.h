@@ -9,9 +9,12 @@
 #include <SDL2_gfxPrimitives.h>
 #include <time.h>
 
-#define red 255
-#define green 255
-#define blue 255
+#define red_white 255
+#define green_white 255
+#define blue_white 255
+#define red_black 0
+#define green_black 0
+#define blue_black 0
 #define a 255
 #define FPS 200
 #define MAP_WIDTH 900

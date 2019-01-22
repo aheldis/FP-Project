@@ -37,13 +37,14 @@ void turn_tank(Tank *tank) {
 }
 
 void move_bullet(Bullet *bullet) {
-    static int n = 0;
-    bullet->x += step_bullet * cos(bullet->angle);
-    bullet->y -= step_bullet * sin(bullet->angle);
-    bullet->n++;
-    if (bullet->n == distanceofBullets) {
-        bullet->boolian = false;
-        bullet->n = 0;
+    if (bullet->boolian) {
+        bullet->x += step_bullet * cos(bullet->angle);
+        bullet->y -= step_bullet * sin(bullet->angle);
+        (bullet->n)++;
+        if (bullet->n == distanceofBullets) {
+            printf ("hi\n");
+            bullet->boolian = false;
+        }
     }
 }
 
@@ -57,6 +58,7 @@ void fire(Tank *tank) {
     }
     if (state[SDL_SCANCODE_M] && flag) {
         static int i = 0;
+        if ((tank->bullets + i)->n == distanceofBullets) i = 0;
         if (i < numberofBullets) {
             (tank->bullets + i)->boolian = true;
             (tank->bullets + i)->x = tank->x + shooter * cos(tank->angle);

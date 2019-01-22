@@ -18,7 +18,7 @@ void quit_window()
 }
 
 void handle_events(Map *map){
-    SDL_SetRenderDrawColor(renderer, red - 200, green - 200, blue - 200, a);
+    SDL_SetRenderDrawColor(renderer, red_white - 200, green_white - 200, blue_white - 200, a);
     SDL_RenderClear(renderer);
     SDL_Event event;
     state = SDL_GetKeyboardState(NULL);
@@ -29,11 +29,6 @@ void handle_events(Map *map){
             free(map);
             quit_window();
         }
-    }
-    fire(map->tanks);
-    if (movement_collids_walls(map->tanks, map)) {
-        move_tank(map->tanks);
-        turn_tank(map->tanks);
     }
 }
 

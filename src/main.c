@@ -60,8 +60,9 @@ void DFS(struct Graph *graph, int vertex, Wall *walls) {
 
         if (graph->visited[connectedVertex] == 0) {
             int i = max(connectedVertex, vertex);
-            if (abs(connectedVertex - vertex) == 1)  (walls + i % numberofColumns + i / numberofColumns * (numberofColumns + 1))->boolian = false;
-            else  (walls + i + numberofRows * (numberofColumns + 1))->boolian = false;
+            if (abs(connectedVertex - vertex) == 1)
+                (walls + i % numberofColumns + i / numberofColumns * (numberofColumns + 1))->boolian = false;
+            else (walls + i + numberofRows * (numberofColumns + 1))->boolian = false;
             DFS(graph, connectedVertex, walls);
         }
         temp = temp->next;
@@ -78,8 +79,8 @@ void read_map_array(Map *map) {
             (map->walls + n)->y1 = i * house + house / 2;
             (map->walls + n)->x2 = j * house + house / 2;
             (map->walls + n)->y2 = (i + 1) * house + house / 2;
-            if (rend == 1 && j != 0 && j != numberofColumns)   (map->walls + n)->boolian = false;
-            else  (map->walls + n)->boolian = true;
+            if (rend == 1 && j != 0 && j != numberofColumns) (map->walls + n)->boolian = false;
+            else (map->walls + n)->boolian = true;
             n++;
         }
     }
@@ -91,8 +92,8 @@ void read_map_array(Map *map) {
             (map->walls + n)->y1 = i * house + house / 2;
             (map->walls + n)->x2 = (j + 1) * house + house / 2;
             (map->walls + n)->y2 = i * house + house / 2;
-            if(rend == 1 && i != 0 && i != numberofRows)    (map->walls + n)->boolian = false;
-            else  (map->walls + n)->boolian = true;
+            if (rend == 1 && i != 0 && i != numberofRows) (map->walls + n)->boolian = false;
+            else (map->walls + n)->boolian = true;
             n++;
         }
     }
@@ -112,7 +113,7 @@ void read_map_array(Map *map) {
 
 //////////////for reading from file. it works correctly
 
-/*void read_map_file(Map *map, char *file_path) {
+void read_map_file(Map *map, char *file_path) {
     FILE *file1 = fopen(file_path, "r");
     int n, x1, y1, x2, y2;
     fscanf(file1, "%d\n", &n);
@@ -124,16 +125,9 @@ void read_map_array(Map *map) {
         (map->walls + i)->y2 = y2 * house;
     }
     fclose(file1);
-}*/
+}
 
-
-int main(int argc, char *argv[]) {
-    Bullet *bullet = malloc(sizeof(Bullet) * numberofBullets);
-    Tank *tank_1 = malloc(sizeof(Tank) * 1);
-    Map *map = malloc(sizeof(Map) * 1);
-    Wall *walls = malloc(sizeof(Wall) * numberofWalls);
-
-    srand(time(0));
+void newGame(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls) {
     tank_1->x = rand() % numberofRows * house + house;
     tank_1->y = rand() % numberofColumns * house + house;
     tank_1->r = rand() % 255;
@@ -150,17 +144,123 @@ int main(int argc, char *argv[]) {
     //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
     read_map_array(map);
+}
 
+bool menu(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls, bool flag) {
+    Tank *sample1 = malloc(sizeof(Tank));
+    sample1->x = MAP_WIDTH / 2;
+    sample1->y = 750;
+    sample1->angle = 0;
+    sample1->r = red_white;
+    sample1->g = green_white;
+    sample1->b = blue_white;
+    Tank *sample2 = malloc(sizeof(Tank));
+    sample2->x = MAP_WIDTH / 2;
+    sample2->y = MAP_HEIGHT - sample1->y;
+    sample2->angle = M_PI;
+    sample2->r = red_white;
+    sample2->g = green_white;
+    sample2->b = blue_white;
+    enum {
+        new, load, end, game
+    } j = 0;
+    while (flag) {
+        handle_events(map);
+        if (state[SDL_SCANCODE_DOWN]) {
+            static int n = 0;
+            n++;
+            if (n >= 5) {
+                j = (j + 1) % 3;
+                n = 0;
+            }
+        }
+        if (state[SDL_SCANCODE_UP]) {
+            static int n = 0;
+            n++;
+            if (n >= 5) {
+                if (j > 0) j--;
+                else j = 2;
+            n = 0;
+            }
+        }
+
+        if (state[SDL_SCANCODE_RETURN]) {
+            flag = false;
+            if (j == new || j == load) newGame(tank_1, bullet, map, walls);
+            if (j == end) quit_window();
+        }
+
+        if (state[SDL_SCANCODE_ESCAPE]) {
+            SDL_Delay(200);
+            flag = false;
+        }
+
+        int x = MAP_WIDTH / 2 - house / 2;
+        int y = 300;
+
+        int red[] = {red_white, red_white, red_white};
+        int green[] = {green_white, green_white, green_white};
+        int blue[] = {blue_white, blue_white, blue_white};
+
+        red[j] = red_black;
+        green[j] = green_black;
+        blue[j] = blue_black;
+
+        draw_tank(sample1);
+        draw_tank(sample2);
+        stringRGBA(renderer, x, y, "Start Game", red[new], green[new], blue[new], a);
+        x += 4;
+        y += 25;
+        stringRGBA(renderer, x, y, "Load Game", red[load], green[load], blue[load], a);
+        x += 3;
+        y += 25;
+        stringRGBA(renderer, x, y, "End Game", red[end], green[end], blue[end], a);
+        sample1->x += step * cos(sample1->angle);
+        sample1->y -= step * sin(sample1->angle);
+        sample1->angle += 0.1;
+        if (sample1->x < 0) sample1->x = MAP_WIDTH - radius_circle;
+        if (sample1->y < 0) sample1->y = MAP_HEIGHT - radius_circle;
+        if (sample1->x > MAP_WIDTH) sample1->x = radius_circle;
+        if (sample1->y > MAP_HEIGHT) sample1->y = radius_circle;
+        sample2->angle += 0.1;
+        sample2->x = MAP_WIDTH - sample1->x;
+        sample2->y = MAP_HEIGHT - sample1->y;
+        SDL_RenderPresent(renderer);
+        SDL_Delay(30);
+    }
+    return flag;
+}
+
+int main(int argc, char *argv[]) {
+
+    srand(time(0));
+    Bullet *bullet = malloc(sizeof(Bullet) * numberofBullets);
+    Tank *tank_1 = malloc(sizeof(Tank) * 1);
+    Map *map = malloc(sizeof(Map) * 1);
+    Wall *walls = malloc(sizeof(Wall) * numberofWalls);
+
+    //////////////////menu
     init_window();
+    bool flag = true;
+
     while (1) {
+        flag = menu(tank_1, bullet, map, walls, flag);
         handle_events(map);
         for (int i = 0; i < numberofWalls; i++)
             if ((map->walls + i)->boolian)
                 draw_walls(map->walls + i);
         for (int i = 0; i < numberofBullets; i++) draw_bullet(map->tanks->bullets + i);
         draw_tank(map->tanks);
+        fire(map->tanks);
+        if (movement_collids_walls(map->tanks, map)) {
+            move_tank(map->tanks);
+            turn_tank(map->tanks);
+        }
+        if (state[SDL_SCANCODE_ESCAPE]) {
+            SDL_Delay(300);
+            flag = true;
+        }
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
     }
-    quit_window();
 }
