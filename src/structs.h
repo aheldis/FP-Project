@@ -53,6 +53,12 @@ typedef struct {
     int r;
     int g;
     int b;
+    int score;
+    int right;
+    int left;
+    int up;
+    int down;
+    bool boolian;
     double angle;
     Bullet *bullets;
 } Tank;

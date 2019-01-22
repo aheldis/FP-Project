@@ -4,6 +4,7 @@
 #undef main
 #endif
 
+//////////////for random map
 
 struct node {
     short int vertex;
@@ -127,6 +128,12 @@ void read_map_file(Map *map, char *file_path) {
     fclose(file1);
 }
 
+
+
+
+
+
+
 void newGame(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls) {
     tank_1->x = rand() % numberofRows * house + house;
     tank_1->y = rand() % numberofColumns * house + house;
@@ -139,6 +146,8 @@ void newGame(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls) {
     tank_1->bullets = bullet;
     map->tanks = tank_1;
     map->walls = walls;
+    tank_1->boolian = true;
+    tank_1->score = 0;
 
     ///////////////for reading from file. it works correctly
     //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
@@ -146,26 +155,37 @@ void newGame(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls) {
     read_map_array(map);
 }
 
+
+
+
+
+
 bool menu(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     Tank *sample1 = malloc(sizeof(Tank));
     sample1->x = MAP_WIDTH / 2;
     sample1->y = 750;
     sample1->angle = 0;
-    sample1->r = red_white;
-    sample1->g = green_white;
-    sample1->b = blue_white;
+    sample1->r = 180;
+    sample1->g = 180;
+    sample1->b = 180;
     Tank *sample2 = malloc(sizeof(Tank));
     sample2->x = MAP_WIDTH / 2;
     sample2->y = MAP_HEIGHT - sample1->y;
     sample2->angle = M_PI;
-    sample2->r = red_white;
-    sample2->g = green_white;
-    sample2->b = blue_white;
+    sample2->r = 180;
+    sample2->g = 180;
+    sample2->b = 180;
     enum {
         new, load, end, game
     } j = 0;
     while (flag) {
         handle_events(map);
+        static int r = red_white - 20, g = green_white - 20, b = blue_white - 20;
+        if (state[SDL_SCANCODE_N]) {
+            SDL_Delay(300);
+            r = red_white - r, g = green_white - g, b = blue_white - b;
+        }
+
         if (state[SDL_SCANCODE_DOWN]) {
             static int n = 0;
             n++;
@@ -198,13 +218,20 @@ bool menu(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         int x = MAP_WIDTH / 2 - house / 2;
         int y = 300;
 
-        int red[] = {red_white, red_white, red_white};
-        int green[] = {green_white, green_white, green_white};
-        int blue[] = {blue_white, blue_white, blue_white};
+        int red[] = {r, r, r};
+        int green[] = {g, g, g};
+        int blue[] = {b, b, b};
 
-        red[j] = red_black;
-        green[j] = green_black;
-        blue[j] = blue_black;
+        if (r == red_white - 20) {
+            red[j] = red_black;
+            green[j] = green_black;
+            blue[j] = blue_black;
+        }
+        else {
+            red[j] = 100;
+            green[j] = 100;
+            blue[j] = 100;
+        }
 
         draw_tank(sample1);
         draw_tank(sample2);
@@ -230,6 +257,14 @@ bool menu(Tank *tank_1, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     }
     return flag;
 }
+
+
+
+
+
+
+
+
 
 int main(int argc, char *argv[]) {
 
