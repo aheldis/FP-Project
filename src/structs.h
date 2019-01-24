@@ -53,11 +53,13 @@ typedef struct {
     int r;
     int g;
     int b;
-    int score;
-    int right;
-    int left;
-    int up;
-    int down;
+    SDL_Scancode score;
+    SDL_Scancode right;
+    SDL_Scancode left;
+    SDL_Scancode up;
+    SDL_Scancode down;
+    SDL_Scancode shoot;
+    char name[10];
     bool boolian;
     double angle;
     Bullet *bullets;
