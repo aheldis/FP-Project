@@ -36,7 +36,7 @@ void turn_tank(Tank *tank) {
 
 void move_bullet(Bullet *bullet) {
     if ((bullet->n) < 2 * distanceofBullets) (bullet->n)++;
-    if (bullet->boolian) {
+    if (bullet->boolian && bullet->x != -100) {
         bullet->x += step_bullet * cos(bullet->angle);
         bullet->y -= step_bullet * sin(bullet->angle);
         if (bullet->n == distanceofBullets) {
@@ -59,40 +59,23 @@ void fire(Tank *tank) {
             ((tank + k)->bullets + numberofBullets - 1)->n = 0;
             printf("hi\n");
         }
-    }
-    if (state[tank->shoot]) {
-        if (i[0] < numberofBullets && (tank->bullets + i[0])->boolian && flag[0]) {
-            (tank->bullets + i[0])->x = tank->x + shooter * cos(tank->angle);
-            (tank->bullets + i[0])->y = tank->y - shooter * sin(tank->angle);
-            (tank->bullets + i[0])->angle = tank->angle;
-            (tank->bullets + i[0])->n = 0;
-            flag[0] = false;
-            i[0]++;
-            printf ("%d\n", i[0]);
-        }
-        static int n = 0;
-        n++;
-        if (n == 10) {
-            flag[0] = true;
-            n = 0;
-        }
-    }
 
-    if (state[(tank + 1)->shoot]) {
-        if (i[1] < numberofBullets && (tank->bullets + i[1])->boolian && flag[1]) {
-            ((tank + 1)->bullets + i[1])->x = (tank + 1)->x + shooter * cos((tank + 1)->angle);
-            ((tank + 1)->bullets + i[1])->y = (tank + 1)->y - shooter * sin((tank + 1)->angle);
-            ((tank + 1)->bullets + i[1])->angle = (tank + 1)->angle;
-            ((tank + 1)->bullets + i[1])->n = 0;
-            flag[1] = false;
-            i[1]++;
-            printf ("%d\n", i[1]);
-        }
-        static int n = 0;
-        n++;
-        if (n == 10) {
-            flag[1] = true;
-            n = 0;
+        if (state[(tank + k)->shoot]) {
+            if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
+                ((tank + k)->bullets + i[k])->x = (tank + k)->x + shooter * cos((tank + k)->angle);
+                ((tank + k)->bullets + i[k])->y = (tank + k)->y - shooter * sin((tank + k)->angle);
+                ((tank + k)->bullets + i[k])->angle = (tank + k)->angle;
+                ((tank + k)->bullets + i[k])->n = 0;
+                flag[k] = false;
+                i[k]++;
+                printf ("%d\n", i[k]);
+            }
+            static int n[numberofTanks] = {0};
+            n[k]++;
+            if (n[k] == 10) {
+                flag[k] = true;
+                n[k] = 0;
+            }
         }
     }
 }

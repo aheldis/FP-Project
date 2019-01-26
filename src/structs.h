@@ -35,6 +35,7 @@
 #define distanceofBullets 200
 #define numberofRows 8
 #define numberofColumns 8
+#define numberofTanks 2
 
 
 #define max(a, b) (a >= b) * a + (a < b) * b

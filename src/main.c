@@ -186,28 +186,17 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             int greenj[] = {green[tank1 + k], (tank + k)->g};
             int bluej[] = {blue[tank1 + k], (tank + k)->b};
             int x1;
-            int yes = (i == 0 && k == i) || (i == 5 && k == i / 5);
+            int yes = i % 5 == 0 && k == i / 5;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
-            if (i == 0 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
                 if (!enter) {
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        tank->left = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
+                        (tank + k)->left = SDL_GetScancodeFromKey(keycode);
+                        f[k] = 1;
                     }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
-                }
-            }
-            if (i == 5 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
-                if (!enter) {
-                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        (tank + 1)->left = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
-                    }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->left && f[k]) i++;
                 }
             }
             if ((tank + k)->left) {
@@ -218,28 +207,17 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
 
             for (int z = 0; z < 4; z++) vx[z] += 45;
             x += 45;
-            yes = (i == 1 && k == i / 5) || (i == 6 && k == i / 5);
+            yes = i % 5 == 1 && k == i / 5;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
-            if (i == 1 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
                 if (!enter) {
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        tank->down = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
+                        (tank + k)->down = SDL_GetScancodeFromKey(keycode);
+                        f[k] = 1;
                     }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
-                }
-            }
-            if (i == 6 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
-                if (!enter) {
-                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        (tank + 1)->down = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
-                    }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->down && f[k]) i++;
                 }
             }
             if ((tank + k)->down){
@@ -250,28 +228,18 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
 
             for (int z = 0; z < 4; z++) vy[z] -= 45;
             y -= 45;
-            yes = (i == 2 && k == i / 5) || (i == 7 && k == i / 5);
+
+            yes = i % 5 == 2 && k == i / 5;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
-            if (i == 2 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
                 if (!enter) {
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        tank->up = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
+                        (tank + k)->up = SDL_GetScancodeFromKey(keycode);
+                        f[k] = 1;
                     }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
-                }
-            }
-            if (i == 7 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
-                if (!enter) {
-                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        (tank + 1)->up = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
-                    }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->up && f[k]) i++;
                 }
             }
             if ((tank + k)->up){
@@ -286,28 +254,18 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             }
             x += 45;
             y += 45;
-            yes = (i == 3 && k == i / 5) || (i == 8 && k == i / 5);
+
+            yes = i % 5 == 3 && k == i / 5;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
-            if (i == 3 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
                 if (!enter) {
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        tank->right = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
+                        (tank + k)->right = SDL_GetScancodeFromKey(keycode);
+                        f[k] = 1;
                     }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
-                }
-            }
-            if (i == 8 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
-                if (!enter) {
-                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        (tank + 1)->right = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
-                    }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->right && f[k]) i++;
                 }
             }
             if ((tank + k)->right){
@@ -322,28 +280,18 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             }
             x -= 250;
             y -= 45;
-            yes = (i == 4 && k == i / 5) || (i == 9 && k == i / 5);
+
+            yes = i % 5 == 4 && k == i / 5;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
-            if (i == 4 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
                 if (!enter) {
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        tank->shoot = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
+                        (tank + k)->shoot = SDL_GetScancodeFromKey(keycode);
+                        f[k] = 1;
                     }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
-                }
-            }
-            if (i == 9 || enter) {
-                static int f = 0;
-                if (enter) f = 0;
-                if (!enter) {
-                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode) {
-                        (tank + 1)->shoot = SDL_GetScancodeFromKey(keycode);
-                        f = 1;
-                    }
-                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && f) i++;
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->shoot && f[k]) i++;
                 }
             }
             if ((tank + k)->shoot){
