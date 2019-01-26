@@ -139,6 +139,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (tank + i)->up = 0;
         (tank + i)->down = 0;
         (tank + i)->right = 0;
+        (tank + i)->shoot = 0;
     }
 
     SDL_Keycode keycode = 0;
@@ -148,7 +149,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     int i = 0, enter = 1;
     while (flag) {
         keycode = handle_events(map);
-        //if (keycode) printf("%d\n", SDL_GetScancodeFromKey(keycode));
+        static SDL_Keycode keycodepre = 0;
         int r = red_white - 20, g = green_white - 20, b = blue_white - 20;
         if (rback == 225) r = red_white - r, g = green_white - g, b = blue_white - b;
 
@@ -165,6 +166,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         red[j] = 100;
         green[j] = 100;
         blue[j] = 100;
+
+        stringRGBA(renderer, 150, 135, "The key that has been pressed:", r, g, b, a);
+        if (keycodepre) stringRGBA(renderer, 150, 150, SDL_GetKeyName(keycodepre), r, g, b, a);
 
         int x = 200, y = 325;
         stringRGBA(renderer, x, y, "tank1", red[tank1], green[tank1], blue[tank1], a);
@@ -310,6 +314,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         }
         if (i == 10)    break;
         enter = 0;
+        if (keycodepre != keycode && keycode) keycodepre = keycode;
         SDL_RenderPresent(renderer);
         SDL_Delay(30);
     }
