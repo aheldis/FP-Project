@@ -130,7 +130,7 @@ void read_map_file(Map *map, char *file_path) {
 
 
 bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < numberofTanks; i++) {
         (tank + i)->r = rand() % 255;
         (tank + i)->g = rand() % 255;
         (tank + i)->b = rand() % 255;
@@ -185,7 +185,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         x = 516, y = 305;
         short vx[] = {x, x + 40, x + 40, x};
         short vy[] = {y, y, y + 40, y + 40};
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < numberofTanks; k++) {
             int redj[] = {red[tank1 + k], (tank + k)->r};
             int greenj[] = {green[tank1 + k], (tank + k)->g};
             int bluej[] = {blue[tank1 + k], (tank + k)->b};
@@ -431,13 +431,13 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             stringRGBA(renderer, x, y, "End Game", red[end], green[end], blue[end], a);
         }
         sample1->x += step * cos(sample1->angle);
-        sample1->y -= step * sin(sample1->angle);
-        sample1->angle += 0.1;
+        sample1->y += step * sin(sample1->angle);
+        sample1->angle -= 0.1;
         if (sample1->x < 0) sample1->x = MAP_WIDTH - radius_circle;
         if (sample1->y < 0) sample1->y = MAP_HEIGHT - radius_circle;
         if (sample1->x > MAP_WIDTH) sample1->x = radius_circle;
         if (sample1->y > MAP_HEIGHT) sample1->y = radius_circle;
-        sample2->angle += 0.1;
+        sample2->angle -= 0.1;
         sample2->x = MAP_WIDTH - sample1->x;
         sample2->y = MAP_HEIGHT - sample1->y;
         SDL_RenderPresent(renderer);
@@ -476,7 +476,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < numberofWalls; i++)
             if ((map->walls + i)->boolian)
                 draw_walls(map->walls + i);
-        for (int k = 0; k < 2; k++) {
+        for (int k = 0; k < numberofTanks; k++) {
             (sample + k)->r = (map->tanks + k)->r;
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
@@ -495,6 +495,7 @@ int main(int argc, char *argv[]) {
             flag = true;
             SDL_Delay(200);
         }
+        //printf("%f\n", sin(tank->angle));
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
     }

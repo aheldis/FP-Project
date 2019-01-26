@@ -45,7 +45,7 @@ void draw_tank(Tank *tank) {
     if (rback == 225)  red = 128, green = 128, blue = 128;
     else red = 75, green = 75, blue = 75;
     filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, 255);
-    filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y - shooter * sin(tank->angle), radius_shooter, red, green, blue, 255);
+    filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y + shooter * sin(tank->angle), radius_shooter, red, green, blue, 255);
     if (rback == 225) {
         circleRGBA(renderer, tank->x, tank->y, radius_circle, red, green, blue, 255);
         circleRGBA(renderer, tank->x, tank->y, radius_circle - 1, red, green, blue, 255);

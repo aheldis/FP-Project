@@ -4,11 +4,11 @@ void move_tank(Tank *tank) {
     int tempx = tank->x;
     int tempy = tank->y;
     if (state[tank->up] && !state[tank->down]) {
-        tank->y -= step * sin(tank->angle);
+        tank->y += step * sin(tank->angle);
         tank->x += step * cos(tank->angle);
     }
     if (state[tank->down] && !state[tank->up]) {
-        tank->y += step * sin(tank->angle);
+        tank->y -= step * sin(tank->angle);
         tank->x -= step * cos(tank->angle);
     }
     if (tank->x < radius) {
@@ -30,15 +30,16 @@ void move_tank(Tank *tank) {
 }
 
 void turn_tank(Tank *tank) {
-    if (state[tank->right] && !state[tank->left]) tank->angle -= degree;
-    if (state[tank->left] && !state[tank->right]) tank->angle += degree;
+    if (state[tank->right] && !state[tank->left]) tank->angle += degree;
+    if (state[tank->left] && !state[tank->right]) tank->angle -= degree;
 }
 
 void move_bullet(Bullet *bullet) {
-    if ((bullet->n) < 2 * distanceofBullets) (bullet->n)++;
+    if ((bullet->n) < 2 * distanceofBullets && !bullet->boolian) (bullet->n)++;
     if (bullet->boolian && bullet->x != -100) {
         bullet->x += step_bullet * cos(bullet->angle);
-        bullet->y -= step_bullet * sin(bullet->angle);
+        bullet->y += step_bullet * sin(bullet->angle);
+        (bullet->n)++;
         if (bullet->n == distanceofBullets) {
             bullet->boolian = false;
         }
@@ -63,7 +64,7 @@ void fire(Tank *tank) {
         if (state[(tank + k)->shoot]) {
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
                 ((tank + k)->bullets + i[k])->x = (tank + k)->x + shooter * cos((tank + k)->angle);
-                ((tank + k)->bullets + i[k])->y = (tank + k)->y - shooter * sin((tank + k)->angle);
+                ((tank + k)->bullets + i[k])->y = (tank + k)->y + shooter * sin((tank + k)->angle);
                 ((tank + k)->bullets + i[k])->angle = (tank + k)->angle;
                 ((tank + k)->bullets + i[k])->n = 0;
                 flag[k] = false;
