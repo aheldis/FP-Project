@@ -29,11 +29,11 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
     if (((radius_shooter + step) * cos(tank->angle) + shooter * sign_x) * sign_x >
         radius_circle + step * cos(tank->angle))
         max_x = (radius_shooter + step) * cos(tank->angle) + shooter * sign_x;
-    else max_x = (radius_circle + step * cos(tank->angle)) * sign_x;
+    else max_x = radius_circle * sign_x + step * cos(tank->angle);
     if (((radius_shooter + step) * sin(tank->angle) + shooter * sign_y) * sign_y >
         radius_circle + step * sin(tank->angle))
         max_y = (radius_shooter + step) * sin(tank->angle) + shooter * sign_y;
-    else max_y = (radius_circle + step * sin(tank->angle)) * sign_y;
+    else max_y = radius_circle * sign_y + step * sin(tank->angle);
 
     for (int j = 0; j < 4; j++) {
         short l = left(vert);
@@ -45,22 +45,20 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
         if ((map->walls + i)->boolian) {
             ////////////////////collision
             if (flag == 0)
-                if ((((abs(tank->x + max_x - (map->walls + i)->x1) <= thick * 2) && (state[tank->up])) ||
+                if ((((abs(tank->x + max_x - (map->walls + i)->x1) <= thick) && state[tank->up]) ||
                      ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <=
-                       thick * 2) &&
-                      (state[tank->down]))) &&
+                       thick) && state[tank->down])) &&
                     (((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                      (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                      abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick * 2)))
+                      abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick)))
                     return false;
             if (flag == 1)
-                if ((((abs(tank->y + max_y - (map->walls + i)->y1) <= thick * 2) && (state[tank->up])) ||
-                     ((abs(tank->y - radius_circle * sign_y - step * cos(tank->angle) - (map->walls + i)->y1) <=
-                       thick * 2) &&
-                      (state[tank->down]))) &&
+                if ((((abs(tank->y + max_y - (map->walls + i)->y1) <= thick) && state[tank->up]) ||
+                     ((abs(tank->y - radius_circle * sign_y - step * sin(tank->angle) - (map->walls + i)->y1) <=
+                       thick) && state[tank->down])) &&
                     ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                     (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                     abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick * 2))
+                     abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
                     return false;
         }
     }
@@ -87,22 +85,20 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
                 if ((map->walls + i)->boolian) {
                     ////////////////////collision
                     if (flag == 0)
-                        if ((((abs(tank->x + max_x - (map->walls + i)->x1) <= thick * 2) && (state[tank->up])) ||
+                        if ((((abs(tank->x + max_x - (map->walls + i)->x1) <= thick) && (state[tank->up])) ||
                              ((abs(tank->x - radius_circle * sign_x - step * cos(tank->angle) - (map->walls + i)->x1) <=
-                               thick * 2) &&
-                              (state[tank->down]))) &&
+                               thick) && state[tank->down])) &&
                             (((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                              (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                              abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick * 2)))
+                              abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick)))
                             return false;
                     if (flag == 1)
-                        if ((((abs(tank->y + max_y - (map->walls + i)->y1) <= thick * 2) && (state[tank->up])) ||
-                             ((abs(tank->y - radius_circle * sign_y - step * cos(tank->angle) - (map->walls + i)->y1) <=
-                               thick * 2) &&
-                              (state[tank->down]))) &&
+                        if ((((abs(tank->y + max_y - (map->walls + i)->y1) <= thick) && (state[tank->up])) ||
+                             ((abs(tank->y - radius_circle * sign_y - step * sin(tank->angle) - (map->walls + i)->y1) <=
+                               thick) && state[tank->down])) &&
                             ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                             (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                             abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick * 2))
+                             abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
                             return false;
                 }
             }
@@ -169,11 +165,11 @@ bool turning_collids_walls(Tank *tank, Map *map) {
     if (((radius_shooter + step) * cos(deg) + shooter * sign_x) * sign_x >
         radius_circle + step * cos(deg))
         max_x = (radius_shooter + step) * cos(deg) + shooter * sign_x;
-    else max_x = (radius_circle + step * cos(deg)) * sign_x;
+    else max_x = radius_circle * sign_x + step * cos(deg);
     if (((radius_shooter + step) * sin(deg) + shooter * sign_y) * sign_y >
         radius_circle + step * sin(deg))
         max_y = (radius_shooter + step) * sin(deg) + shooter * sign_y;
-    else max_y = (radius_circle + step * sin(deg)) * sign_y;
+    else max_y = radius_circle * sign_y + step * sin(deg);
     short vertl = vertex(tank->x + (max_x < 0) * max_x - (max_x > 0) * (radius_circle + step * cos(deg)),
                          tank->y);
     short vertr = vertex(tank->x + (max_x > 0) * max_x + (max_x < 0) * (radius_circle + step * cos(deg)),
@@ -191,12 +187,18 @@ bool turning_collids_walls(Tank *tank, Map *map) {
         int i = b[j];
         ////////////////////rotation
         if ((map->walls + i)->boolian) {
-            if ((abs(tank->x + shooter * sign_x + radius_shooter * cos(deg) - (map->walls + i)->x1) <= thick) &&
+            if ((((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <=
+                   thick) && (state[tank->right])) ||
+                 ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) - (map->walls + i)->x1) <=
+                   thick) && (state[tank->left]))) &&
                 ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                  abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
                 return false;
-            if ((abs(tank->y + shooter * sign_y + radius_shooter * sin(deg) - (map->walls + i)->y1) <= thick) &&
+            if ((((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <=
+                   thick) && (state[tank->right])) ||
+                 ((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle - degree) - (map->walls + i)->y1) <=
+                   thick) && (state[tank->left]))) &&
                 ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
                  abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
@@ -217,12 +219,22 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                 int i = b[j];
                 if ((map->walls + i)->boolian) {
                     ////////////////////rotation
-                    if ((abs(tank->x + shooter * sign_x + radius_shooter * cos(deg) - (map->walls + i)->x1) <= thick) &&
+                    if ((((abs(
+                            tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <=
+                           thick) && (state[tank->right])) ||
+                         ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) -
+                               (map->walls + i)->x1) <=
+                           thick) && (state[tank->left]))) &&
                         ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                         (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                          abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
                         return false;
-                    if ((abs(tank->y + shooter * sign_y + radius_shooter * sin(deg) - (map->walls + i)->y1) <= thick) &&
+                    if ((((abs(
+                            tank->y + (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <=
+                           thick) && (state[tank->right])) ||
+                         ((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle - degree) -
+                               (map->walls + i)->y1) <=
+                           thick) && (state[tank->left]))) &&
                         ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                         (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
                          abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))

@@ -16,7 +16,7 @@
 #define green_black 0
 #define blue_black 0
 #define a 255
-#define FPS 150
+#define FPS 400
 #define MAP_WIDTH 900
 #define MAP_HEIGHT 820
 #define house 90
@@ -30,7 +30,7 @@
 #define thick 2
 #define step 5
 #define step_bullet 7
-#define degree 0.15
+#define degree 0.1
 #define radius_bullet 3
 #define distanceofBullets 200
 #define numberofRows 8

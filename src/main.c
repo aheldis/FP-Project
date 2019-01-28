@@ -486,12 +486,12 @@ int main(int argc, char *argv[]) {
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
             for (int i = 0; i < numberofBullets; i++) draw_bullet((map->tanks + k)->bullets + i);
+            turn_tank(map->tanks + k, map);
+            move_tank(map->tanks + k, map);
             draw_tank(map->tanks + k);
             draw_tank(sample + k);
             stringRGBA(renderer, x - 20, 310, "tank1", red, green, blue, a);
             stringRGBA(renderer, x - 20, 550, "tank2", red, green, blue, a);
-            move_tank(map->tanks + k, map);
-            turn_tank(map->tanks + k, map);
         }
         fire(map->tanks);
         if (state[SDL_SCANCODE_ESCAPE]) {
