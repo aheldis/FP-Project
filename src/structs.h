@@ -16,7 +16,7 @@
 #define green_black 0
 #define blue_black 0
 #define a 255
-#define FPS 350
+#define FPS 150
 #define MAP_WIDTH 900
 #define MAP_HEIGHT 820
 #define house 90
