@@ -56,7 +56,6 @@ void draw_tank(Tank *tank) {
 void draw_bullet(Bullet *bullet) {
     if (bullet->boolian && bullet->x != -100)
         filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 150, 150, 150, 255);
-    move_bullet(bullet);
 }
 
 void draw_walls(Wall *walls) {

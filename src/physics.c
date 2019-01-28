@@ -19,8 +19,8 @@ void move_tank(Tank *tank, Map *map) {
         tank->x = tempx;
         tank->y = house / 2 + radius;
     }
-    if (tank->x > MAP_HEIGHT - radius) {
-        tank->x = MAP_HEIGHT - radius;
+    if (tank->x > MAP_HEIGHT - house / 2 - radius) {
+        tank->x = MAP_HEIGHT - house / 2 - radius;
         tank->y = tempy;
     }
     if (tank->y > MAP_HEIGHT - house / 2 - radius) {
@@ -35,7 +35,7 @@ void turn_tank(Tank *tank, Map *map) {
 }
 
 void move_bullet(Bullet *bullet) {
-    if ((bullet->n) < 2 * distanceofBullets && !bullet->boolian) (bullet->n)++;
+    if ((bullet->n) < 3 * distanceofBullets / 2 && !bullet->boolian) (bullet->n)++;
     if (bullet->boolian && bullet->x != -100) {
         bullet->x += step_bullet * cos(bullet->angle);
         bullet->y += step_bullet * sin(bullet->angle);
@@ -50,7 +50,7 @@ void fire(Tank *tank) {
     static bool flag[] = {true, true};
     static int i[] = {0, 0};
     for (int k = 0; k < 2; k++) {
-        if (((tank + k)->bullets + numberofBullets - 1)->n == 2 * distanceofBullets) {
+        if (((tank + k)->bullets + numberofBullets - 1)->n == 3 * distanceofBullets / 2) {
             i[k] = 0;
             for (int j = 0; j < numberofBullets; j++) {
                 ((tank + k)->bullets + j)->boolian = true;

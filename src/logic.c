@@ -187,21 +187,25 @@ bool turning_collids_walls(Tank *tank, Map *map) {
         int i = b[j];
         ////////////////////rotation
         if ((map->walls + i)->boolian) {
-            if ((((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <=
+            if ((((abs(
+                    tank->x + radius_shooter * sign_x + shooter * cos(tank->angle + degree) - (map->walls + i)->x1) <=
                    thick) && (state[tank->right])) ||
-                 ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) - (map->walls + i)->x1) <=
+                 ((abs(tank->x + radius_shooter * sign_x + shooter * cos(tank->angle - degree) -
+                       (map->walls + i)->x1) <=
                    thick) && (state[tank->left]))) &&
                 ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                 abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
+                 abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_circle + thick))
                 return false;
-            if ((((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <=
+            if ((((abs(
+                    tank->y + radius_shooter * sign_y + shooter * sin(tank->angle + degree) - (map->walls + i)->y1) <=
                    thick) && (state[tank->right])) ||
-                 ((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle - degree) - (map->walls + i)->y1) <=
+                 ((abs(tank->y + radius_shooter * sign_y + shooter * sin(tank->angle - degree) -
+                       (map->walls + i)->y1) <=
                    thick) && (state[tank->left]))) &&
                 ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
+                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_circle + thick))
                 return false;
         }
     }
@@ -218,25 +222,30 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                 int b[] = {r, d, l, u};
                 int i = b[j];
                 if ((map->walls + i)->boolian) {
+                    //printf("hi");
                     ////////////////////rotation
                     if ((((abs(
-                            tank->x + (shooter + radius_shooter) * cos(tank->angle + degree) - (map->walls + i)->x1) <=
-                           thick) && (state[tank->right])) ||
-                         ((abs(tank->x + (shooter + radius_shooter) * cos(tank->angle - degree) -
+                            tank->x + radius_shooter * sign_x + shooter * cos(tank->angle + degree) -
+                            (map->walls + i)->x1) <=
+                           thick + 1) && (state[tank->right])) ||
+                         ((abs(tank->x + radius_shooter * sign_x + shooter * cos(tank->angle - degree) -
                                (map->walls + i)->x1) <=
-                           thick) && (state[tank->left]))) &&
+                           thick + 1) && (state[tank->left]))) &&
                         ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
-                        (abs(tank->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+                        (abs(tank->y + radius_shooter * sign_y + shooter * sin(deg) -
+                             ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                          abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
                         return false;
                     if ((((abs(
-                            tank->y + (shooter + radius_shooter) * sin(tank->angle + degree) - (map->walls + i)->y1) <=
-                           thick) && (state[tank->right])) ||
-                         ((abs(tank->y + (shooter + radius_shooter) * sin(tank->angle - degree) -
+                            tank->y + radius_shooter * sign_y + shooter * sin(tank->angle + degree) -
+                            (map->walls + i)->y1) <=
+                           thick + 1) && (state[tank->right])) ||
+                         ((abs(tank->y + radius_shooter * sign_y + shooter * sin(tank->angle - degree) -
                                (map->walls + i)->y1) <=
-                           thick) && (state[tank->left]))) &&
+                           thick + 1) && (state[tank->left]))) &&
                         ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
-                        (abs(tank->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                        (abs(tank->x + radius_shooter * sign_x + shooter * cos(deg) -
+                             ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
                          abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
                         return false;
                 }
@@ -245,6 +254,48 @@ bool turning_collids_walls(Tank *tank, Map *map) {
     }
 
     return true;
+}
+
+void bullet_collids_walls(Bullet *bullet, Map *map) {
+    //////the house where bullet is in it
+    short vert = vertex(bullet->x, bullet->y);
+    int sign_x = (cos(bullet->angle) > 0 ? 1 : -1);
+    int sign_y = (sin(bullet->angle) > 0 ? 1 : -1);
+    for (int j = 0; j < 4; j++) {
+        short l = left(vert);
+        short r = right(vert);
+        short u = up(vert);
+        short d = down(vert);
+        int b[] = {r, d, l, u};
+        int i = b[j];
+        if ((map->walls + i)->boolian) {
+            ////////////////////collision
+            if ((abs(bullet->x + radius_bullet * sign_x + step_bullet * cos(bullet->angle) - (map->walls + i)->x1) <=
+                 thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
+                (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+                 abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
+                bullet->angle = M_PI - bullet->angle;
+            else if ((bullet->x + radius_bullet * sign_x + step_bullet * cos(bullet->angle) >=
+                      (map->walls + i)->x1 + thick) &&
+                     (bullet->x + radius_bullet * sign_x <= (map->walls + i)->x1 - thick) &&
+                     ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
+                     (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+                      abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
+                bullet->angle = M_PI - bullet->angle;
+            if ((abs(bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
+                 thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
+                bullet->angle = 2 * M_PI - bullet->angle;
+            else if ((bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) >=
+                      (map->walls + i)->y1 + thick) &&
+                     (bullet->y + radius_bullet * sign_y <= (map->walls + i)->y1 - thick) &&
+                     ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                     (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                      abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
+                bullet->angle = 2 * M_PI - bullet->angle;
+        }
+    }
 }
 
 ///////////////for reading from file. it works correctly

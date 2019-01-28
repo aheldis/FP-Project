@@ -485,9 +485,13 @@ int main(int argc, char *argv[]) {
             (sample + k)->r = (map->tanks + k)->r;
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
-            for (int i = 0; i < numberofBullets; i++) draw_bullet((map->tanks + k)->bullets + i);
-            turn_tank(map->tanks + k, map);
+            for (int i = 0; i < numberofBullets; i++) {
+                bullet_collids_walls((map->tanks + k)->bullets + i, map);
+                move_bullet((map->tanks + k)->bullets + i);
+                draw_bullet((map->tanks + k)->bullets + i);
+            }
             move_tank(map->tanks + k, map);
+            turn_tank(map->tanks + k, map);
             draw_tank(map->tanks + k);
             draw_tank(sample + k);
             stringRGBA(renderer, x - 20, 310, "tank1", red, green, blue, a);

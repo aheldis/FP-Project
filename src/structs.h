@@ -28,11 +28,11 @@
 #define radius_circle 15
 #define radius_shooter 5
 #define thick 2
-#define step 5
-#define step_bullet 7
+#define step 4
+#define step_bullet 6
 #define degree 0.1
 #define radius_bullet 3
-#define distanceofBullets 200
+#define distanceofBullets 500
 #define numberofRows 8
 #define numberofColumns 8
 #define numberofTanks 2
