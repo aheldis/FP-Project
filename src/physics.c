@@ -1,37 +1,37 @@
 #include "structs.h"
 
-void move_tank(Tank *tank) {
+void move_tank(Tank *tank, Map *map) {
     int tempx = tank->x;
     int tempy = tank->y;
     if (state[tank->up] && !state[tank->down]) {
-        tank->y += step * sin(tank->angle);
-        tank->x += step * cos(tank->angle);
+        if (movement_collids_walls(tank, map, 1)) tank->y += step * sin(tank->angle);
+        if (movement_collids_walls(tank, map, 0)) tank->x += step * cos(tank->angle);
     }
     if (state[tank->down] && !state[tank->up]) {
-        tank->y -= step * sin(tank->angle);
-        tank->x -= step * cos(tank->angle);
+        if (movement_collids_walls(tank, map, 1)) tank->y -= step * sin(tank->angle);
+        if (movement_collids_walls(tank, map, 0)) tank->x -= step * cos(tank->angle);
     }
-    if (tank->x < radius) {
-        tank->x = radius;
+    if (tank->x < house / 2 + radius) {
+        tank->x = house / 2 + radius;
         tank->y = tempy;
     }
-    if (tank->y < radius) {
+    if (tank->y < house / 2 + radius) {
         tank->x = tempx;
-        tank->y = radius;
+        tank->y = house / 2 + radius;
     }
-    if (tank->x > MAP_WIDTH - radius) {
-        tank->x = MAP_WIDTH - radius;
+    if (tank->x > MAP_HEIGHT - radius) {
+        tank->x = MAP_HEIGHT - radius;
         tank->y = tempy;
     }
-    if (tank->y > MAP_HEIGHT - radius) {
+    if (tank->y > MAP_HEIGHT - house / 2 - radius) {
         tank->x = tempx;
-        tank->y = MAP_HEIGHT - radius;
+        tank->y = MAP_HEIGHT - house / 2 - radius;
     }
 }
 
-void turn_tank(Tank *tank) {
-    if (state[tank->right] && !state[tank->left]) tank->angle += degree;
-    if (state[tank->left] && !state[tank->right]) tank->angle -= degree;
+void turn_tank(Tank *tank, Map *map) {
+    if (state[tank->right] && !state[tank->left] && turning_collids_walls(tank, map)) tank->angle += degree;
+    if (state[tank->left] && !state[tank->right] && turning_collids_walls(tank, map)) tank->angle -= degree;
 }
 
 void move_bullet(Bullet *bullet) {

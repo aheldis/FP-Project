@@ -206,7 +206,8 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             if ((tank + k)->left) {
                 if (SDL_GetKeyFromScancode((tank + k)->left) > 200) x1 = x + 2;
                 else x1 = x + 20;
-                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->left)), rback, gback, bback, a);
+                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->left)), rback, gback,
+                           bback, a);
             }
 
             for (int z = 0; z < 4; z++) vx[z] += 45;
@@ -224,10 +225,11 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                     if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->down && f[k]) i++;
                 }
             }
-            if ((tank + k)->down){
+            if ((tank + k)->down) {
                 if (SDL_GetKeyFromScancode((tank + k)->down) > 200) x1 = x + 2;
                 else x1 = x + 20;
-                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->down)), rback, gback, bback, a);
+                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->down)), rback, gback,
+                           bback, a);
             }
 
             for (int z = 0; z < 4; z++) vy[z] -= 45;
@@ -246,10 +248,11 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                     if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->up && f[k]) i++;
                 }
             }
-            if ((tank + k)->up){
+            if ((tank + k)->up) {
                 if (SDL_GetKeyFromScancode((tank + k)->up) > 200) x1 = x + 2;
                 else x1 = x + 20;
-                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->up)), rback, gback, bback, a);
+                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->up)), rback, gback,
+                           bback, a);
             }
 
             for (int z = 0; z < 4; z++) {
@@ -272,10 +275,11 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                     if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->right && f[k]) i++;
                 }
             }
-            if ((tank + k)->right){
+            if ((tank + k)->right) {
                 if (SDL_GetKeyFromScancode((tank + k)->right) > 200) x1 = x + 2;
                 else x1 = x + 20;
-                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->right)), rback, gback, bback, a);
+                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->right)), rback,
+                           gback, bback, a);
             }
 
             for (int z = 0; z < 4; z++) {
@@ -298,21 +302,22 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                     if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->shoot && f[k]) i++;
                 }
             }
-            if ((tank + k)->shoot){
+            if ((tank + k)->shoot) {
                 if (SDL_GetKeyFromScancode((tank + k)->shoot) > 200) x1 = x + 2;
                 else x1 = x + 20;
-                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->shoot)), rback, gback, bback, a);
+                stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->shoot)), rback,
+                           gback, bback, a);
             }
 
             for (int z = 0; z < 4; z++) {
-                vx[z] += - 90 + 250;
+                vx[z] += -90 + 250;
                 vy[z] += 45 + 275;
             }
             x += 250 - 90;
             y += 45 + 275;
             if (i >= 5) j = tank2;
         }
-        if (i == 10)    break;
+        if (i == 10) break;
         enter = 0;
         if (keycodepre != keycode && keycode) keycodepre = keycode;
         SDL_RenderPresent(renderer);
@@ -463,7 +468,7 @@ int main(int argc, char *argv[]) {
 
     int x = MAP_WIDTH - 75, y = 290;
     for (int k = 0; k < 2; k++) {
-        (sample + k)->angle = M_PI / 2;
+        (sample + k)->angle = -M_PI / 2;
         (sample + k)->x = x;
         (sample + k)->y = y;
         y += 240;
@@ -485,17 +490,15 @@ int main(int argc, char *argv[]) {
             draw_tank(sample + k);
             stringRGBA(renderer, x - 20, 310, "tank1", red, green, blue, a);
             stringRGBA(renderer, x - 20, 550, "tank2", red, green, blue, a);
-            if (movement_collids_walls(map->tanks + k, map)) {
-                move_tank(map->tanks + k);
-                turn_tank(map->tanks + k);
-            }
+            move_tank(map->tanks + k, map);
+            turn_tank(map->tanks + k, map);
         }
         fire(map->tanks);
         if (state[SDL_SCANCODE_ESCAPE]) {
             flag = true;
             SDL_Delay(200);
         }
-        //printf("%f\n", sin(tank->angle));
+        //if(state[tank->shoot]) printf("%d\n", state[tank->shoot]);
         SDL_RenderPresent(renderer);
         SDL_Delay(1000 / FPS);
     }

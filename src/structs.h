@@ -16,7 +16,7 @@
 #define green_black 0
 #define blue_black 0
 #define a 255
-#define FPS 200
+#define FPS 350
 #define MAP_WIDTH 900
 #define MAP_HEIGHT 820
 #define house 90
@@ -28,7 +28,7 @@
 #define radius_circle 15
 #define radius_shooter 5
 #define thick 2
-#define step 4
+#define step 5
 #define step_bullet 7
 #define degree 0.15
 #define radius_bullet 3
