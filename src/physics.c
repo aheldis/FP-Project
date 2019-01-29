@@ -1,5 +1,7 @@
 #include "structs.h"
 
+bool nextGame_flag = false;
+
 void move_tank(Tank *tank, Map *map) {
     int tempx = tank->x;
     int tempy = tank->y;
@@ -49,8 +51,9 @@ void move_bullet(Bullet *bullet) {
 void fire(Tank *tank) {
     static bool flag[] = {true, true};
     static int i[] = {0, 0};
-    for (int k = 0; k < 2; k++) {
-        if (((tank + k)->bullets + numberofBullets - 1)->n == 3 * distanceofBullets / 2) {
+    for (int k = 0; k < numberofTanks; k++) {
+        if (((tank + k)->bullets + numberofBullets - 1)->n == 3 * distanceofBullets / 2 || start_flag) {
+            if (start_flag && k == numberofTanks - 1) start_flag = false;
             i[k] = 0;
             for (int j = 0; j < numberofBullets; j++) {
                 ((tank + k)->bullets + j)->boolian = true;
@@ -61,15 +64,17 @@ void fire(Tank *tank) {
             printf("hi\n");
         }
 
-        if (state[(tank + k)->shoot]) {
+        if (state[(tank + k)->shoot] && (tank + k)->boolian) {
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
-                ((tank + k)->bullets + i[k])->x = (tank + k)->x + shooter * cos((tank + k)->angle);
-                ((tank + k)->bullets + i[k])->y = (tank + k)->y + shooter * sin((tank + k)->angle);
+                ((tank + k)->bullets + i[k])->x =
+                        (tank + k)->x + (shooter + radius_shooter + radius_bullet) * cos((tank + k)->angle);
+                ((tank + k)->bullets + i[k])->y =
+                        (tank + k)->y + (shooter + radius_shooter + radius_bullet) * sin((tank + k)->angle);
                 ((tank + k)->bullets + i[k])->angle = (tank + k)->angle;
                 ((tank + k)->bullets + i[k])->n = 0;
                 flag[k] = false;
                 i[k]++;
-                printf ("%d\n", i[k]);
+                printf("%d\n", i[k]);
             }
             static int n[numberofTanks] = {0};
             n[k]++;

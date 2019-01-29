@@ -1,5 +1,7 @@
 #include "structs.h"
 
+int remaining;
+
 short vertex(int x, int y) {
     return (x - house / 2) / house + (y - house / 2) / house * numberofColumns;
 }
@@ -26,13 +28,13 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
     int max_x, max_y;
     int sign_x = (cos(tank->angle) > 0 ? 1 : -1);
     int sign_y = (sin(tank->angle) > 0 ? 1 : -1);
-    if (((radius_shooter + step) * cos(tank->angle) + shooter * sign_x) * sign_x >
+    if (((shooter + step) * cos(tank->angle) + radius_shooter * sign_x) * sign_x >
         radius_circle + step * cos(tank->angle))
-        max_x = (radius_shooter + step) * cos(tank->angle) + shooter * sign_x;
+        max_x = (shooter + step) * cos(tank->angle) + radius_shooter * sign_x;
     else max_x = radius_circle * sign_x + step * cos(tank->angle);
-    if (((radius_shooter + step) * sin(tank->angle) + shooter * sign_y) * sign_y >
+    if (((shooter + step) * sin(tank->angle) + radius_shooter * sign_y) * sign_y >
         radius_circle + step * sin(tank->angle))
-        max_y = (radius_shooter + step) * sin(tank->angle) + shooter * sign_y;
+        max_y = (shooter + step) * sin(tank->angle) + radius_shooter * sign_y;
     else max_y = radius_circle * sign_y + step * sin(tank->angle);
 
     for (int j = 0; j < 4; j++) {
@@ -114,14 +116,14 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
         for (int j = 0; j < 2; j++) {
             int i = b[j];
             if (i && (map->walls + i)->boolian && !(map->walls + down(vertu))->boolian) {
-                if ((pow((map->walls + i)->x1 - thick -
+                if ((pow((map->walls + i)->x1 -
                          (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
                      pow((map->walls + i)->y1 - (tank->y + step * sin(tank->angle)), 2) <=
                      max_x * max_x * state[tank->up] + radius_circle * radius_circle * state[tank->down]) ||
-                    (pow((map->walls + i)->x2 + thick -
+                    (pow((map->walls + i)->x2 -
                          (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
                      pow((map->walls + i)->y1 - (tank->y + step * sin(tank->angle)), 2) <=
-                     max_x * max_x * state[tank->up] + radius_circle * radius_circle * state[tank->down])) {
+                            (max_x + thick) * (max_x + thick) * state[tank->up] + (radius_circle + thick) * (radius_circle + thick) * state[tank->down])) {
                     if (flag == 0 && (((sign_x == 1 && i == r) || (sign_x == -1 && i == l)) && state[tank->up]) ||
                         (((sign_x == 1 && i == l) || (sign_x == -1 && i == r)) && state[tank->down]))
                         return false;
@@ -138,14 +140,14 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
         for (int j = 0; j < 2; j++) {
             int i = b[j];
             if (i && (map->walls + i)->boolian && !(map->walls + left(vertr))->boolian)
-                if ((pow((map->walls + i)->y1 - thick -
+                if ((pow((map->walls + i)->y1 -
                          (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
                      pow((map->walls + i)->x1 - (tank->x + step * cos(tank->angle)), 2) <=
-                     max_y * max_y * state[tank->up] + radius_circle * radius_circle * state[tank->down]) ||
-                    (pow((map->walls + i)->y2 + thick -
+                        (max_y + thick) * (max_y + thick) * state[tank->up] + (radius_circle + thick) * (radius_circle + thick) * state[tank->down]) ||
+                    (pow((map->walls + i)->y2 -
                          (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
                      pow((map->walls + i)->x1 - (tank->x + step * cos(tank->angle)), 2) <=
-                     max_y * max_y * state[tank->up] + radius_circle * radius_circle * state[tank->down])) {
+                            (max_y + thick) * (max_y + thick) * state[tank->up] + (radius_circle + thick) * (radius_circle + thick) * state[tank->down])) {
                     if (flag == 1 && (((sign_y == 1 && i == d) || (sign_y == -1 && i == u)) && state[tank->up]) ||
                         (((sign_y == 1 && i == u) || (sign_y == -1 && i == d)) && state[tank->down]))
                         return false;
@@ -162,13 +164,13 @@ bool turning_collids_walls(Tank *tank, Map *map) {
     int max_x, max_y;
     int sign_x = (cos(deg) > 0 ? 1 : -1);
     int sign_y = (sin(deg) > 0 ? 1 : -1);
-    if (((radius_shooter + step) * cos(deg) + shooter * sign_x) * sign_x >
+    if (((shooter + step) * cos(deg) + radius_shooter * sign_x) * sign_x >
         radius_circle + step * cos(deg))
-        max_x = (radius_shooter + step) * cos(deg) + shooter * sign_x;
+        max_x = (shooter + step) * cos(deg) + radius_shooter * sign_x;
     else max_x = radius_circle * sign_x + step * cos(deg);
-    if (((radius_shooter + step) * sin(deg) + shooter * sign_y) * sign_y >
+    if (((shooter + step) * sin(deg) + radius_shooter * sign_y) * sign_y >
         radius_circle + step * sin(deg))
-        max_y = (radius_shooter + step) * sin(deg) + shooter * sign_y;
+        max_y = (shooter + step) * sin(deg) + radius_shooter * sign_y;
     else max_y = radius_circle * sign_y + step * sin(deg);
     short vertl = vertex(tank->x + (max_x < 0) * max_x - (max_x > 0) * (radius_circle + step * cos(deg)),
                          tank->y);
@@ -275,6 +277,7 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                 (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                  abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
+
             else if ((bullet->x + radius_bullet * sign_x + step_bullet * cos(bullet->angle) >=
                       (map->walls + i)->x1 + thick) &&
                      (bullet->x + radius_bullet * sign_x <= (map->walls + i)->x1 - thick) &&
@@ -282,11 +285,13 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                      (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                       abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
+
             if ((abs(bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
                  thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
                  abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
+
             else if ((bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) >=
                       (map->walls + i)->y1 + thick) &&
                      (bullet->y + radius_bullet * sign_y <= (map->walls + i)->y1 - thick) &&
@@ -295,6 +300,65 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                       abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
         }
+    }
+    for (int j = 0; j < 8; j++) {
+        short ur = -1, ul = -1, ru = -1, rd = -1, lu = -1, ld = -1, dr = -1, dl = -1;
+        if (vert / numberofColumns != 0) {
+            if (vert % numberofColumns != numberofColumns - 1) ur = left(vert - 7);
+            if (vert % numberofColumns != 0) ul = right(vert - 9);
+        }
+        if (vert % numberofColumns != numberofColumns - 1) {
+            ru = up(vert + 1);
+            rd = down(vert + 1);
+        }
+        if (vert % numberofColumns != 0) {
+            lu = up(vert - 1);
+            ld = down(vert - 1);
+        }
+        if (vert / numberofColumns != numberofColumns - 1) {
+            dr = right(vert + 8);
+            dl = left(vert + 8);
+        }
+        int b[] = {ur, ul, ru, rd, lu, ld, dr, dl};
+        int i = b[j];
+        if (i != -1 && (map->walls + i)->boolian) {
+            if ((map->walls + i)->x1 - (map->walls + i)->x2 == 0)
+                if ((pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
+                        (radius_bullet + thick) * (radius_bullet + thick)) ||
+                    (pow((map->walls + i)->x2 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
+                            (radius_bullet + thick) * (radius_bullet + thick)))
+                    bullet->angle = 2 * M_PI - bullet->angle;
+
+            if ((map->walls + i)->y1 - (map->walls + i)->y2 == 0)
+                if ((pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
+                     pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
+                        (radius_bullet + thick) * (radius_bullet + thick)) ||
+                    (pow((map->walls + i)->y2 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
+                     pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
+                            (radius_bullet + thick) * (radius_bullet + thick)))
+                    bullet->angle = M_PI - bullet->angle;
+        }
+    }
+}
+
+void bullet_collids_tanks(Bullet *bullet, Tank *tank) {
+    if (bullet->boolian) {
+        if (pow(tank->x - bullet->x, 2) + pow(tank->y - bullet->y, 2) <= pow(radius_circle + radius_bullet, 2)) {
+            tank->boolian = false;
+            bullet->boolian = false;
+            remaining--;
+            return;
+        }
+        if (pow(tank->x + shooter * cos(tank->angle) - bullet->x, 2) +
+            pow(tank->y + shooter * sin(tank->angle) - bullet->y, 2) <=
+            pow(radius_shooter + radius_bullet, 2)) {
+            tank->boolian = false;
+            bullet->boolian = false;
+            remaining--;
+        }
+        //printf("remaining: %d\n", remaining);
     }
 }
 

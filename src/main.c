@@ -129,6 +129,36 @@ void read_map_file(Map *map, char *file_path) {
 }
 
 
+void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
+    for (int i = 0; i < 2; i++) {
+        (tank + i)->x = rand() % numberofRows * house + house;
+        (tank + i)->y = rand() % numberofColumns * house + house;
+        (tank + i)->angle = rand() % 360;
+        (tank + i)->boolian = true;
+    }
+
+    while (tank->x == (tank + 1)->x && tank->y == (tank + 1)->y)
+        (tank + 1)->y = rand() % numberofColumns * house + house;
+
+    for (int i = 0; i < numberofBullets; i++) {
+        (bullet + i)->boolian = true;
+        (bullet + i)->x = -100;
+        (bullet + i)->y = -100;
+        (bullet + i)->n = 0;
+        (bullet + numberofBullets + i)->boolian = true;
+        (bullet + numberofBullets + i)->x = -100;
+        (bullet + numberofBullets + i)->y = -100;
+        (bullet + numberofBullets + i)->n = 0;
+    }
+    remaining = numberofTanks;
+    ///////////////for reading from file. it works correctly
+    //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+
+    read_map_array(map);
+    start_flag = true;
+}
+
+
 bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     for (int i = 0; i < numberofTanks; i++) {
         (tank + i)->r = rand() % 255;
@@ -339,19 +369,23 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (bullet + i)->boolian = true;
         (bullet + i)->x = -100;
         (bullet + i)->y = -100;
+        (bullet + i)->n = 0;
         (bullet + numberofBullets + i)->boolian = true;
         (bullet + numberofBullets + i)->x = -100;
         (bullet + numberofBullets + i)->y = -100;
+        (bullet + numberofBullets + i)->n = 0;
     }
     tank->bullets = bullet;
     (tank + 1)->bullets = bullet + numberofBullets;
     map->tanks = tank;
     map->walls = walls;
+    remaining = numberofTanks;
 
     ///////////////for reading from file. it works correctly
     //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
     read_map_array(map);
+    start_flag = true;
     return flag;
 }
 
@@ -417,16 +451,15 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             if (n >= 5) flag = false;
         }
 
-        int x = MAP_WIDTH / 2 - house / 2;
-        int y = 300;
-
         red[j] = 100;
         green[j] = 100;
         blue[j] = 100;
-
         if (flag) {
+            SDL_RenderSetScale(renderer, 1.5, 1.5);
             draw_tank(sample1);
             draw_tank(sample2);
+            int x = (MAP_WIDTH / 2 - house / 2 - 10) / 1.5;
+            int y = 300 / 1.5;
             stringRGBA(renderer, x, y, "Start Game", red[new], green[new], blue[new], a);
             x += 4;
             y += 25;
@@ -434,17 +467,18 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             x += 3;
             y += 25;
             stringRGBA(renderer, x, y, "End Game", red[end], green[end], blue[end], a);
+            SDL_RenderSetScale(renderer, 1, 1);
         }
         sample1->x += step * cos(sample1->angle);
         sample1->y += step * sin(sample1->angle);
         sample1->angle -= 0.1;
-        if (sample1->x < 0) sample1->x = MAP_WIDTH - radius_circle;
-        if (sample1->y < 0) sample1->y = MAP_HEIGHT - radius_circle;
-        if (sample1->x > MAP_WIDTH) sample1->x = radius_circle;
-        if (sample1->y > MAP_HEIGHT) sample1->y = radius_circle;
+        if (sample1->x < 0) sample1->x = (MAP_WIDTH - radius_circle) / 1.5;
+        if (sample1->y < 0) sample1->y = (MAP_HEIGHT - radius_circle) / 1.5;
+        if (sample1->x > MAP_WIDTH / 1.5) sample1->x = radius_circle;
+        if (sample1->y > MAP_HEIGHT / 1.5) sample1->y = radius_circle;
         sample2->angle -= 0.1;
-        sample2->x = MAP_WIDTH - sample1->x;
-        sample2->y = MAP_HEIGHT - sample1->y;
+        sample2->x = MAP_WIDTH / 1.5 - sample1->x;
+        sample2->y = MAP_HEIGHT / 1.5 - sample1->y;
         SDL_RenderPresent(renderer);
         SDL_Delay(30);
     }
@@ -452,6 +486,21 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     return flag;
 }
 
+void makingstring(int n, char *score) {
+    int i = 0;
+    int m = n / 10, argham = 1;
+    while (m / 10) {
+        argham++;
+        m /= 10;
+    }
+
+    while (argham) {
+        score[argham - 1] = n % 10 + '0';
+        //printf("in func: %c\n", score[argham - 1]);
+        n /= 10;
+        argham--;
+    }
+}
 
 int main(int argc, char *argv[]) {
 
@@ -485,19 +534,54 @@ int main(int argc, char *argv[]) {
             (sample + k)->r = (map->tanks + k)->r;
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
+            if ((map->tanks + k)->boolian) {
+                move_tank(map->tanks + k, map);
+                turn_tank(map->tanks + k, map);
+                draw_tank(map->tanks + k);
+            }
             for (int i = 0; i < numberofBullets; i++) {
                 bullet_collids_walls((map->tanks + k)->bullets + i, map);
                 move_bullet((map->tanks + k)->bullets + i);
                 draw_bullet((map->tanks + k)->bullets + i);
+                for (int l = 0; l < 2; l++)
+                    if ((tank + l)->boolian)
+                        bullet_collids_tanks((map->tanks + k)->bullets + i, tank + l);
             }
-            move_tank(map->tanks + k, map);
-            turn_tank(map->tanks + k, map);
-            draw_tank(map->tanks + k);
             draw_tank(sample + k);
-            stringRGBA(renderer, x - 20, 310, "tank1", red, green, blue, a);
-            stringRGBA(renderer, x - 20, 550, "tank2", red, green, blue, a);
+            stringRGBA(renderer, x - 20, 315, "tank1", red, green, blue, a);
+            char score1[1000] = {0};
+            char score2[1000] = {0};
+            makingstring(tank->score, score1);
+            //printf("%d\n", tank->score);
+            makingstring((tank + 1)->score, score2);
+            //printf("score is: %s\n", score1);
+            stringRGBA(renderer, x, 330, score1, red, green, blue, a);
+            stringRGBA(renderer, x - 20, 555, "tank2", red, green, blue, a);
+            stringRGBA(renderer, x, 570, score2, red, green, blue, a);
         }
         fire(map->tanks);
+
+        if (remaining == 1) {
+            static int n = 0;
+            n++;
+            if (n == 200) {
+                n = 0;
+                for (int i = 0; i < numberofTanks; i++)
+                    if ((tank + i)->boolian)
+                        (tank + i)->score++;
+                nextGame(map->tanks, map->tanks->bullets, map, map->walls);
+            }
+        }
+
+        if (remaining == 0) {
+            static int n = 0;
+            n++;
+            if (n == 10) {
+                n = 0;
+                nextGame(map->tanks, map->tanks->bullets, map, map->walls);
+            }
+        }
+
         if (state[SDL_SCANCODE_ESCAPE]) {
             flag = true;
             SDL_Delay(200);
@@ -507,3 +591,4 @@ int main(int argc, char *argv[]) {
         SDL_Delay(1000 / FPS);
     }
 }
+

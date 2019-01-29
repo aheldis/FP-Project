@@ -27,16 +27,15 @@
 #define radius 15
 #define radius_circle 15
 #define radius_shooter 5
+#define radius_bullet 3
 #define thick 2
 #define step 4
 #define step_bullet 6
 #define degree 0.1
-#define radius_bullet 3
 #define distanceofBullets 500
 #define numberofRows 8
 #define numberofColumns 8
 #define numberofTanks 2
-
 
 #define max(a, b) (a >= b) * a + (a < b) * b
 #define min(a, b) (a >= b) * b + (a < b) * a
@@ -54,13 +53,13 @@ typedef struct {
     int r;
     int g;
     int b;
-    SDL_Scancode score;
     SDL_Scancode right;
     SDL_Scancode left;
     SDL_Scancode up;
     SDL_Scancode down;
     SDL_Scancode shoot;
     char name[10];
+    int score;
     bool boolian;
     double angle;
     Bullet *bullets;
