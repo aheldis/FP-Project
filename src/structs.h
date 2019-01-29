@@ -44,6 +44,7 @@ typedef struct {
     int x, y;
     double angle;
     int n;
+    bool fragBomb;
     bool boolian;
 } Bullet;
 

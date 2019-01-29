@@ -145,10 +145,12 @@ void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
         (bullet + i)->x = -100;
         (bullet + i)->y = -100;
         (bullet + i)->n = 0;
+        (bullet + i)->fragBomb = false;
         (bullet + numberofBullets + i)->boolian = true;
         (bullet + numberofBullets + i)->x = -100;
         (bullet + numberofBullets + i)->y = -100;
         (bullet + numberofBullets + i)->n = 0;
+        (bullet + numberofBullets + i)->fragBomb = false;
     }
     remaining = numberofTanks;
     ///////////////for reading from file. it works correctly
