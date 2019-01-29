@@ -233,8 +233,8 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                            thick + 1) && (state[tank->left]))) &&
                         ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                         (abs(tank->y + radius_shooter * sign_y + shooter * sin(deg) -
-                             ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                         abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick))
+                             ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <
+                         abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + shooter + radius_shooter + thick))
                         return false;
                     if ((((abs(
                             tank->y + radius_shooter * sign_y + shooter * sin(tank->angle + degree) -
@@ -245,8 +245,8 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                            thick + 1) && (state[tank->left]))) &&
                         ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                         (abs(tank->x + radius_shooter * sign_x + shooter * cos(deg) -
-                             ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                         abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick))
+                             ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <
+                         abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + shooter + radius_shooter + thick))
                         return false;
                 }
             }
