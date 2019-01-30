@@ -44,22 +44,39 @@ void draw_tank(Tank *tank) {
     int red, green, blue;
     if (rback == 225) red = 128, green = 128, blue = 128;
     else red = 75, green = 75, blue = 75;
-    filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, 255);
+    filledCircleRGBA(renderer, tank->x, tank->y, radius_circle, tank->r, tank->g, tank->b, a);
     filledCircleRGBA(renderer, tank->x + shooter * cos(tank->angle), tank->y + shooter * sin(tank->angle),
-                     radius_shooter, red, green, blue, 255);
+                     radius_shooter, red, green, blue, a);
     if (rback == 225) {
-        circleRGBA(renderer, tank->x, tank->y, radius_circle, red, green, blue, 255);
-        circleRGBA(renderer, tank->x, tank->y, radius_circle - 1, red, green, blue, 255);
+        circleRGBA(renderer, tank->x, tank->y, radius_circle, red, green, blue, a);
+        circleRGBA(renderer, tank->x, tank->y, radius_circle - 1, red, green, blue, a);
     }
 }
 
 void draw_bullet(Bullet *bullet) {
     if (bullet->boolian && bullet->x != -100)
-        filledCircleRGBA(renderer, bullet->x, bullet->y, radius_bullet, 150, 150, 150, 255);
+        filledCircleRGBA(renderer, bullet->x, bullet->y, bullet->rad, 150, 150, 150, a);
+}
+
+void draw_shard(Shard *shard) {
+    int r = 4;
+    thickLineRGBA(renderer, shard->x - r * cos(shard->angle), shard->y - r * sin(shard->angle),
+                  shard->x + r * cos(shard->angle), shard->y + r * sin(shard->angle), thick, 150, 150, 150, a);
+}
+
+void draw_fragBomb(FragBomb *fragBomb) {
+    int red, green, blue;
+    red = 144, green = 12, blue = 63;
+    filledCircleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, 255, 96, 49, a);
+    circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, red, green, blue, a);
+    circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item - 1, red, green, blue, a);
+    SDL_RenderSetScale(renderer, 1.3, 1.3);
+    stringRGBA(renderer, (fragBomb->x - 4) / 1.3, (fragBomb->y - 3) / 1.3, "*", red, green, blue, a);
+    SDL_RenderSetScale(renderer, 1, 1);
 }
 
 void draw_walls(Wall *walls) {
     int red = 150, green = 150, blue = 150;
     if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
-    thickLineRGBA(renderer, walls->x1, walls->y1, walls->x2, walls->y2, thick, red, green, blue, 255);
+    thickLineRGBA(renderer, walls->x1, walls->y1, walls->x2, walls->y2, thick, red, green, blue, a);
 }

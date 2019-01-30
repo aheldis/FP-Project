@@ -28,14 +28,20 @@
 #define radius_circle 15
 #define radius_shooter 5
 #define radius_bullet 3
+#define radius_fragBomb 5
+#define radius_item 11
 #define thick 2
 #define step 4
 #define step_bullet 6
 #define degree 0.1
 #define distanceofBullets 500
+#define distanceofShards 200
 #define numberofRows 8
 #define numberofColumns 8
 #define numberofTanks 2
+#define numberofItems 3
+#define numberofShards 8
+#define timeofItem 1000
 
 #define max(a, b) (a >= b) * a + (a < b) * b
 #define min(a, b) (a >= b) * b + (a < b) * a
@@ -44,9 +50,21 @@ typedef struct {
     int x, y;
     double angle;
     int n;
-    bool fragBomb;
+    int rad;
     bool boolian;
 } Bullet;
+
+typedef struct {
+    int x, y;
+    int n;
+    bool boolian;
+} FragBomb;
+
+typedef struct {
+    int x, y;
+    int n;
+    bool boolian;
+} Shard;
 
 typedef struct {
     int x;
@@ -62,6 +80,7 @@ typedef struct {
     char name[10];
     int score;
     bool boolian;
+    int fragBomb;
     double angle;
     Bullet *bullets;
 } Tank;

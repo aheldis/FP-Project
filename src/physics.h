@@ -5,6 +5,7 @@
 bool start_flag;
 void move_tank(Tank *tank, Map *map);
 void turn_tank(Tank *tank, Map *map);
-void fire(Tank* tank);
+void fire(Tank* tank, Shard *shard);
 void move_bullet(Bullet* bullet);
+void move_shard(Shard *shard);
 #endif //PROJECT_PHYSICS_H

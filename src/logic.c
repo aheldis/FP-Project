@@ -118,20 +118,29 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
             if (i && (map->walls + i)->boolian && !(map->walls + down(vertu))->boolian) {
                 if ((pow((map->walls + i)->x1 -
                          (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
-                     min(pow((map->walls + i)->y1 + thick - (tank->y + step * sin(tank->angle)), 2),
-                         pow((map->walls + i)->y1 - thick - (tank->y + step * sin(tank->angle)), 2)) <=
+                     min(pow((map->walls + i)->y1 + thick -
+                             (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2),
+                         pow((map->walls + i)->y1 - thick -
+                             (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2)) <=
                      (max_x + thick) * (max_x + thick) * state[tank->up] +
-                     (radius_circle + thick) * (radius_circle + thick) * state[tank->down]) ||
+                     (radius_circle + thick / 2) * (radius_circle + thick / 2) * state[tank->down]) ||
                     (pow((map->walls + i)->x2 -
                          (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
-                     min(pow((map->walls + i)->y1 + thick - (tank->y + step * sin(tank->angle)), 2),
-                         pow((map->walls + i)->y1 - thick - (tank->y + step * sin(tank->angle)), 2))<=
+                     min(pow((map->walls + i)->y1 + thick -
+                             (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2),
+                         pow((map->walls + i)->y1 - thick -
+                             (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2)) <=
                      (max_x + thick) * (max_x + thick) * state[tank->up] +
-                     (radius_circle + thick) * (radius_circle + thick) * state[tank->down])) {
+                     (radius_circle + thick / 2) * (radius_circle + thick / 2) * state[tank->down])) {
                     if (flag == 0 && (((sign_x == 1 && i == r) || (sign_x == -1 && i == l)) && state[tank->up]) ||
                         (((sign_x == 1 && i == l) || (sign_x == -1 && i == r)) && state[tank->down]))
                         return false;
-                    //if (flag == 1 && (((sign_y == 1 &&  )
+                    if (flag == 1 && state[tank->up] &&
+                        (abs(tank->x + max_x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                         abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2) &&
+                        ((sign_y == 1 && tank->y + max_y >= (map->walls + i)->y1 - thick) ||
+                         (sign_y == -1 && tank->y + max_y <= (map->walls + i)->y1 + thick)))
+                        return false;
                 }
             }
         }
@@ -147,18 +156,28 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
             if (i && (map->walls + i)->boolian && !(map->walls + left(vertr))->boolian)
                 if ((pow((map->walls + i)->y1 -
                          (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
-                     min(pow((map->walls + i)->x1 + thick - (tank->x + step * cos(tank->angle)), 2),
-                         pow((map->walls + i)->x1 - thick - (tank->x + step * cos(tank->angle)), 2))<=
+                     min(pow((map->walls + i)->x1 + thick -
+                             (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2),
+                         pow((map->walls + i)->x1 - thick -
+                             (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2)) <=
                      (max_y + thick) * (max_y + thick) * state[tank->up] +
                      (radius_circle + thick) * (radius_circle + thick) * state[tank->down]) ||
                     (pow((map->walls + i)->y2 -
                          (tank->y + step * sin(tank->angle) * (state[tank->up] - state[tank->down])), 2) +
-                     min(pow((map->walls + i)->x1 + thick - (tank->x + step * cos(tank->angle)), 2),
-                         pow((map->walls + i)->x1 - thick - (tank->x + step * cos(tank->angle)), 2)) <=
+                     min(pow((map->walls + i)->x1 + thick -
+                             (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2),
+                         pow((map->walls + i)->x1 - thick -
+                             (tank->x + step * cos(tank->angle) * (state[tank->up] - state[tank->down])), 2)) <=
                      (max_y + thick) * (max_y + thick) * state[tank->up] +
                      (radius_circle + thick) * (radius_circle + thick) * state[tank->down])) {
                     if (flag == 1 && (((sign_y == 1 && i == d) || (sign_y == -1 && i == u)) && state[tank->up]) ||
                         (((sign_y == 1 && i == u) || (sign_y == -1 && i == d)) && state[tank->down]))
+                        return false;
+                    if (flag == 0 && state[tank->up] &&
+                        (abs(tank->y + max_y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+                         abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2) &&
+                        ((sign_x == 1 && tank->x + max_x >= (map->walls + i)->x1 - thick) ||
+                         (sign_x == -1 && tank->x + max_x <= (map->walls + i)->x1 + thick)))
                         return false;
                 }
         }
@@ -250,7 +269,8 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                         (abs(tank->y + radius_shooter * sign_y + shooter * sin(deg) -
                              ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <
                          abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + shooter + radius_shooter + thick)) {
-                        tank->y -= step * sin(tank->angle);
+                        //tank->y -= step * sin(tank->angle);
+                        tank->x -= step * cos(tank->angle);
                         //return false;
                     }
                     if ((((abs(
@@ -264,7 +284,8 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                         (abs(tank->x + radius_shooter * sign_x + shooter * cos(deg) -
                              ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <
                          abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + shooter + radius_shooter + thick)) {
-                        tank->x -= step * cos(tank->angle);
+                        tank->y -= step * sin(tank->angle);
+                        //tank->x -= step * cos(tank->angle);
                         //return false;
                     }
                 }
@@ -289,32 +310,32 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
         int i = b[j];
         if ((map->walls + i)->boolian) {
             ////////////////////collision
-            if ((abs(bullet->x + radius_bullet * sign_x + step_bullet * cos(bullet->angle) - (map->walls + i)->x1) <=
+            if ((abs(bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) - (map->walls + i)->x1) <=
                  thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                 abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
+                 abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
 
-            else if ((bullet->x + radius_bullet * sign_x + step_bullet * cos(bullet->angle) >=
+            else if ((bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) >=
                       (map->walls + i)->x1 + thick) &&
-                     (bullet->x + radius_bullet * sign_x <= (map->walls + i)->x1 - thick) &&
+                     (bullet->x + bullet->rad * sign_x <= (map->walls + i)->x1 - thick) &&
                      ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                      (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                      abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + radius_bullet + thick * 2))
+                      abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
 
-            if ((abs(bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
+            if ((abs(bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
                  thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
+                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
 
-            else if ((bullet->y + radius_bullet * sign_y + step_bullet * sin(bullet->angle) >=
+            else if ((bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) >=
                       (map->walls + i)->y1 + thick) &&
-                     (bullet->y + radius_bullet * sign_y <= (map->walls + i)->y1 - thick) &&
+                     (bullet->y + bullet->rad * sign_y <= (map->walls + i)->y1 - thick) &&
                      ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                      (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                      abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + radius_bullet + thick * 2))
+                      abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
         }
     }
@@ -342,19 +363,19 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
             if ((map->walls + i)->x1 - (map->walls + i)->x2 == 0)
                 if ((pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
                      pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
-                     (radius_bullet + thick) * (radius_bullet + thick)) ||
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
                     (pow((map->walls + i)->x2 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
                      pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
-                     (radius_bullet + thick) * (radius_bullet + thick)))
+                     (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = 2 * M_PI - bullet->angle;
 
             if ((map->walls + i)->y1 - (map->walls + i)->y2 == 0)
                 if ((pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
                      pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
-                     (radius_bullet + thick) * (radius_bullet + thick)) ||
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
                     (pow((map->walls + i)->y2 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
                      pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
-                     (radius_bullet + thick) * (radius_bullet + thick)))
+                     (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = M_PI - bullet->angle;
         }
     }
@@ -362,7 +383,7 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
 
 void bullet_collids_tanks(Bullet *bullet, Tank *tank) {
     if (bullet->boolian) {
-        if (pow(tank->x - bullet->x, 2) + pow(tank->y - bullet->y, 2) <= pow(radius_circle + radius_bullet, 2)) {
+        if (pow(tank->x - bullet->x, 2) + pow(tank->y - bullet->y, 2) <= pow(radius_circle + bullet->rad, 2)) {
             tank->boolian = false;
             bullet->boolian = false;
             remaining--;
@@ -370,13 +391,45 @@ void bullet_collids_tanks(Bullet *bullet, Tank *tank) {
         }
         if (pow(tank->x + shooter * cos(tank->angle) - bullet->x, 2) +
             pow(tank->y + shooter * sin(tank->angle) - bullet->y, 2) <=
-            pow(radius_shooter + radius_bullet, 2)) {
+            pow(radius_shooter + bullet->rad, 2)) {
             tank->boolian = false;
             bullet->boolian = false;
             remaining--;
         }
         //printf("remaining: %d\n", remaining);
     }
+}
+
+void tank_collids_fragBombItem(FragBomb *fragBomb, Tank *tank) {
+    if (pow(tank->x - fragBomb->x, 2) + pow(tank->y - fragBomb->y, 2) <= pow(radius_circle + radius_item, 2)) {
+        tank->fragBomb = 1;
+        fragBomb->boolian = false;
+        return;
+    }
+    if (pow(tank->x + shooter * cos(tank->angle) - fragBomb->x, 2) +
+        pow(tank->y + shooter * sin(tank->angle) - fragBomb->y, 2) <=
+        pow(radius_shooter + radius_item, 2)) {
+        tank->fragBomb = 1;
+        fragBomb->boolian = false;
+    }
+    //printf("remaining: %d\n", remaining);
+}
+
+void shard_collids_tanks(Shard *shard, Tank *tank) {
+    if ((pow(shard->x - cos(shard->angle) - tank->x, 2) + pow(shard->y - sin(shard->angle) - tank->y, 2) <=
+         pow(thick + radius_circle, 2)) ||
+        (pow(shard->x + cos(shard->angle) - tank->x, 2) + pow(shard->y + sin(shard->angle) - tank->y, 2) <=
+         pow(thick + radius_circle, 2)) ||
+        (pow(shard->x - cos(shard->angle) - (tank->x + shooter * cos(tank->angle)), 2) +
+             pow(shard->y - sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
+             pow(thick + radius_shooter, 2)) ||
+         (pow(shard->x + cos(shard->angle) - (tank->x + shooter * cos(tank->angle)), 2) +
+              pow(shard->y + sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
+              pow(thick + radius_shooter, 2))) {
+            tank->boolian = false;
+            shard->boolian = false;
+            remaining--;
+        }
 }
 
 ///////////////for reading from file. it works correctly

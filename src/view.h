@@ -10,5 +10,7 @@ void quit_window();
 void draw_tank(Tank *tank);
 void draw_walls(Wall* walls);
 void draw_bullet(Bullet* bullet);
-int handle_events(Map* map);
+void draw_shard(Shard *shard);
+void draw_fragBomb(FragBomb *fragBomb);
+SDL_Keycode handle_events(Map* map);
 #endif //PROJECT_VIEW_H

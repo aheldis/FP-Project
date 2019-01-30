@@ -1,6 +1,6 @@
 #include "structs.h"
 
-bool nextGame_flag = false;
+bool start_flag = false;
 
 void move_tank(Tank *tank, Map *map) {
     int tempx = tank->x;
@@ -48,7 +48,19 @@ void move_bullet(Bullet *bullet) {
     }
 }
 
-void fire(Tank *tank) {
+void move_shard(Shard *shard) {
+    if (shard->boolian) {
+        shard->x += step_bullet * cos(shard->angle);
+        shard->y += step_bullet * sin(shard->angle);
+        (shard->n)++;
+        if (shard->n == distanceofShards) {
+            shard->n = 0;
+            shard->boolian = false;
+        }
+    }
+}
+
+void fire(Tank *tank, Shard *shard) {
     static bool flag[] = {true, true};
     static int i[] = {0, 0};
     for (int k = 0; k < numberofTanks; k++) {
@@ -65,16 +77,40 @@ void fire(Tank *tank) {
         }
 
         if (state[(tank + k)->shoot] && (tank + k)->boolian) {
+            printf("i have bug!\n");
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
-                ((tank + k)->bullets + i[k])->x =
-                        (tank + k)->x + (shooter + radius_shooter + radius_bullet) * cos((tank + k)->angle);
-                ((tank + k)->bullets + i[k])->y =
-                        (tank + k)->y + (shooter + radius_shooter + radius_bullet) * sin((tank + k)->angle);
-                ((tank + k)->bullets + i[k])->angle = (tank + k)->angle;
-                ((tank + k)->bullets + i[k])->n = 0;
-                flag[k] = false;
-                i[k]++;
-                printf("%d\n", i[k]);
+                if ((tank + k)->fragBomb == 0 || (tank + k)->fragBomb == 1) {
+                    if ((tank + k)->fragBomb == 1) {
+                        ((tank + k)->bullets + i[k])->rad = radius_fragBomb;
+                        (tank + k)->fragBomb = 2;
+                    }
+                    ((tank + k)->bullets + i[k])->x =
+                            (tank + k)->x +
+                            (shooter + radius_shooter + ((tank + k)->bullets + i[k])->rad) * cos((tank + k)->angle);
+                    ((tank + k)->bullets + i[k])->y =
+                            (tank + k)->y +
+                            (shooter + radius_shooter + ((tank + k)->bullets + i[k])->rad) * sin((tank + k)->angle);
+                    ((tank + k)->bullets + i[k])->angle = (tank + k)->angle;
+                    ((tank + k)->bullets + i[k])->n = 0;
+                    flag[k] = false;
+                    if ((tank + k)->fragBomb == 0) i[k]++;
+                    printf("%d\n", i[k]);
+                }
+
+                else if ((tank + k)->fragBomb == 2) {
+                    printf("i don't have bug!\n");
+                    for (int j = k * numberofShards; j < (k + 1) * numberofShards; j++) {
+                        (shard + j)->x = ((tank + k)->bullets + i[k])->x;
+                        (shard + j)->y = ((tank + k)->bullets + i[k])->y;
+                        (shard + j)->n = 0;
+                        (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                        (shard + j)->boolian = true;
+                    }
+                    ((tank + k)->bullets + j)->x = -100;
+                    ((tank + k)->bullets + j)->y = -100;
+                    (tank + k)->fragBomb = 0;
+                    flag[k] = false;
+                }
             }
             static int n[numberofTanks] = {0};
             n[k]++;
