@@ -135,12 +135,12 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
                     if (flag == 0 && (((sign_x == 1 && i == r) || (sign_x == -1 && i == l)) && state[tank->up]) ||
                         (((sign_x == 1 && i == l) || (sign_x == -1 && i == r)) && state[tank->down]))
                         return false;
-                    if (flag == 1 && state[tank->up] &&
-                        (abs(tank->x + max_x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                         abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2) &&
-                        ((sign_y == 1 && tank->y + max_y >= (map->walls + i)->y1 - thick) ||
-                         (sign_y == -1 && tank->y + max_y <= (map->walls + i)->y1 + thick)))
-                        return false;
+//                    if (flag == 1 && state[tank->up] &&
+//                        (abs(tank->x + max_x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+//                         abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2) &&
+//                        ((sign_y == 1 && tank->y + max_y >= (map->walls + i)->y1 - thick) ||
+//                         (sign_y == -1 && tank->y + max_y <= (map->walls + i)->y1 + thick)))
+//                        return false;
                 }
             }
         }
@@ -173,12 +173,12 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
                     if (flag == 1 && (((sign_y == 1 && i == d) || (sign_y == -1 && i == u)) && state[tank->up]) ||
                         (((sign_y == 1 && i == u) || (sign_y == -1 && i == d)) && state[tank->down]))
                         return false;
-                    if (flag == 0 && state[tank->up] &&
-                        (abs(tank->y + max_y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
-                         abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2) &&
-                        ((sign_x == 1 && tank->x + max_x >= (map->walls + i)->x1 - thick) ||
-                         (sign_x == -1 && tank->x + max_x <= (map->walls + i)->x1 + thick)))
-                        return false;
+//                    if (flag == 0 && state[tank->up] &&
+//                        (abs(tank->y + max_y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+//                         abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2) &&
+//                        ((sign_x == 1 && tank->x + max_x >= (map->walls + i)->x1 - thick) ||
+//                         (sign_x == -1 && tank->x + max_x <= (map->walls + i)->x1 + thick)))
+//                        return false;
                 }
         }
     }
@@ -260,11 +260,9 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                     ////////////////////rotation
                     if ((((abs(
                             tank->x + radius_shooter * sign_x + shooter * cos(tank->angle + degree) -
-                            (map->walls + i)->x1) <=
-                           thick) && (state[tank->right])) ||
+                            (map->walls + i)->x1) <= thick) && (state[tank->right])) ||
                          ((abs(tank->x + radius_shooter * sign_x + shooter * cos(tank->angle - degree) -
-                               (map->walls + i)->x1) <=
-                           thick) && (state[tank->left]))) &&
+                               (map->walls + i)->x1) <= thick) && (state[tank->left]))) &&
                         ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                         (abs(tank->y + radius_shooter * sign_y + shooter * sin(deg) -
                              ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <
@@ -275,11 +273,9 @@ bool turning_collids_walls(Tank *tank, Map *map) {
                     }
                     if ((((abs(
                             tank->y + radius_shooter * sign_y + shooter * sin(tank->angle + degree) -
-                            (map->walls + i)->y1) <=
-                           thick) && (state[tank->right])) ||
+                            (map->walls + i)->y1) <= thick) && (state[tank->right])) ||
                          ((abs(tank->y + radius_shooter * sign_y + shooter * sin(tank->angle - degree) -
-                               (map->walls + i)->y1) <=
-                           thick) && (state[tank->left]))) &&
+                               (map->walls + i)->y1) <= thick) && (state[tank->left]))) &&
                         ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                         (abs(tank->x + radius_shooter * sign_x + shooter * cos(deg) -
                              ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <
@@ -381,20 +377,46 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
     }
 }
 
-void bullet_collids_tanks(Bullet *bullet, Tank *tank) {
+void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
     if (bullet->boolian) {
-        if (pow(tank->x - bullet->x, 2) + pow(tank->y - bullet->y, 2) <= pow(radius_circle + bullet->rad, 2)) {
-            tank->boolian = false;
-            bullet->boolian = false;
-            remaining--;
-            return;
-        }
-        if (pow(tank->x + shooter * cos(tank->angle) - bullet->x, 2) +
-            pow(tank->y + shooter * sin(tank->angle) - bullet->y, 2) <=
-            pow(radius_shooter + bullet->rad, 2)) {
-            tank->boolian = false;
-            bullet->boolian = false;
-            remaining--;
+        for (int i = 0; i < numberofTanks; i++) {
+            if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <= pow(radius_circle + bullet->rad, 2)) {
+                (tank + i)->boolian = false;
+                remaining--;
+                bullet->x = -100;
+                bullet->y = -100;
+                if (bullet->rad == radius_fragBomb) {
+                    for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
+                        (shard + j)->x = bullet->x;
+                        (shard + j)->y = bullet->y;
+                        (shard + j)->n = 0;
+                        (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                        (shard + j)->boolian = true;
+                    }
+                    (tank + i)->fragBomb = 0;
+                    bullet->rad = radius_bullet;
+                }
+                return;
+            }
+            if (pow((tank + i)->x + shooter * cos((tank + i)->angle) - bullet->x, 2) +
+                pow((tank + i)->y + shooter * sin((tank + i)->angle) - bullet->y, 2) <=
+                pow(radius_shooter + bullet->rad, 2)) {
+                (tank + i)->boolian = false;
+                remaining--;
+                bullet->x = -100;
+                bullet->y = -100;
+                if (bullet->rad == radius_fragBomb) {
+                    for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
+                        (shard + j)->x = bullet->x;
+                        (shard + j)->y = bullet->y;
+                        (shard + j)->n = 0;
+                        (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                        (shard + j)->boolian = true;
+                    }
+                    (tank + i)->fragBomb = 0;
+                    bullet->rad = radius_bullet;
+                }
+            }
         }
         //printf("remaining: %d\n", remaining);
     }
@@ -430,6 +452,34 @@ void shard_collids_tanks(Shard *shard, Tank *tank) {
             shard->boolian = false;
             remaining--;
         }
+}
+
+bool shard_collids_walls(Shard *shard, Map *map) {
+    short r = 4;
+    short vert = vertex(shard->x + r * cos(shard->angle), shard->y + r * sin(shard->angle));
+    short x = shard->x + r * cos(shard->angle);
+    short y = shard->y + r * sin(shard->angle);
+    for (int j = 0; j < 4; j++) {
+        short l = left(vert);
+        short r = right(vert);
+        short u = up(vert);
+        short d = down(vert);
+        int b[] = {r, d, l, u};
+        int i = b[j];
+        if ((map->walls + i)->boolian) {
+            if ((abs(x - (map->walls + i)->x1) <= thick) &&
+                (((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
+                 (abs(y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
+                  abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + thick)))
+                return false;
+            if ((abs(y - (map->walls + i)->y1) <= thick) &&
+                (((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                 (abs(x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                  abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + thick)))
+                return false;
+        }
+    }
+    return true;
 }
 
 ///////////////for reading from file. it works correctly

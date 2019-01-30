@@ -48,10 +48,12 @@ void move_bullet(Bullet *bullet) {
     }
 }
 
-void move_shard(Shard *shard) {
+void move_shard(Shard *shard, Map *map) {
     if (shard->boolian) {
-        shard->x += step_bullet * cos(shard->angle);
-        shard->y += step_bullet * sin(shard->angle);
+        if (shard_collids_walls(shard, map)) {
+            shard->x += step_bullet * cos(shard->angle);
+            shard->y += step_bullet * sin(shard->angle);
+        }
         (shard->n)++;
         if (shard->n == distanceofShards) {
             shard->n = 0;
@@ -77,7 +79,8 @@ void fire(Tank *tank, Shard *shard) {
         }
 
         if (state[(tank + k)->shoot] && (tank + k)->boolian) {
-            printf("i have bug!\n");
+            //printf("i have bug!\n");
+            //fflush(stdout);
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
                 if ((tank + k)->fragBomb == 0 || (tank + k)->fragBomb == 1) {
                     if ((tank + k)->fragBomb == 1) {
@@ -106,8 +109,9 @@ void fire(Tank *tank, Shard *shard) {
                         (shard + j)->angle = (rand() % 360) * (M_PI / 180);
                         (shard + j)->boolian = true;
                     }
-                    ((tank + k)->bullets + j)->x = -100;
-                    ((tank + k)->bullets + j)->y = -100;
+                    ((tank + k)->bullets + i[k])->x = -100;
+                    ((tank + k)->bullets + i[k])->y = -100;
+                    ((tank + k)->bullets + i[k])->rad = radius_bullet;
                     (tank + k)->fragBomb = 0;
                     flag[k] = false;
                 }

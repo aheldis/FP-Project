@@ -35,13 +35,13 @@
 #define step_bullet 6
 #define degree 0.1
 #define distanceofBullets 500
-#define distanceofShards 200
+#define distanceofShards 30
 #define numberofRows 8
 #define numberofColumns 8
 #define numberofTanks 2
 #define numberofItems 3
 #define numberofShards 8
-#define timeofItem 1000
+#define timeofItem 500
 
 #define max(a, b) (a >= b) * a + (a < b) * b
 #define min(a, b) (a >= b) * b + (a < b) * a
@@ -62,6 +62,7 @@ typedef struct {
 
 typedef struct {
     int x, y;
+    double angle;
     int n;
     bool boolian;
 } Shard;

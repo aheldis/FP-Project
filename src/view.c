@@ -65,13 +65,13 @@ void draw_shard(Shard *shard) {
 }
 
 void draw_fragBomb(FragBomb *fragBomb) {
-    int red, green, blue;
-    red = 144, green = 12, blue = 63;
-    filledCircleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, 255, 96, 49, a);
+    int red = 80, green = 80, blue = 80;
+//    if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
+    filledCircleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, red_white, green_black, blue_black, a);
     circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, red, green, blue, a);
     circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item - 1, red, green, blue, a);
     SDL_RenderSetScale(renderer, 1.3, 1.3);
-    stringRGBA(renderer, (fragBomb->x - 4) / 1.3, (fragBomb->y - 3) / 1.3, "*", red, green, blue, a);
+    stringRGBA(renderer, (fragBomb->x - 4) / 1.3, (fragBomb->y - 3) / 1.3, "*", 50, 50, 50, a);
     SDL_RenderSetScale(renderer, 1, 1);
 }
 
