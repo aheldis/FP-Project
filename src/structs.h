@@ -30,6 +30,7 @@
 #define radius_bullet 3
 #define radius_fragBomb 5
 #define radius_item 11
+#define radius_mine 12
 #define thick 2
 #define step 4
 #define step_bullet 6
@@ -56,9 +57,11 @@ typedef struct {
 
 typedef struct {
     int x, y;
+    int number;
     int n;
+    enum {FragBomb, MineItem} type;
     bool boolian;
-} FragBomb;
+} Item;
 
 typedef struct {
     int x, y;
@@ -66,6 +69,15 @@ typedef struct {
     int n;
     bool boolian;
 } Shard;
+
+typedef struct {
+    int x, y;
+    int r;
+    int g;
+    int b;
+    int n;
+    bool boolian;
+} Mine;
 
 typedef struct {
     int x;
@@ -81,7 +93,9 @@ typedef struct {
     char name[10];
     int score;
     bool boolian;
+    bool item;
     int fragBomb;
+    int mine;
     double angle;
     Bullet *bullets;
 } Tank;

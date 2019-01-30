@@ -380,7 +380,8 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
 void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
     if (bullet->boolian) {
         for (int i = 0; i < numberofTanks; i++) {
-            if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <= pow(radius_circle + bullet->rad, 2)) {
+            if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <=
+                pow(radius_circle + bullet->rad, 2)) {
                 (tank + i)->boolian = false;
                 remaining--;
                 bullet->x = -100;
@@ -422,19 +423,22 @@ void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
     }
 }
 
-void tank_collids_fragBombItem(FragBomb *fragBomb, Tank *tank) {
-    if (pow(tank->x - fragBomb->x, 2) + pow(tank->y - fragBomb->y, 2) <= pow(radius_circle + radius_item, 2)) {
-        tank->fragBomb = 1;
-        fragBomb->boolian = false;
+void tank_collids_Items(Item *item, Tank *tank) {
+    if (!tank->item && pow(tank->x - item->x, 2) + pow(tank->y - item->y, 2) <= pow(radius_circle + radius_item, 2)) {
+        tank->item = true;
+        if (item->type == FragBomb) tank->fragBomb = 1;
+        if (item->type == MineItem) tank->mine = 1;
+        item->boolian = false;
         return;
     }
-    if (pow(tank->x + shooter * cos(tank->angle) - fragBomb->x, 2) +
-        pow(tank->y + shooter * sin(tank->angle) - fragBomb->y, 2) <=
-        pow(radius_shooter + radius_item, 2)) {
-        tank->fragBomb = 1;
-        fragBomb->boolian = false;
+    if (!tank->item && pow(tank->x + shooter * cos(tank->angle) - item->x, 2) +
+                       pow(tank->y + shooter * sin(tank->angle) - item->y, 2) <=
+                       pow(radius_shooter + radius_item, 2)) {
+        tank->item = true;
+        if (item->type == FragBomb) tank->fragBomb = 1;
+        if (item->type == MineItem) tank->mine = 1;
+        item->boolian = false;
     }
-    //printf("remaining: %d\n", remaining);
 }
 
 void shard_collids_tanks(Shard *shard, Tank *tank) {
@@ -443,15 +447,15 @@ void shard_collids_tanks(Shard *shard, Tank *tank) {
         (pow(shard->x + cos(shard->angle) - tank->x, 2) + pow(shard->y + sin(shard->angle) - tank->y, 2) <=
          pow(thick + radius_circle, 2)) ||
         (pow(shard->x - cos(shard->angle) - (tank->x + shooter * cos(tank->angle)), 2) +
-             pow(shard->y - sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
-             pow(thick + radius_shooter, 2)) ||
-         (pow(shard->x + cos(shard->angle) - (tank->x + shooter * cos(tank->angle)), 2) +
-              pow(shard->y + sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
-              pow(thick + radius_shooter, 2))) {
-            tank->boolian = false;
-            shard->boolian = false;
-            remaining--;
-        }
+         pow(shard->y - sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
+         pow(thick + radius_shooter, 2)) ||
+        (pow(shard->x + cos(shard->angle) - (tank->x + shooter * cos(tank->angle)), 2) +
+         pow(shard->y + sin(shard->angle) - (tank->y + shooter * sin(tank->angle)), 2) <=
+         pow(thick + radius_shooter, 2))) {
+        tank->boolian = false;
+        shard->boolian = false;
+        remaining--;
+    }
 }
 
 bool shard_collids_walls(Shard *shard, Map *map) {
@@ -482,9 +486,21 @@ bool shard_collids_walls(Shard *shard, Map *map) {
     return true;
 }
 
-///////////////for reading from file. it works correctly
+void tank_collids_mine(Mine *mine, Tank *tank) {
+    if (pow(tank->x - mine->x, 2) + pow(tank->y - mine->y, 2) <= pow(radius_circle + radius_mine, 2)) {
+        mine->n = 200;
+        return;
+    }
+    if (pow(tank->x + shooter * cos(tank->angle) - mine->x, 2) +
+        pow(tank->y + shooter * sin(tank->angle) - mine->y, 2) <= pow(radius_shooter + radius_mine, 2)) {
+        mine->n = 200;
+    }
 
+}
+
+///////////////for reading from file. it works correctly
 /*
+
 bool movement_collids_walls(Tank *tank, Map *map) {
     for (int i = 0; i < numberofWalls; i++) {
         int max_x, max_y;
@@ -546,4 +562,5 @@ bool movement_collids_walls(Tank *tank, Map *map) {
             return false;
     }
     return true;
-}*/
+}
+*/

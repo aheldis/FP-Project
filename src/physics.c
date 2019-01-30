@@ -62,7 +62,7 @@ void move_shard(Shard *shard, Map *map) {
     }
 }
 
-void fire(Tank *tank, Shard *shard) {
+void fire(Tank *tank, Shard *shard, Mine *mine) {
     static bool flag[] = {true, true};
     static int i[] = {0, 0};
     for (int k = 0; k < numberofTanks; k++) {
@@ -82,7 +82,18 @@ void fire(Tank *tank, Shard *shard) {
             //printf("i have bug!\n");
             //fflush(stdout);
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
-                if ((tank + k)->fragBomb == 0 || (tank + k)->fragBomb == 1) {
+                if ((tank + k)->mine == 1) {
+                    (mine + k)->x =
+                            (tank + k)->x - (shooter + radius_shooter + radius_mine + step) * cos((tank + k)->angle);
+                    (mine + k)->y =
+                            (tank + k)->y - (shooter + radius_shooter + radius_mine + step) * sin((tank + k)->angle);
+                    (mine + k)->boolian = true;
+                    (mine + k)->n = 0;
+                    (mine + k)->r = (tank + k)->r;
+                    (mine + k)->g = (tank + k)->g;
+                    (mine + k)->b = (tank + k)->b;
+                } else if ((tank->item == false && (tank + k)->fragBomb == 0) ||
+                           (tank->item == true && (tank + k)->fragBomb == 1)) {
                     if ((tank + k)->fragBomb == 1) {
                         ((tank + k)->bullets + i[k])->rad = radius_fragBomb;
                         (tank + k)->fragBomb = 2;
@@ -98,9 +109,7 @@ void fire(Tank *tank, Shard *shard) {
                     flag[k] = false;
                     if ((tank + k)->fragBomb == 0) i[k]++;
                     printf("%d\n", i[k]);
-                }
-
-                else if ((tank + k)->fragBomb == 2) {
+                } else if (tank->item == true && (tank + k)->fragBomb == 2) {
                     printf("i don't have bug!\n");
                     for (int j = k * numberofShards; j < (k + 1) * numberofShards; j++) {
                         (shard + j)->x = ((tank + k)->bullets + i[k])->x;
@@ -113,6 +122,7 @@ void fire(Tank *tank, Shard *shard) {
                     ((tank + k)->bullets + i[k])->y = -100;
                     ((tank + k)->bullets + i[k])->rad = radius_bullet;
                     (tank + k)->fragBomb = 0;
+                    (tank + k)->item = false;
                     flag[k] = false;
                 }
             }

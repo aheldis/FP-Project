@@ -64,15 +64,67 @@ void draw_shard(Shard *shard) {
                   shard->x + r * cos(shard->angle), shard->y + r * sin(shard->angle), thick, 150, 150, 150, a);
 }
 
-void draw_fragBomb(FragBomb *fragBomb) {
+void draw_mine(Mine *mine, Shard *shard, Tank *tank) {
+    if (mine->n < 75 || (mine->n >= 200 && mine->n < 275)) {
+        int c = 5;
+        filledCircleRGBA(renderer, mine->x, mine->y, radius_mine, mine->r, mine->g, mine->b, a);
+        circleRGBA(renderer, mine->x, mine->y, radius_mine, 80, 80, 80, a);
+        double alpha = M_PI / 2;
+        for (int i = 0; i < 3; i++) {
+            int x = mine->x + radius_mine * cos(alpha);
+            int y = mine->y + radius_mine * sin(alpha);
+            double prim = alpha - M_PI / 2;
+            thickLineRGBA(renderer, x - c * cos(prim), y - c * sin(prim), x + c * cos(prim), y + c * sin(prim), thick,
+                          50, 50, 50, a);
+            thickLineRGBA(renderer, x, y, mine->x, mine->y, thick / 2, 50, 50, 50, a);
+            alpha += 2 * M_PI / 3;
+        }
+        mine->n++;
+        if (mine->n == 275) {
+            int k;
+            for (int i = 0; i < numberofTanks; i++)
+                if ((tank + i)->r == mine->r && (tank + i)->g == mine->g && (tank + i)->b == mine->b)
+                    k = i;
+            for (int j = k * numberofShards; j < (k + 1) * numberofShards; j++) {
+                (shard + j)->x = mine->x;
+                (shard + j)->y = mine->y;
+                (shard + j)->n = 0;
+                (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                (shard + j)->boolian = true;
+            }
+            mine->n = 0;
+            mine->boolian = false;
+            (tank + k)->mine = 0;
+            (tank + k)->item = false;
+        }
+    }
+}
+
+void draw_item(Item *item) {
     int red = 80, green = 80, blue = 80;
 //    if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
-    filledCircleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, red_white, green_black, blue_black, a);
-    circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item, red, green, blue, a);
-    circleRGBA(renderer, fragBomb->x, fragBomb->y, radius_item - 1, red, green, blue, a);
-    SDL_RenderSetScale(renderer, 1.3, 1.3);
-    stringRGBA(renderer, (fragBomb->x - 4) / 1.3, (fragBomb->y - 3) / 1.3, "*", 50, 50, 50, a);
-    SDL_RenderSetScale(renderer, 1, 1);
+    if (item->type == FragBomb) {
+        filledCircleRGBA(renderer, item->x, item->y, radius_item, 255, 72, 66, a);
+        SDL_RenderSetScale(renderer, 1.5, 1.5);
+        stringRGBA(renderer, (item->x - 5) / 1.5, (item->y - 4) / 1.5, "*", 50, 50, 50, a);
+        SDL_RenderSetScale(renderer, 1, 1);
+    }
+    if (item->type == MineItem) {
+        filledCircleRGBA(renderer, item->x, item->y, radius_item, 132, 237, 109, a);
+        int r = 6, c = 2;
+        circleRGBA(renderer, item->x, item->y, r, 50, 50, 50, a);
+        double alpha = M_PI / 2;
+        for (int i = 0; i < 3; i++) {
+            int x = item->x + r * cos(alpha);
+            int y = item->y + r * sin(alpha);
+            double prim = alpha - M_PI / 2;
+            thickLineRGBA(renderer, x - c * cos(prim), y - c * sin(prim), x + c * cos(prim), y + c * sin(prim), thick, 50,
+                          50, 50, a);
+            alpha += 2 * M_PI / 3;
+        }
+    }
+    circleRGBA(renderer, item->x, item->y, radius_item, red, green, blue, a);
+    circleRGBA(renderer, item->x, item->y, radius_item - 1, red, green, blue, a);
 }
 
 void draw_walls(Wall *walls) {

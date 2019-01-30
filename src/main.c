@@ -136,6 +136,8 @@ void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
         (tank + i)->angle = (rand() % 360) * M_PI / 180;
         (tank + i)->boolian = true;
         (tank + i)->fragBomb = 0;
+        (tank + i)->mine = 0;
+        (tank + i)->item = false;
     }
 
     while (tank->x == (tank + 1)->x && tank->y == (tank + 1)->y)
@@ -364,6 +366,8 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (tank + i)->boolian = true;
         (tank + i)->score = 0;
         (tank + i)->fragBomb = 0;
+        (tank + i)->mine = 0;
+        (tank + i)->item = false;
     }
 
     while (tank->x == (tank + 1)->x && tank->y == (tank + 1)->y)
@@ -517,9 +521,9 @@ int main(int argc, char *argv[]) {
     Tank *sample = malloc(sizeof(Tank) * numberofTanks);
     Map *map = malloc(sizeof(Map) * 1);
     Wall *walls = malloc(sizeof(Wall) * numberofWalls);
-    FragBomb *fragBomb = malloc(sizeof(FragBomb) * numberofItems);
+    Item *item = malloc(sizeof(Item) * numberofItems);
     Shard *shard = malloc(numberofTanks * sizeof(Shard) * numberofShards);
-
+    Mine *mine = malloc(sizeof(Mine) * numberofTanks);
 
     //////////////////menu
     init_window();
@@ -536,15 +540,13 @@ int main(int argc, char *argv[]) {
         int red = 150, green = 150, blue = 150;
         if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
         flag = menu(tank, bullet, map, walls, flag);
-        static int item = 0;
-        item++;
+        static int time = 0;
+        time++;
 
         if (start_flag) {
             for (int i = 0; i < numberofItems; i++) {
-                (fragBomb + i)->boolian = false;
-                (fragBomb + i)->n = 0;
-                (fragBomb + i)->x = rand() % numberofRows * house + house;
-                (fragBomb + i)->y = rand() % numberofColumns * house + house;
+                (item + i)->boolian = false;
+                (mine + i)->boolian = false;
             }
             for (int i = 0; i < numberofTanks * numberofShards; i++) {
                 (shard + i)->boolian = false;
@@ -556,31 +558,35 @@ int main(int argc, char *argv[]) {
             if ((map->walls + i)->boolian)
                 draw_walls(map->walls + i);
 
-        if (item == timeofItem) {
-            item = 0;
+        if (time == timeofItem) {
+            time = 0;
             int i = 0;
             for (int j = 0; j < 3; j++)
-                if ((fragBomb + j)->boolian)
+                if ((item + j)->boolian)
                     i++;
+
             if (i < 3) {
                 for (int j = 0; j < 3; j++)
-                    if (!(fragBomb + j)->boolian) {
-                        (fragBomb + j)->n = 0;
-                        (fragBomb + j)->x = rand() % numberofRows * house + house;
-                        (fragBomb + j)->y = rand() % numberofColumns * house + house;
-                        (fragBomb + j)->boolian = true;
+                    if (!(item + j)->boolian) {
+                        (item + j)->n = 0;
+                        (item + j)->x = rand() % numberofRows * house + house;
+                        (item + j)->y = rand() % numberofColumns * house + house;
+                        (item + j)->boolian = true;
+                        int k = rand() % 2;
+                        //int k = 0;
+                        (item + j)->type = k;
                         break;
                     }
             }
         }
 
         for (int i = 0; i < numberofItems; i++) {
-            if ((fragBomb + i)->boolian) {
-                draw_fragBomb(fragBomb + i);
-                if ((fragBomb + i)->n == timeofItem) (fragBomb + i)->boolian = false;
+            if ((item + i)->boolian) {
+                draw_item(item + i);
+                if ((item + i)->n == timeofItem) (item + i)->boolian = false;
                 for (int k = 0; k < numberofTanks; k++)
                     if ((map->tanks + k)->boolian)
-                        tank_collids_fragBombItem(fragBomb + i, map->tanks + k);
+                        tank_collids_Items(item + i, map->tanks + k);
             }
         }
 
@@ -610,8 +616,15 @@ int main(int argc, char *argv[]) {
             stringRGBA(renderer, x, 330, score1, red, green, blue, a);
             stringRGBA(renderer, x - 20, 555, "tank2", red, green, blue, a);
             stringRGBA(renderer, x, 570, score2, red, green, blue, a);
+
+            if ((mine + k)->boolian) {
+                draw_mine(mine + k, shard, map->tanks);
+                for (int i = 0; i < numberofTanks; i++)
+                    if ((map->tanks + i)->boolian)
+                        tank_collids_mine(mine + k, map->tanks + i);
+            }
         }
-        fire(map->tanks, shard);
+        fire(map->tanks, shard, mine);
 
         for (int i = 0; i < numberofTanks * numberofShards; i++) {
             if ((shard + i)->boolian) {
