@@ -79,7 +79,7 @@ void read_map_array(Map *map) {
     MAP_WIDTH = (numberofColumns + 2) * house;
     MAP_HEIGHT = (numberofRows + 1) * house;
     numberofWalls = (numberofRows + 1) * numberofColumns + (numberofColumns + 1) * numberofRows;
-    free(map->walls);
+    //free(map->walls);
     map->walls = malloc(sizeof(Wall) * numberofWalls);
     short int n = 0;
     /////////amoodi
@@ -366,9 +366,12 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             yes = i % 6 == 5 && k == i / 6;
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
-                if (enter) f[k] = 0;
+                static int z = 0;
+                if (enter) {
+                    f[k] = 0;
+                    z = 0;
+                }
                 if (!enter) {
-                    static int z = 0;
                     if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
                         *SDL_GetKeyName(keycode) != '') {
                         if (keycode == SDLK_BACKSPACE && z > 0) {
@@ -717,6 +720,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (newGame_flag) {
+            static int z = 0;
             short vx[] = {MAP_WIDTH / 2 - 5 * house / 2, MAP_WIDTH / 2 - 5 * house / 2,
                           MAP_WIDTH / 2 + 5 * house / 2, MAP_WIDTH / 2 + 5 * house / 2};
             short vy[] = {MAP_HEIGHT / 2 - 4 * house / 2, MAP_HEIGHT / 2 + 4 * house / 2,
@@ -727,7 +731,7 @@ int main(int argc, char *argv[]) {
                 int red = rand() % 255;
                 int green = rand() % 255;
                 int blue = rand() % 255;
-                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars((tank + winner - 1)->name) * 4 -
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars((tank + winner - 1)->name) * 6 -
                                      numberofchars(" won the game!") * 4, MAP_HEIGHT / 2 - house / 2,
                            (tank + winner - 1)->name, red, green, blue, a);
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars(" won the game!") * 3, MAP_HEIGHT / 2 - house / 2,
@@ -739,13 +743,15 @@ int main(int argc, char *argv[]) {
                     winner = 0;
                     winnerScore = 0;
                     newGame(tank, bullet, map, walls, true);
+                    for (int i = 0; i < numberofchars(score); i++) score[i] = 0;
+                    z = 0;
                 }
             } else {
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Give me winner's score!") * 4,
                            MAP_HEIGHT / 2 - 2 * house / 2, "Give me winner's score!", rback, gback, bback, a);
 
                 static int f = 0;
-                static int z = 0;
+
                 if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
                     *SDL_GetKeyName(keycode) != '') {
                     if (keycode == SDLK_BACKSPACE && z > 0) {
@@ -788,8 +794,8 @@ int main(int argc, char *argv[]) {
                         if ((tank + i)->score == winnerScore) {
                             winner = i + 1;
                             newGame_flag = true;
-                            remaining = 2;
                         } else nextGame(map->tanks, map->tanks->bullets, map, map->walls);
+                        i = 2;
                     }
                 }
             }
