@@ -432,6 +432,7 @@ void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
 void tank_collids_Items(Item *item, Tank *tank) {
     if (!tank->item && pow(tank->x - item->x, 2) + pow(tank->y - item->y, 2) <= pow(radius_circle + radius_item, 2)) {
         tank->item = true;
+        printf("i got item\n");
         if (item->type == FragBomb) tank->fragBomb = 1;
         if (item->type == MineItem) tank->mine = 1;
         if (item->type == Lazer) tank->lazer = 1;
@@ -441,6 +442,7 @@ void tank_collids_Items(Item *item, Tank *tank) {
     if (!tank->item && pow(tank->x + shooter * cos(tank->angle) - item->x, 2) +
                        pow(tank->y + shooter * sin(tank->angle) - item->y, 2) <=
                        pow(radius_shooter + radius_item, 2)) {
+        printf("i got item\n");
         tank->item = true;
         if (item->type == FragBomb) tank->fragBomb = 1;
         if (item->type == MineItem) tank->mine = 1;
@@ -492,19 +494,19 @@ bool shard_collids_walls(Shard *shard, Map *map) {
         }
     }
 
-    if (shard->x < house / 2 || shard->y < house / 2 || shard->x > MAP_HEIGHT - house / 2 ||
+    if (shard->x < house / 2 || shard->y < house / 2 || shard->x > MAP_WIDTH - house / 2 - house ||
         shard->y > MAP_HEIGHT - house / 2)
         return false;
     return true;
 }
 
-void tank_collids_mine(Mine *mine, Tank *tank) {
-    if (pow(tank->x - mine->x, 2) + pow(tank->y - mine->y, 2) <= pow(radius_circle + radius_mine, 2)) {
+void tank_collids_mine(Mine *mine, Tank *tank1) {
+    if (pow(tank1->x - mine->x, 2) + pow(tank1->y - mine->y, 2) <= pow(radius_circle + radius_mine, 2)) {
         mine->n = 200;
         return;
     }
-    if (pow(tank->x + shooter * cos(tank->angle) - mine->x, 2) +
-        pow(tank->y + shooter * sin(tank->angle) - mine->y, 2) <= pow(radius_shooter + radius_mine, 2)) {
+    if (pow(tank1->x + shooter * cos(tank1->angle) - mine->x, 2) +
+        pow(tank1->y + shooter * sin(tank1->angle) - mine->y, 2) <= pow(radius_shooter + radius_mine, 2)) {
         mine->n = 200;
     }
 }

@@ -63,10 +63,13 @@ void move_shard(Shard *shard, Map *map) {
 void fire(Tank *tank, Shard *shard, Mine *mine) {
     static bool flag[] = {true, true};
     static int i[] = {0, 0};
+    static int n[numberofTanks] = {0};
     for (int k = 0; k < numberofTanks; k++) {
         if (((tank + k)->bullets + numberofBullets - 1)->n == 3 * distanceofBullets / 2 || start_flag) {
             if (start_flag && k == numberofTanks - 1) start_flag = false;
             i[k] = 0;
+            flag[k] = true;
+            n[k] = 0;
             for (int j = 0; j < numberofBullets; j++) {
                 ((tank + k)->bullets + j)->boolian = true;
                 ((tank + k)->bullets + j)->x = -100;
@@ -79,7 +82,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
         if (state[(tank + k)->shoot] && (tank + k)->boolian) {
             //printf("i have bug!\n");
             //fflush(stdout);
-            if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
+            if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && (flag[k] || (tank + k)->fragBomb == 1)) {
                 if ((tank + k)->lazer == 1) {
                     (tank + k)->lazer = 2;
                     (tank + k)->lazerTime = 0;
@@ -94,8 +97,9 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                     (mine + k)->g = (tank + k)->g;
                     (mine + k)->b = (tank + k)->b;
                     (tank + k)->mine = 2;
-                } else if ((tank + k)->lazer == 0 && ((tank->item == false && (tank + k)->fragBomb == 0) ||
-                           (tank->item == true && (tank + k)->fragBomb == 1))) {
+                } else if ((tank + k)->lazer == 0 && (tank + k)->mine == 0 &&
+                           (((tank + k)->item == false && (tank + k)->fragBomb == 0 && flag[k]) ||
+                            ((tank + k)->item == true && (tank + k)->fragBomb == 1))) {
                     if ((tank + k)->fragBomb == 1) {
                         ((tank + k)->bullets + i[k])->rad = radius_fragBomb;
                         (tank + k)->fragBomb = 2;
@@ -111,8 +115,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                     flag[k] = false;
                     if ((tank + k)->fragBomb == 0) i[k]++;
                     printf("%d\n", i[k]);
-                } else if (tank->item == true && (tank + k)->fragBomb == 2) {
-                    printf("i don't have bug!\n");
+                } else if ((tank + k)->item == true && (tank + k)->fragBomb == 2) {
                     for (int j = k * numberofShards; j < (k + 1) * numberofShards; j++) {
                         (shard + j)->x = ((tank + k)->bullets + i[k])->x;
                         (shard + j)->y = ((tank + k)->bullets + i[k])->y;
@@ -128,11 +131,13 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                     flag[k] = false;
                 }
             }
-            static int n[numberofTanks] = {0};
-            n[k]++;
-            if (n[k] == 30) {
-                flag[k] = true;
-                n[k] = 0;
+            n[0]++;
+            n[1]++;
+            if ((n[0] == 20) || (n[1] == 20)) {
+                flag[0] = true;
+                n[0] = 0;
+                flag[1] = true;
+                n[1] = 0;
             }
         }
     }
