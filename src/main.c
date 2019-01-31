@@ -732,12 +732,12 @@ int main(int argc, char *argv[]) {
                 int green = rand() % 255;
                 int blue = rand() % 255;
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars((tank + winner - 1)->name) * 4 -
-                                     numberofchars(" won the game!") * 4, MAP_HEIGHT / 2 - house / 2,
+                                     numberofchars(" won the game!") * 4, MAP_HEIGHT / 2 - house / 4,
                            (tank + winner - 1)->name, red, green, blue, a);
-                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars(" won the game!") * 2, MAP_HEIGHT / 2 - house / 2,
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars(" won the game!") * 2, MAP_HEIGHT / 2 - house / 4,
                            " won the game!", red, green, blue, a);
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Enter to continue") * 4,
-                           MAP_HEIGHT / 2 + house / 2, "Press Enter to continue", red, green, blue, a);
+                           MAP_HEIGHT / 2 + house / 4, "Press Enter to continue", red, green, blue, a);
                 if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
                     newGame_flag = false;
                     winner = 0;
