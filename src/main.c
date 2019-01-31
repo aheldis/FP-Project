@@ -749,7 +749,7 @@ int main(int argc, char *argv[]) {
                 }
             } else {
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Give me winner's score!") * 4,
-                           MAP_HEIGHT / 2 - house / 2, "Give me winner's score!", rback, gback, bback, a);
+                           MAP_HEIGHT / 2 - house / 4, "Give me winner's score!", rback, gback, bback, a);
 
                 if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
                     *SDL_GetKeyName(keycode) != '') {
@@ -776,7 +776,7 @@ int main(int argc, char *argv[]) {
 
                 if (score[0]) {
                     int x1 = MAP_WIDTH / 2;
-                    int y1 = MAP_HEIGHT / 2 - house / 4;
+                    int y1 = MAP_HEIGHT / 2 + house / 4;
                     stringRGBA(renderer, x1 - numberofchars(score) * 3, y1, score, rback, gback, bback, a);
                 }
             }
