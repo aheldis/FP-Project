@@ -21,8 +21,8 @@ void move_tank(Tank *tank, Map *map) {
         tank->x = tempx;
         tank->y = house / 2 + radius;
     }
-    if (tank->x > MAP_HEIGHT - house / 2 - radius) {
-        tank->x = MAP_HEIGHT - house / 2 - radius;
+    if (tank->x > MAP_WIDTH - house / 2 - house - radius) {
+        tank->x = MAP_WIDTH - house / 2 - house - radius;
         tank->y = tempy;
     }
     if (tank->y > MAP_HEIGHT - house / 2 - radius) {
@@ -49,16 +49,14 @@ void move_bullet(Bullet *bullet) {
 }
 
 void move_shard(Shard *shard, Map *map) {
-    if (shard->boolian) {
-        if (shard_collids_walls(shard, map)) {
-            shard->x += step_bullet * cos(shard->angle);
-            shard->y += step_bullet * sin(shard->angle);
-        }
-        (shard->n)++;
-        if (shard->n == distanceofShards) {
-            shard->n = 0;
-            shard->boolian = false;
-        }
+    if (shard_collids_walls(shard, map)) {
+        shard->x += step_bullet * cos(shard->angle);
+        shard->y += step_bullet * sin(shard->angle);
+    }
+    (shard->n)++;
+    if (shard->n == distanceofShards) {
+        shard->n = 0;
+        shard->boolian = false;
     }
 }
 
@@ -96,8 +94,8 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                     (mine + k)->g = (tank + k)->g;
                     (mine + k)->b = (tank + k)->b;
                     (tank + k)->mine = 2;
-                } else if ((tank->item == false && (tank + k)->fragBomb == 0) ||
-                           (tank->item == true && (tank + k)->fragBomb == 1)) {
+                } else if ((tank + k)->lazer == 0 && ((tank->item == false && (tank + k)->fragBomb == 0) ||
+                           (tank->item == true && (tank + k)->fragBomb == 1))) {
                     if ((tank + k)->fragBomb == 1) {
                         ((tank + k)->bullets + i[k])->rad = radius_fragBomb;
                         (tank + k)->fragBomb = 2;
@@ -132,7 +130,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
             }
             static int n[numberofTanks] = {0};
             n[k]++;
-            if (n[k] == 20) {
+            if (n[k] == 30) {
                 flag[k] = true;
                 n[k] = 0;
             }

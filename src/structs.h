@@ -17,11 +17,8 @@
 #define blue_black 0
 #define a 255
 #define FPS 400
-#define MAP_WIDTH 900
-#define MAP_HEIGHT 810
 #define house 90
 #define numberofBullets 5
-#define numberofWalls 144
 #define numberofMaps 3
 #define shooter 20
 #define radius 15
@@ -37,8 +34,6 @@
 #define degree 0.1
 #define distanceofBullets 500
 #define distanceofShards 100
-#define numberofRows 8
-#define numberofColumns 8
 #define numberofTanks 2
 #define numberofItems 3
 #define numberofShards 15

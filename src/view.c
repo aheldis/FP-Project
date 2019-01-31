@@ -4,6 +4,9 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 const Uint8 *state;
 int rback = 30, gback = 30, bback = 30;
+int MAP_WIDTH = 800, MAP_HEIGHT = 800;
+int numberofRows, numberofColumns;
+int numberofWalls;
 
 void init_window() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -19,6 +22,13 @@ void quit_window() {
 }
 
 SDL_Keycode handle_events(Map *map) {
+    static int width = 900, height = 810;
+    if (MAP_HEIGHT != height || MAP_WIDTH != width) {
+        width = MAP_WIDTH;
+        height = MAP_HEIGHT;
+        SDL_SetWindowSize(window, MAP_WIDTH, MAP_HEIGHT);
+        SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    }
     SDL_Keycode keycode = 0;
     SDL_SetRenderDrawColor(renderer, rback, gback, bback, a);
     SDL_RenderClear(renderer);

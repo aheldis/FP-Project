@@ -385,6 +385,7 @@ void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
             if ((tank + i)->boolian) {
                 if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <=
                     pow(radius_circle + bullet->rad, 2)) {
+                    if (bullet->rad == radius_bullet) bullet->boolian = false;
                     (tank + i)->boolian = false;
                     remaining--;
                     if (bullet->rad == radius_fragBomb) {
@@ -405,6 +406,7 @@ void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
                 if (pow((tank + i)->x + shooter * cos((tank + i)->angle) - bullet->x, 2) +
                     pow((tank + i)->y + shooter * sin((tank + i)->angle) - bullet->y, 2) <=
                     pow(radius_shooter + bullet->rad, 2)) {
+                    if (bullet->rad == radius_bullet) bullet->boolian = false;
                     (tank + i)->boolian = false;
                     remaining--;
                     if (bullet->rad == radius_fragBomb) {
@@ -512,7 +514,7 @@ void lazer_collids_walls(Tank *tank1, Tank *tank2, int *x, int *y) {
     int sign_y = (sin(tank1->angle) > 0 ? 1 : -1);
     if (sign_x == 1 && sign_y == -1) {
         if (cos(tank1->angle) >= cos(M_PI / 4)) {
-            *x = MAP_HEIGHT - house / 2;
+            *x = MAP_WIDTH - house / 2 - house;
             *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
         } else {
             *y = house / 2;
@@ -521,7 +523,7 @@ void lazer_collids_walls(Tank *tank1, Tank *tank2, int *x, int *y) {
     }
     if (sign_x == 1 && sign_y == 1) {
         if (cos(tank1->angle) >= cos(M_PI / 4)) {
-            *x = MAP_HEIGHT - house / 2;
+            *x = MAP_WIDTH - house / 2 - house;
             *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
         } else {
             *y = MAP_HEIGHT - house / 2;
@@ -546,7 +548,7 @@ void lazer_collids_walls(Tank *tank1, Tank *tank2, int *x, int *y) {
             *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
         }
     }
-    if (*x > MAP_HEIGHT - house / 2) *x = MAP_HEIGHT - house / 2;
+    if (*x > MAP_WIDTH - house / 2 - house) *x = MAP_WIDTH - house / 2 - house;
     if (*y > MAP_HEIGHT - house / 2) *y = MAP_HEIGHT - house / 2;
     if (*x < house / 2) *x = house / 2;
     if (*y < house / 2) *y = house / 2;
