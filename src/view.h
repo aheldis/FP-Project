@@ -10,6 +10,7 @@ extern int MAP_HEIGHT;
 extern int numberofRows;
 extern int numberofColumns;
 extern int numberofWalls;
+extern int winnerScore;
 void init_window();
 void quit_window();
 void draw_tank(Tank *tank);

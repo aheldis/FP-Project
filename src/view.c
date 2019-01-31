@@ -6,7 +6,7 @@ const Uint8 *state;
 int rback = 30, gback = 30, bback = 30;
 int MAP_WIDTH = 800, MAP_HEIGHT = 800;
 int numberofRows, numberofColumns;
-int numberofWalls;
+int numberofWalls, winnerScore;
 
 void init_window() {
     SDL_Init(SDL_INIT_VIDEO);
@@ -112,7 +112,7 @@ void draw_mine(Mine *mine, Shard *shard, Tank *tank) {
 
 void draw_lazer(Tank *tank1, Tank *tank2) {
     if (tank1->lazer == 2) {
-        if (tank1->lazerTime < 200) {
+        if (tank1->lazerTime < 150) {
             int x, y;
             lazer_collids_walls(tank1, tank2, &x, &y);
             thickLineRGBA(renderer, tank1->x + (shooter + radius_shooter + step) * cos(tank1->angle),

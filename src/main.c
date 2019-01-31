@@ -4,6 +4,9 @@
 #undef main
 #endif
 
+bool newGame_flag = false;
+int winner = 0;
+
 //////////////for random map
 
 struct node {
@@ -193,6 +196,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     } j = 0;
     int i = 0, enter = 1;
     while (flag) {
+        MAP_HEIGHT = 800, MAP_WIDTH = 800;
         keycode = handle_events(map);
         static SDL_Keycode keycodepre = 0;
         int r = red_white - 20, g = green_white - 20, b = blue_white - 20;
@@ -374,9 +378,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                             }
                             p++;
                             if (p == 2) p = 0;
-                        }
-                        else {
-                            (tank + k)->name[z] = *SDL_GetKeyName(keycode);
+                        } else {
+                            (tank + k)->name[z] = *SDL_GetKeyName(keycode) * (z == 0) +
+                                                  (*SDL_GetKeyName(keycode) - 'A' + 'a') * (z != 0);
                             if (z < 9) z++;
                             f[k] = 1;
                         }
@@ -448,6 +452,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     remaining = numberofTanks;
 
     start_flag = true;
+    newGame_flag = true;
     return flag;
 }
 
@@ -456,24 +461,26 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     int width = MAP_WIDTH, height = MAP_HEIGHT;
     bool f = flag;
     Tank *sample1 = malloc(sizeof(Tank));
-    sample1->x = MAP_WIDTH / 2;
-    sample1->y = 750;
-    sample1->angle = 0;
-    sample1->r = 180;
-    sample1->g = 180;
-    sample1->b = 180;
     Tank *sample2 = malloc(sizeof(Tank));
-    sample2->x = MAP_WIDTH / 2;
-    sample2->y = MAP_HEIGHT - sample1->y;
-    sample2->angle = M_PI;
-    sample2->r = 180;
-    sample2->g = 180;
-    sample2->b = 180;
+    if (flag) {
+        MAP_WIDTH = 800, MAP_HEIGHT = 800;
+        sample1->x = MAP_WIDTH / 2;
+        sample1->y = 750;
+        sample1->angle = 0;
+        sample1->r = 180;
+        sample1->g = 180;
+        sample1->b = 180;
+        sample2->x = MAP_WIDTH / 2;
+        sample2->y = MAP_HEIGHT - sample1->y;
+        sample2->angle = M_PI;
+        sample2->r = 180;
+        sample2->g = 180;
+        sample2->b = 180;
+    }
     enum {
         new, load, end, game
     } j = 0;
     while (flag) {
-        MAP_WIDTH = 800, MAP_HEIGHT = 800;
         handle_events(map);
         int r = red_white - 20, g = green_white - 20, b = blue_white - 20;
         if (rback == 225) r = red_white - r, g = green_white - g, b = blue_white - b;
@@ -594,13 +601,16 @@ int main(int argc, char *argv[]) {
     //////////////////menu
     init_window();
     bool flag = true;
+    char score[5];
+
+    for (int j = 0; j < 5; j++) score[j] = 0;
 
     while (1) {
         int red = 150, green = 150, blue = 150;
         if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
         flag = menu(tank, bullet, map, walls, flag);
         static int time = 0;
-        time++;
+        if (!newGame_flag) time++;
 
         if (start_flag) {
             for (int i = 0; i < numberofItems; i++) {
@@ -611,13 +621,13 @@ int main(int argc, char *argv[]) {
                 (shard + i)->boolian = false;
             }
         }
-
-        handle_events(map);
+        SDL_Keycode keycode = 0;
+        keycode = handle_events(map);
         for (int i = 0; i < numberofWalls; i++)
             if ((map->walls + i)->boolian)
                 draw_walls(map->walls + i);
 
-        if (time == timeofItem) {
+        if (time == timeofItem && !newGame_flag) {
             time = 0;
             int i = 0;
             for (int j = 0; j < 3; j++)
@@ -663,8 +673,8 @@ int main(int argc, char *argv[]) {
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
             if ((map->tanks + k)->boolian) {
-                move_tank(map->tanks + k, map);
-                turn_tank(map->tanks + k, map);
+                if (!newGame_flag) move_tank(map->tanks + k, map);
+                if (!newGame_flag) turn_tank(map->tanks + k, map);
                 draw_tank(map->tanks + k);
                 draw_lazer(tank + k, tank + numberofTanks - 1 - k);
             }
@@ -693,7 +703,7 @@ int main(int argc, char *argv[]) {
             free(score1);
             free(score2);
         }
-        fire(map->tanks, shard, mine);
+        if (!newGame_flag) fire(map->tanks, shard, mine);
 
         for (int i = 0; i < numberofTanks * numberofShards; i++) {
             if ((shard + i)->boolian) {
@@ -705,15 +715,82 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        if (newGame_flag) {
+            short vx[] = {MAP_WIDTH / 2 - 5 * house / 2, MAP_WIDTH / 2 - 5 * house / 2,
+                          MAP_WIDTH / 2 + 5 * house / 2, MAP_WIDTH / 2 + 5 * house / 2};
+            short vy[] = {MAP_HEIGHT / 2 - 4 * house / 2, MAP_HEIGHT / 2 + 4 * house / 2,
+                          MAP_HEIGHT / 2 + 4 * house / 2, MAP_HEIGHT / 2 - 4 * house / 2};
+            filledPolygonRGBA(renderer, vx, vy, 4, red_white - rback, green_white - gback, blue_white - bback, 220);
+
+            if (winner) {
+                int red = rand() % 255;
+                int green = rand() % 255;
+                int blue = rand() % 255;
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars((tank + winner - 1)->name) * 4 -
+                                     numberofchars(" won the game!") * 4, MAP_HEIGHT / 2 - house / 2,
+                           (tank + winner - 1)->name, red, green, blue, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars(" won the game!") * 3, MAP_HEIGHT / 2 - house / 2,
+                           " won the game!", red, green, blue, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Enter to continue") * 4,
+                           MAP_HEIGHT / 2 + house / 2, "Press Enter to continue", red, green, blue, a);
+                if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
+                    newGame_flag = false;
+                    winner = 0;
+                    winnerScore = 0;
+                    newGame(tank, bullet, map, walls, true);
+                }
+            } else {
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Give me winner's score!") * 4,
+                           MAP_HEIGHT / 2 - 2 * house / 2, "Give me winner's score!", rback, gback, bback, a);
+
+                static int f = 0;
+                static int z = 0;
+                if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
+                    *SDL_GetKeyName(keycode) != '') {
+                    if (keycode == SDLK_BACKSPACE && z > 0) {
+                        static int p = 0;
+                        if (p == 0) {
+                            z--;
+                            score[z] = 0;
+                        }
+                        p++;
+                        if (p == 2) p = 0;
+                    } else if (*SDL_GetKeyName(keycode) >= '0' && *SDL_GetKeyName(keycode) <= '9') {
+                        score[z] = *SDL_GetKeyName(keycode);
+                        if (z < 3) z++;
+                        f = 1;
+                    }
+                }
+                if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && score[0] && f) {
+                    newGame_flag = false;
+                    winnerScore = 0;
+                    for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
+                    printf("%d\n", winnerScore);
+                }
+
+                if (score[0]) {
+                    int x1 = MAP_WIDTH / 2;
+                    int y1 = MAP_HEIGHT / 2 - house / 2 - house / 4;
+                    stringRGBA(renderer, x1 - numberofchars(score) * 3, y1, score, rback, gback, bback, a);
+                }
+            }
+        }
+
         if (remaining == 1) {
             static int n = 0;
             n++;
             if (n == 200) {
                 n = 0;
-                for (int i = 0; i < numberofTanks; i++)
-                    if ((tank + i)->boolian)
+                for (int i = 0; i < numberofTanks; i++) {
+                    if ((tank + i)->boolian) {
                         (tank + i)->score++;
-                nextGame(map->tanks, map->tanks->bullets, map, map->walls);
+                        if ((tank + i)->score == winnerScore) {
+                            winner = i + 1;
+                            newGame_flag = true;
+                            remaining = 2;
+                        } else nextGame(map->tanks, map->tanks->bullets, map, map->walls);
+                    }
+                }
             }
         }
 
@@ -735,4 +812,3 @@ int main(int argc, char *argv[]) {
         SDL_Delay(1000 / FPS);
     }
 }
-
