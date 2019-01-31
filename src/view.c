@@ -100,11 +100,28 @@ void draw_mine(Mine *mine, Shard *shard, Tank *tank) {
     }
 }
 
+void draw_lazer(Tank *tank1, Tank *tank2) {
+    if (tank1->lazer == 2) {
+        if (tank1->lazerTime < 200) {
+            int x, y;
+            lazer_collids_walls(tank1, tank2, &x, &y);
+            thickLineRGBA(renderer, tank1->x + (shooter + radius_shooter + step) * cos(tank1->angle),
+                          tank1->y + (shooter + radius_shooter + step) * sin(tank1->angle), x, y, thick * 2, tank1->r,
+                          tank1->g, tank1->b, a);
+            tank1->lazerTime++;
+        } else {
+            tank1->lazerTime = 0;
+            tank1->lazer = 0;
+            tank1->item = false;
+        }
+    }
+}
+
 void draw_item(Item *item) {
     int red = 80, green = 80, blue = 80;
 //    if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
     if (item->type == FragBomb) {
-        filledCircleRGBA(renderer, item->x, item->y, radius_item, 255, 72, 66, a);
+        filledCircleRGBA(renderer, item->x, item->y, radius_item, 238, 130, 238, a);
         SDL_RenderSetScale(renderer, 1.5, 1.5);
         stringRGBA(renderer, (item->x - 5) / 1.5, (item->y - 4) / 1.5, "*", 50, 50, 50, a);
         SDL_RenderSetScale(renderer, 1, 1);
@@ -118,9 +135,19 @@ void draw_item(Item *item) {
             int x = item->x + r * cos(alpha);
             int y = item->y + r * sin(alpha);
             double prim = alpha - M_PI / 2;
-            thickLineRGBA(renderer, x - c * cos(prim), y - c * sin(prim), x + c * cos(prim), y + c * sin(prim), thick, 50,
-                          50, 50, a);
+            thickLineRGBA(renderer, x - c * cos(prim), y - c * sin(prim), x + c * cos(prim), y + c * sin(prim), thick,
+                          50, 50, 50, a);
             alpha += 2 * M_PI / 3;
+        }
+    }
+    if (item->type == Lazer) {
+        filledCircleRGBA(renderer, item->x, item->y, radius_item, 138, 43, 226, a);
+        int x = item->x;
+        int y = item->y - 6;
+        int r = 6;
+        for (int i = 0; i < 3; i++) {
+            thickLineRGBA(renderer, x - r, y, x + r, y, thick, 50, 50, 50, a);
+            y += 6;
         }
     }
     circleRGBA(renderer, item->x, item->y, radius_item, red, green, blue, a);

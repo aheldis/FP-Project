@@ -82,7 +82,10 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
             //printf("i have bug!\n");
             //fflush(stdout);
             if (i[k] < numberofBullets && (tank->bullets + i[k])->boolian && flag[k]) {
-                if ((tank + k)->mine == 1) {
+                if ((tank + k)->lazer == 1) {
+                    (tank + k)->lazer = 2;
+                    (tank + k)->lazerTime = 0;
+                } else if ((tank + k)->mine == 1) {
                     (mine + k)->x =
                             (tank + k)->x - (shooter + radius_shooter + radius_mine + step) * cos((tank + k)->angle);
                     (mine + k)->y =
@@ -92,6 +95,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                     (mine + k)->r = (tank + k)->r;
                     (mine + k)->g = (tank + k)->g;
                     (mine + k)->b = (tank + k)->b;
+                    (tank + k)->mine = 2;
                 } else if ((tank->item == false && (tank + k)->fragBomb == 0) ||
                            (tank->item == true && (tank + k)->fragBomb == 1)) {
                     if ((tank + k)->fragBomb == 1) {
@@ -128,7 +132,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
             }
             static int n[numberofTanks] = {0};
             n[k]++;
-            if (n[k] == 10) {
+            if (n[k] == 20) {
                 flag[k] = true;
                 n[k] = 0;
             }

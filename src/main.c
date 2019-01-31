@@ -35,7 +35,7 @@ struct Graph *createGraph(int vertices) {
         graph->visited[i] = 0;
     }
     return graph;
-}
+};
 
 void addEdge(struct Graph *graph, int src, int dest) {
     // Add edge from src to dest
@@ -137,6 +137,7 @@ void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
         (tank + i)->boolian = true;
         (tank + i)->fragBomb = 0;
         (tank + i)->mine = 0;
+        (tank + i)->lazer = 0;
         (tank + i)->item = false;
     }
 
@@ -367,6 +368,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (tank + i)->score = 0;
         (tank + i)->fragBomb = 0;
         (tank + i)->mine = 0;
+        (tank + i)->lazer = 0;
         (tank + i)->item = false;
     }
 
@@ -572,8 +574,7 @@ int main(int argc, char *argv[]) {
                         (item + j)->x = rand() % numberofRows * house + house;
                         (item + j)->y = rand() % numberofColumns * house + house;
                         (item + j)->boolian = true;
-                        int k = rand() % 2;
-                        //int k = 0;
+                        int k = rand() % 3;
                         (item + j)->type = k;
                         break;
                     }
@@ -590,7 +591,13 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        for (int k = 0; k < numberofTanks; k++) {
+        for (int k = 0; k < numberofTanks; k++){
+            if ((mine + k)->boolian) {
+                draw_mine(mine + k, shard, map->tanks);
+                for (int i = 0; i < numberofTanks; i++)
+                    if ((map->tanks + i)->boolian)
+                        tank_collids_mine(mine + k, map->tanks + i);
+            }
             (sample + k)->r = (map->tanks + k)->r;
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
@@ -598,6 +605,7 @@ int main(int argc, char *argv[]) {
                 move_tank(map->tanks + k, map);
                 turn_tank(map->tanks + k, map);
                 draw_tank(map->tanks + k);
+                draw_lazer(tank + k, tank + numberofTanks - 1 - k);
             }
             for (int i = 0; i < numberofBullets; i++) {
                 bullet_collids_walls((map->tanks + k)->bullets + i, map);
@@ -616,13 +624,6 @@ int main(int argc, char *argv[]) {
             stringRGBA(renderer, x, 330, score1, red, green, blue, a);
             stringRGBA(renderer, x - 20, 555, "tank2", red, green, blue, a);
             stringRGBA(renderer, x, 570, score2, red, green, blue, a);
-
-            if ((mine + k)->boolian) {
-                draw_mine(mine + k, shard, map->tanks);
-                for (int i = 0; i < numberofTanks; i++)
-                    if ((map->tanks + i)->boolian)
-                        tank_collids_mine(mine + k, map->tanks + i);
-            }
         }
         fire(map->tanks, shard, mine);
 

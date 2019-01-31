@@ -12,6 +12,7 @@ void draw_walls(Wall* walls);
 void draw_bullet(Bullet* bullet);
 void draw_shard(Shard *shard);
 void draw_mine(Mine *mine, Shard *shard, Tank *tank);
+void draw_lazer(Tank *tank1, Tank *tank2);
 void draw_item(Item *item);
 SDL_Keycode handle_events(Map* map);
 #endif //PROJECT_VIEW_H

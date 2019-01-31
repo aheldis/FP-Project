@@ -23,6 +23,7 @@ short down(short vert) {
 }
 
 bool movement_collids_walls(Tank *tank, Map *map, int flag) {
+    if (tank->lazer == 2) return false;
     //////the house where tank is in it
     short vert = vertex(tank->x, tank->y);
     int max_x, max_y;
@@ -186,6 +187,7 @@ bool movement_collids_walls(Tank *tank, Map *map, int flag) {
 }
 
 bool turning_collids_walls(Tank *tank, Map *map) {
+    if (tank->lazer == 2) return false;
     //////the house where tank is in it
     short vert = vertex(tank->x, tank->y);
     double deg = (tank->angle + degree) * state[tank->right] + (tank->angle - degree) * state[tank->left];
@@ -380,42 +382,44 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
 void bullet_collids_tanks(Bullet *bullet, Tank *tank, Shard *shard) {
     if (bullet->boolian) {
         for (int i = 0; i < numberofTanks; i++) {
-            if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <=
-                pow(radius_circle + bullet->rad, 2)) {
-                (tank + i)->boolian = false;
-                remaining--;
-                bullet->x = -100;
-                bullet->y = -100;
-                if (bullet->rad == radius_fragBomb) {
-                    for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
-                        (shard + j)->x = bullet->x;
-                        (shard + j)->y = bullet->y;
-                        (shard + j)->n = 0;
-                        (shard + j)->angle = (rand() % 360) * (M_PI / 180);
-                        (shard + j)->boolian = true;
+            if ((tank + i)->boolian) {
+                if (pow((tank + i)->x - bullet->x, 2) + pow((tank + i)->y - bullet->y, 2) <=
+                    pow(radius_circle + bullet->rad, 2)) {
+                    (tank + i)->boolian = false;
+                    remaining--;
+                    if (bullet->rad == radius_fragBomb) {
+                        for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
+                            (shard + j)->x = bullet->x;
+                            (shard + j)->y = bullet->y;
+                            (shard + j)->n = 0;
+                            (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                            (shard + j)->boolian = true;
+                        }
+                        (tank + i)->fragBomb = 0;
+                        bullet->rad = radius_bullet;
                     }
-                    (tank + i)->fragBomb = 0;
-                    bullet->rad = radius_bullet;
+                    bullet->x = -100;
+                    bullet->y = -100;
+                    return;
                 }
-                return;
-            }
-            if (pow((tank + i)->x + shooter * cos((tank + i)->angle) - bullet->x, 2) +
-                pow((tank + i)->y + shooter * sin((tank + i)->angle) - bullet->y, 2) <=
-                pow(radius_shooter + bullet->rad, 2)) {
-                (tank + i)->boolian = false;
-                remaining--;
-                bullet->x = -100;
-                bullet->y = -100;
-                if (bullet->rad == radius_fragBomb) {
-                    for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
-                        (shard + j)->x = bullet->x;
-                        (shard + j)->y = bullet->y;
-                        (shard + j)->n = 0;
-                        (shard + j)->angle = (rand() % 360) * (M_PI / 180);
-                        (shard + j)->boolian = true;
+                if (pow((tank + i)->x + shooter * cos((tank + i)->angle) - bullet->x, 2) +
+                    pow((tank + i)->y + shooter * sin((tank + i)->angle) - bullet->y, 2) <=
+                    pow(radius_shooter + bullet->rad, 2)) {
+                    (tank + i)->boolian = false;
+                    remaining--;
+                    if (bullet->rad == radius_fragBomb) {
+                        for (int j = i * numberofShards; j < (i + 1) * numberofShards; j++) {
+                            (shard + j)->x = bullet->x;
+                            (shard + j)->y = bullet->y;
+                            (shard + j)->n = 0;
+                            (shard + j)->angle = (rand() % 360) * (M_PI / 180);
+                            (shard + j)->boolian = true;
+                        }
+                        bullet->x = -100;
+                        bullet->y = -100;
+                        (tank + i)->fragBomb = 0;
+                        bullet->rad = radius_bullet;
                     }
-                    (tank + i)->fragBomb = 0;
-                    bullet->rad = radius_bullet;
                 }
             }
         }
@@ -428,6 +432,7 @@ void tank_collids_Items(Item *item, Tank *tank) {
         tank->item = true;
         if (item->type == FragBomb) tank->fragBomb = 1;
         if (item->type == MineItem) tank->mine = 1;
+        if (item->type == Lazer) tank->lazer = 1;
         item->boolian = false;
         return;
     }
@@ -437,6 +442,7 @@ void tank_collids_Items(Item *item, Tank *tank) {
         tank->item = true;
         if (item->type == FragBomb) tank->fragBomb = 1;
         if (item->type == MineItem) tank->mine = 1;
+        if (item->type == Lazer) tank->lazer = 1;
         item->boolian = false;
     }
 }
@@ -483,6 +489,10 @@ bool shard_collids_walls(Shard *shard, Map *map) {
                 return false;
         }
     }
+
+    if (shard->x < house / 2 || shard->y < house / 2 || shard->x > MAP_HEIGHT - house / 2 ||
+        shard->y > MAP_HEIGHT - house / 2)
+        return false;
     return true;
 }
 
@@ -495,7 +505,60 @@ void tank_collids_mine(Mine *mine, Tank *tank) {
         pow(tank->y + shooter * sin(tank->angle) - mine->y, 2) <= pow(radius_shooter + radius_mine, 2)) {
         mine->n = 200;
     }
+}
 
+void lazer_collids_walls(Tank *tank1, Tank *tank2, int *x, int *y) {
+    int sign_x = (cos(tank1->angle) > 0 ? 1 : -1);
+    int sign_y = (sin(tank1->angle) > 0 ? 1 : -1);
+    if (sign_x == 1 && sign_y == -1) {
+        if (cos(tank1->angle) >= cos(M_PI / 4)) {
+            *x = MAP_HEIGHT - house / 2;
+            *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
+        } else {
+            *y = house / 2;
+            *x = tank1->x + (*y - tank1->y) / tan(tank1->angle);
+        }
+    }
+    if (sign_x == 1 && sign_y == 1) {
+        if (cos(tank1->angle) >= cos(M_PI / 4)) {
+            *x = MAP_HEIGHT - house / 2;
+            *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
+        } else {
+            *y = MAP_HEIGHT - house / 2;
+            *x = tank1->x + (*y - tank1->y) / tan(tank1->angle);
+        }
+    }
+    if (sign_x == -1 && sign_y == 1) {
+        if (cos(tank1->angle) >= cos(3 * M_PI / 4)) {
+            *y = MAP_HEIGHT - house / 2;
+            *x = tank1->x + (*y - tank1->y) / tan(tank1->angle);
+        } else {
+            *x = house / 2;
+            *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
+        }
+    }
+    if (sign_x == -1 && sign_y == -1) {
+        if (cos(tank1->angle) >= cos(3 * M_PI / 4)) {
+            *y = house / 2;
+            *x = tank1->x + (*y - tank1->y) / tan(tank1->angle);
+        } else {
+            *x = house / 2;
+            *y = tank1->y + (*x - tank1->x) * tan(tank1->angle);
+        }
+    }
+    if (*x > MAP_HEIGHT - house / 2) *x = MAP_HEIGHT - house / 2;
+    if (*y > MAP_HEIGHT - house / 2) *y = MAP_HEIGHT - house / 2;
+    if (*x < house / 2) *x = house / 2;
+    if (*y < house / 2) *y = house / 2;
+
+    double m = (double)(*y - tank1->y) / (double)(*x - tank1->x);
+    double b = (double)tank1->y - m * (double)tank1->x;
+    if (fabs((double) tank2->y - m * (double) tank2->x - b) / sqrt(1 + m * m) <= radius_circle + thick * 2) {
+        tank2->boolian = false;
+        if (remaining > 1) remaining--;
+        //printf("remaining: %d\n", remaining);
+        //fflush(stdout);
+    }
 }
 
 ///////////////for reading from file. it works correctly

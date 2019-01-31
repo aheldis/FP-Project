@@ -18,7 +18,7 @@
 #define a 255
 #define FPS 400
 #define MAP_WIDTH 900
-#define MAP_HEIGHT 820
+#define MAP_HEIGHT 810
 #define house 90
 #define numberofBullets 5
 #define numberofWalls 144
@@ -36,12 +36,12 @@
 #define step_bullet 6
 #define degree 0.1
 #define distanceofBullets 500
-#define distanceofShards 30
+#define distanceofShards 100
 #define numberofRows 8
 #define numberofColumns 8
 #define numberofTanks 2
 #define numberofItems 3
-#define numberofShards 8
+#define numberofShards 15
 #define timeofItem 500
 
 #define max(a, b) (a >= b) * a + (a < b) * b
@@ -59,7 +59,7 @@ typedef struct {
     int x, y;
     int number;
     int n;
-    enum {FragBomb, MineItem} type;
+    enum {FragBomb, MineItem, Lazer} type;
     bool boolian;
 } Item;
 
@@ -96,6 +96,8 @@ typedef struct {
     bool item;
     int fragBomb;
     int mine;
+    int lazer;
+    int lazerTime;
     double angle;
     Bullet *bullets;
 } Tank;
