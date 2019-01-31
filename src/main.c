@@ -183,6 +183,8 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (tank + i)->down = 0;
         (tank + i)->right = 0;
         (tank + i)->shoot = 0;
+        for (int z = 0; z < 10; z++)
+            (tank + i)->name[z] = 0;
     }
 
     SDL_Keycode keycode = 0;
@@ -233,7 +235,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             int greenj[] = {green[tank1 + k], (tank + k)->g};
             int bluej[] = {blue[tank1 + k], (tank + k)->b};
             int x1;
-            int yes = i % 5 == 0 && k == i / 5;
+            int yes = i % 6 == 0 && k == i / 6;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
@@ -255,7 +257,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
 
             for (int z = 0; z < 4; z++) vx[z] += 45;
             x += 45;
-            yes = i % 5 == 1 && k == i / 5;
+            yes = i % 6 == 1 && k == i / 6;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
@@ -278,7 +280,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             for (int z = 0; z < 4; z++) vy[z] -= 45;
             y -= 45;
 
-            yes = i % 5 == 2 && k == i / 5;
+            yes = i % 6 == 2 && k == i / 6;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
@@ -305,7 +307,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             x += 45;
             y += 45;
 
-            yes = i % 5 == 3 && k == i / 5;
+            yes = i % 6 == 3 && k == i / 6;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
@@ -332,7 +334,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
             x -= 250;
             y -= 45;
 
-            yes = i % 5 == 4 && k == i / 5;
+            yes = i % 6 == 4 && k == i / 6;
             filledPolygonRGBA(renderer, vx, vy, 4, redj[yes], greenj[yes], bluej[yes], a);
             if (yes || enter) {
                 static int f[numberofTanks] = {0};
@@ -352,15 +354,54 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                            gback, bback, a);
             }
 
+            int x2 = MAP_WIDTH / 2 - house;
+            int y2 = (k + 1) * MAP_HEIGHT / 3 + 3 * house / 2;
+            stringRGBA(renderer, x2, y2, "Name:", red_white - rback, green_white - gback, blue_white - bback, a);
+
+            yes = i % 6 == 5 && k == i / 6;
+            if (yes || enter) {
+                static int f[numberofTanks] = {0};
+                if (enter) f[k] = 0;
+                if (!enter) {
+                    static int z = 0;
+                    if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
+                        *SDL_GetKeyName(keycode) != '') {
+                        if (keycode == SDLK_BACKSPACE && z > 0) {
+                            static int p = 0;
+                            if (p == 0) {
+                                z--;
+                                (tank + k)->name[z] = 0;
+                            }
+                            p++;
+                            if (p == 2) p = 0;
+                        }
+                        else {
+                            (tank + k)->name[z] = *SDL_GetKeyName(keycode);
+                            if (z < 9) z++;
+                            f[k] = 1;
+                        }
+                    }
+                    if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && (tank + k)->name[0] && f[k]) {
+                        i++;
+                        z = 0;
+                    }
+                }
+            }
+            if ((tank + k)->name[0]) {
+                int x1 = MAP_WIDTH / 2;
+                int y1 = (k + 1) * MAP_HEIGHT / 3 + 3 * house / 2;
+                stringRGBA(renderer, x1, y1, (tank + k)->name, (tank + k)->r, (tank + k)->g, (tank + k)->b, a);
+            }
+
             for (int z = 0; z < 4; z++) {
                 vx[z] += -90 + 250;
                 vy[z] += 45 + 275;
             }
             x += 250 - 90;
             y += 45 + 275;
-            if (i >= 5) j = tank2;
+            if (i >= 6) j = tank2;
         }
-        if (i == 10) break;
+        if (i == 12) break;
         enter = 0;
         if (keycodepre != keycode && keycode) keycodepre = keycode;
         SDL_RenderPresent(renderer);
@@ -513,20 +554,28 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     return flag;
 }
 
-
-void makingstring(int n, char *score) {
+int numberofchars(char *name) {
     int i = 0;
-    int m = n / 10, argham = 1;
+    while (name[i] != 0) i++;
+    return i;
+}
+
+int argham(int n) {
+    int m = n / 10, ragham = 1;
     while (m / 10) {
-        argham++;
+        ragham++;
         m /= 10;
     }
+    return ragham;
+}
 
-    while (argham) {
-        score[argham - 1] = n % 10 + '0';
-        //printf("in func: %c\n", score[argham - 1]);
+void makingstring(int n, char *score, int ragham) {
+    int i = 0;
+    *(score + ragham) = 0;
+    while (ragham) {
+        *(score + ragham - 1) = n % 10 + '0';
         n /= 10;
-        argham--;
+        ragham--;
     }
 }
 
@@ -627,20 +676,22 @@ int main(int argc, char *argv[]) {
             }
             draw_tank(sample + k);
             y = MAP_HEIGHT / 3 + radius_circle + 15;
-            stringRGBA(renderer, x - 20, y, "tank1", red, green, blue, a);
-            char score1[1000] = {0};
-            char score2[1000] = {0};
-            makingstring(tank->score, score1);
-            //printf("%d\n", tank->score);
-            makingstring((tank + 1)->score, score2);
-            //printf("score is: %s\n", score1);
+            stringRGBA(renderer, x - numberofchars(tank->name) * 4, y, tank->name, red, green, blue, a);
+            char *score1, *score2;
+            int ragham1 = argham(tank->score), ragham2 = argham((tank + 1)->score);
+            score1 = malloc(ragham1 * sizeof(char));
+            score2 = malloc(ragham2 * sizeof(char));
+            makingstring(tank->score, score1, ragham1);
+            makingstring((tank + 1)->score, score2, ragham2);
             y += 15;
-            stringRGBA(renderer, x, y, score1, red, green, blue, a);
+            stringRGBA(renderer, x - (ragham1) * 3, y, score1, red, green, blue, a);
             y = 2 * MAP_HEIGHT / 3 + radius_circle + 15;
-            stringRGBA(renderer, x - 20, y, "tank2", red, green, blue, a);
+            stringRGBA(renderer, x - numberofchars((tank + 1)->name) * 4, y, (tank + 1)->name, red, green, blue, a);
             y += 15;
-            stringRGBA(renderer, x, y, score2, red, green, blue, a);
+            stringRGBA(renderer, x - (ragham2) * 3, y, score2, red, green, blue, a);
             y -= 30 + radius_circle;
+            free(score1);
+            free(score2);
         }
         fire(map->tanks, shard, mine);
 
