@@ -79,6 +79,7 @@ void read_map_array(Map *map) {
     MAP_WIDTH = (numberofColumns + 2) * house;
     MAP_HEIGHT = (numberofRows + 1) * house;
     numberofWalls = (numberofRows + 1) * numberofColumns + (numberofColumns + 1) * numberofRows;
+    free(map->walls);
     map->walls = malloc(sizeof(Wall) * numberofWalls);
     short int n = 0;
     /////////amoodi
