@@ -132,7 +132,7 @@ void fire(Tank *tank, Shard *shard, Mine *mine) {
                 }
             }
             n[k]++;
-            if (n[k] == 10) {
+            if (n[k] == 15) {
                 flag[k] = true;
                 n[k] = 0;
             }

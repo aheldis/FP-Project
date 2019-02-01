@@ -131,13 +131,20 @@ void read_map_array(Map *map, bool flag) {
 void read_map_file(Map *map, char *file_path) {
     FILE *file1 = fopen(file_path, "r");
     int n, x1, y1, x2, y2;
+    MAP_WIDTH = 8 * house;
+    MAP_HEIGHT = 8 * house;
     fscanf(file1, "%d\n", &n);
+    map->walls = malloc(n * sizeof(Wall));
+    numberofWalls = n;
+    numberofColumns = 6;
+    numberofRows = 7;
     for (int i = 0; i < n; i++) {
         fscanf(file1, "%d %d %d %d\n", &x1, &y1, &x2, &y2);
-        (map->walls + i)->x1 = x1 * house;
-        (map->walls + i)->y1 = y1 * house;
-        (map->walls + i)->x2 = x2 * house;
-        (map->walls + i)->y2 = y2 * house;
+        (map->walls + i)->x1 = x1 * house + house / 2;
+        (map->walls + i)->y1 = y1 * house + house / 2;
+        (map->walls + i)->x2 = x2 * house + house / 2;
+        (map->walls + i)->y2 = y2 * house + house / 2;
+        (map->walls + i)->boolian = true;
     }
     fclose(file1);
 }
@@ -145,7 +152,7 @@ void read_map_file(Map *map, char *file_path) {
 
 void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
     ///////////////for reading from file. it works correctly
-    //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+//    read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
     read_map_array(map, false);
 
