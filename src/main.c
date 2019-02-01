@@ -474,6 +474,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         (bullet + numberofBullets + i)->rad = radius_bullet;
     }
     remaining = numberofTanks;
+    winnerScore = 0;
 
     start_flag = true;
     whilePlayingMenu = true;
@@ -1120,6 +1121,7 @@ int main(int argc, char *argv[]) {
                        "Winner's Score:", red_white - rback, green_white - gback, blue_white - bback, a);
             stringRGBA(renderer, (MAP_WIDTH - house) / 2 + numberofchars("Winner's Score: ") * 4, MAP_HEIGHT - 23,
                        score, red_white - rback, green_white - gback, blue_white - bback, a);
+            free(score);
         }
         for (int k = 0; k < numberofTanks; k++) {
             if ((mine + k)->boolian) {
@@ -1309,13 +1311,14 @@ int main(int argc, char *argv[]) {
                     f = 0;
                     z = 0;
                     for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
-                    for (int i = 0; i < numberofchars(score); i++) score[i] = 0;
+                    for (int i = 0; i < argham(winnerScore); i++) score[i] = 0;
                     printf("winnerScore: %d\n", winnerScore);
                 }
 
                 if (score[0]) {
                     int x1 = MAP_WIDTH / 2;
                     int y1 = MAP_HEIGHT / 2 + house / 4;
+                    score[3] = 0;
                     stringRGBA(renderer, x1 - numberofchars(score) * 3, y1, score, rback, gback, bback, a);
                 }
             }
