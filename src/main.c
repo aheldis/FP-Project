@@ -121,7 +121,7 @@ void read_map_array(Map *map, bool flag) {
         }
 
         //int rend = (rand() % (numberofRows - 2) + 1) * (rand() % (numberofColumns - 2) + 1);
-        int rend = numberofRows / 2 *  numberofColumns + numberofColumns / 2;
+        int rend = numberofRows / 2 * numberofColumns + numberofColumns / 2;
         DFS(graph, rend, map->walls);
     }
 }
@@ -489,7 +489,7 @@ int numberofchars(char *name) {
 
 int argham(int n) {
     int m = n / 10, ragham = 1;
-    while (m / 10) {
+    while (m) {
         ragham++;
         m /= 10;
     }
@@ -707,7 +707,8 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
                    blue_white - bback, a);
         char *winScore = malloc(argham(winnerScore) * sizeof(char));
         makingstring(winnerScore, winScore, argham(winnerScore));
-        //printf("winnerScore: %d\n", winnerScore);
+        printf("winnerScore: %d\n", argham(winnerScore));
+        fflush(stdout);
         stringRGBA(renderer, (MAP_WIDTH / 2 + numberofchars("Winner's Score: ") * 6) / 1.2,
                    (MAP_HEIGHT / 3 - house) / 1.2, winScore, red_white - rback, green_white - gback, blue_white - bback,
                    a);
@@ -1112,14 +1113,13 @@ int main(int argc, char *argv[]) {
 
         int x = MAP_WIDTH - 75, y = MAP_HEIGHT / 3;
         if (winnerScore) {
-            char *score1, *score2;
             int ragham = argham(winnerScore);
             char *score = malloc(ragham * sizeof(char));
             makingstring(winnerScore, score, ragham);
             stringRGBA(renderer, (MAP_WIDTH - house) / 2 - numberofchars("Winner's Score:") * 4, MAP_HEIGHT - 23,
                        "Winner's Score:", red_white - rback, green_white - gback, blue_white - bback, a);
-            stringRGBA(renderer, (MAP_WIDTH - house) / 2 + numberofchars("Winner's Score: ") * 4, MAP_HEIGHT - 23, score,
-                       red_white - rback, green_white - gback, blue_white - bback, a);
+            stringRGBA(renderer, (MAP_WIDTH - house) / 2 + numberofchars("Winner's Score: ") * 4, MAP_HEIGHT - 23,
+                       score, red_white - rback, green_white - gback, blue_white - bback, a);
         }
         for (int k = 0; k < numberofTanks; k++) {
             if ((mine + k)->boolian) {
@@ -1309,6 +1309,7 @@ int main(int argc, char *argv[]) {
                     f = 0;
                     z = 0;
                     for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
+                    for (int i = 0; i < numberofchars(score); i++) score[i] = 0;
                     printf("winnerScore: %d\n", winnerScore);
                 }
 
