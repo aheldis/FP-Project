@@ -4,7 +4,7 @@
 #undef main
 #endif
 
-bool newGame_flag = false;
+bool whilePlayingMenu = false, saveGame_flag = false;
 int winner = 0;
 
 //////////////for random map
@@ -455,7 +455,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     remaining = numberofTanks;
 
     start_flag = true;
-    newGame_flag = true;
+    whilePlayingMenu = true;
     return flag;
 }
 
@@ -589,6 +589,16 @@ void makingstring(int n, char *score, int ragham) {
     }
 }
 
+
+void saveGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, char *fileName) {
+//    char name[20];
+//    for (int j = 0; j < numberofchars(fileName); j++)
+//        name[j] = fileName[j];
+    FILE *file1 = fopen("src/fileNames.txt", "w");
+    fprintf(file1,"src/%s", fileName);
+    fclose(file1);
+}
+
 int main(int argc, char *argv[]) {
 
     srand(time(0));
@@ -608,12 +618,16 @@ int main(int argc, char *argv[]) {
 
     for (int j = 0; j < 5; j++) score[j] = 0;
 
+    char fileName[10];
+
+    for (int j = 0; j < 10; j++) fileName[j] = 0;
+
     while (1) {
         int red = 150, green = 150, blue = 150;
         if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
         flag = menu(tank, bullet, map, walls, flag);
         static int time = 0;
-        if (!newGame_flag) time++;
+        if (!whilePlayingMenu) time++;
 
         if (start_flag) {
             for (int i = 0; i < numberofItems; i++) {
@@ -630,7 +644,7 @@ int main(int argc, char *argv[]) {
             if ((map->walls + i)->boolian)
                 draw_walls(map->walls + i);
 
-        if (time == timeofItem && !newGame_flag) {
+        if (time == timeofItem && !whilePlayingMenu) {
             time = 0;
             int i = 0;
             for (int j = 0; j < 3; j++)
@@ -676,8 +690,8 @@ int main(int argc, char *argv[]) {
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
             if ((map->tanks + k)->boolian) {
-                if (!newGame_flag) move_tank(map->tanks + k, map);
-                if (!newGame_flag) turn_tank(map->tanks + k, map);
+                if (!whilePlayingMenu) move_tank(map->tanks + k, map);
+                if (!whilePlayingMenu) turn_tank(map->tanks + k, map);
                 draw_tank(map->tanks + k);
                 draw_lazer(tank + k, tank + numberofTanks - 1 - k);
             }
@@ -706,7 +720,7 @@ int main(int argc, char *argv[]) {
             free(score1);
             free(score2);
         }
-        if (!newGame_flag) fire(map->tanks, shard, mine);
+        if (!whilePlayingMenu) fire(map->tanks, shard, mine);
 
         for (int i = 0; i < numberofTanks * numberofShards; i++) {
             if ((shard + i)->boolian) {
@@ -718,7 +732,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        if (newGame_flag) {
+        if (whilePlayingMenu) {
             static int z = 0;
             static int f = 0;
             short vx[] = {MAP_WIDTH / 2 - 5 * house / 2, MAP_WIDTH / 2 - 5 * house / 2,
@@ -727,7 +741,40 @@ int main(int argc, char *argv[]) {
                           MAP_HEIGHT / 2 + 4 * house / 2, MAP_HEIGHT / 2 - 4 * house / 2};
             filledPolygonRGBA(renderer, vx, vy, 4, red_white - rback, green_white - gback, blue_white - bback, 220);
 
-            if (winner) {
+            if (saveGame_flag) {
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Give me the name for saving the file:") * 4,
+                           MAP_HEIGHT / 2 - house / 4, "Give me the name for saving the file:", rback, gback, bback, a);
+
+                if (!state[SDL_SCANCODE_RETURN] && keycode != SDLK_RETURN && keycode &&
+                    *SDL_GetKeyName(keycode) != '') {
+                    if (keycode == SDLK_BACKSPACE && z > 0) {
+                        static int p = 0;
+                        if (p == 0) {
+                            z--;
+                            fileName[z] = 0;
+                        }
+                        p++;
+                        if (p == 2) p = 0;
+                    } else {
+                        fileName[z] = *SDL_GetKeyName(keycode);
+                        if (z < 9) z++;
+                        f = 1;
+                    }
+                }
+                if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && fileName[0] && f) {
+                    whilePlayingMenu = false;
+                    saveGame_flag = false;
+                    f = 0;
+                    z = 0;
+                    saveGame(map->tanks, map->tanks->bullets, map, map->walls, item, fileName);
+                }
+
+                if (fileName[0]) {
+                    int x1 = MAP_WIDTH / 2;
+                    int y1 = MAP_HEIGHT / 2 + house / 4;
+                    stringRGBA(renderer, x1 - numberofchars(fileName) * 3, y1, fileName, rback, gback, bback, a);
+                }
+            } else if (winner) {
                 int red = rand() % 255;
                 int green = rand() % 255;
                 int blue = rand() % 255;
@@ -739,7 +786,7 @@ int main(int argc, char *argv[]) {
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Enter to continue") * 4,
                            MAP_HEIGHT / 2 + house / 4, "Press Enter to continue", red, green, blue, a);
                 if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
-                    newGame_flag = false;
+                    whilePlayingMenu = false;
                     winner = 0;
                     winnerScore = 0;
                     newGame(tank, bullet, map, walls, true);
@@ -768,8 +815,10 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && score[0] && f) {
-                    newGame_flag = false;
+                    whilePlayingMenu = false;
                     winnerScore = 0;
+                    f = 0;
+                    z = 0;
                     for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
                     printf("%d\n", winnerScore);
                 }
@@ -793,7 +842,7 @@ int main(int argc, char *argv[]) {
                         if ((tank + i)->score == winnerScore) {
                             remaining = numberofTanks;
                             winner = i + 1;
-                            newGame_flag = true;
+                            whilePlayingMenu = true;
                         } else nextGame(map->tanks, map->tanks->bullets, map, map->walls);
                         break;
                     }
@@ -808,6 +857,11 @@ int main(int argc, char *argv[]) {
                 n = 0;
                 nextGame(map->tanks, map->tanks->bullets, map, map->walls);
             }
+        }
+
+        if ((state[224] || state[228]) && state[SDL_SCANCODE_S]) {
+            whilePlayingMenu = true;
+            saveGame_flag = true;
         }
 
         if (state[SDL_SCANCODE_ESCAPE]) {
