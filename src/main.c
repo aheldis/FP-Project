@@ -4,7 +4,7 @@
 #undef main
 #endif
 
-bool whilePlayingMenu = false, saveGame_flag = false, load_flag = false;
+bool whilePlayingMenu = false, saveGame_flag = false, load_flag = false, alert_flag = false, pause_flag = false;
 int winner = 0;
 
 //////////////for random map
@@ -528,7 +528,7 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
             f++;
             if (once) f = 0;
             if (f >= 5 && !once) {
-                SDL_Delay(200);
+                SDL_Delay(100);
                 flag = true;
                 load_flag = true;
                 tank->bullets = bullet;
@@ -678,6 +678,9 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
                 fscanf(file1, "tank%d->shoot: %d\n", &i, &(sample + i)->shoot);
                 fscanf(file1, "tank%d->name: %s\n", &i, &(sample + i)->name);
                 fscanf(file1, "tank%d->score: %d\n", &i, &(sample + i)->score);
+                (sample + i)->mine = 0;
+                (sample + i)->fragBomb = 0;
+                (sample + i)->lazer = 0;
                 (sample + i)->angle = 3 * M_PI / 2;
             }
             fclose(file1);
@@ -800,12 +803,18 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Shard *
         sample1->r = 180;
         sample1->g = 180;
         sample1->b = 180;
+        sample1->mine = 0;
+        sample1->fragBomb = 0;
+        sample1->lazer = 0;
         sample2->x = MAP_WIDTH / 2;
         sample2->y = MAP_HEIGHT - sample1->y;
         sample2->angle = M_PI;
         sample2->r = 180;
         sample2->g = 180;
         sample2->b = 180;
+        sample2->mine = 0;
+        sample2->fragBomb = 0;
+        sample2->lazer = 0;
     }
     enum {
         new, load, end
@@ -1094,6 +1103,16 @@ int main(int argc, char *argv[]) {
         }
 
         int x = MAP_WIDTH - 75, y = MAP_HEIGHT / 3;
+        if (winnerScore) {
+            char *score1, *score2;
+            int ragham = argham(winnerScore);
+            char *score = malloc(ragham * sizeof(char));
+            makingstring(winnerScore, score, ragham);
+            stringRGBA(renderer, (MAP_WIDTH - house) / 2 - numberofchars("Winner's Score:") * 4, MAP_HEIGHT - 23,
+                       "Winner's Score:", red_white - rback, green_white - gback, blue_white - bback, a);
+            stringRGBA(renderer, (MAP_WIDTH - house) / 2 + numberofchars("Winner's Score: ") * 4, MAP_HEIGHT - 23, score,
+                       red_white - rback, green_white - gback, blue_white - bback, a);
+        }
         for (int k = 0; k < numberofTanks; k++) {
             if ((mine + k)->boolian) {
                 draw_mine(mine + k, shard, map->tanks);
@@ -1118,7 +1137,7 @@ int main(int argc, char *argv[]) {
             }
             for (int i = 0; i < numberofBullets; i++) {
                 bullet_collids_walls((map->tanks + k)->bullets + i, map);
-                move_bullet((map->tanks + k)->bullets + i);
+                if (!pause_flag) move_bullet((map->tanks + k)->bullets + i);
                 draw_bullet((map->tanks + k)->bullets + i);
                 bullet_collids_tanks((map->tanks + k)->bullets + i, map->tanks, shard);
             }
@@ -1146,7 +1165,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < numberofTanks * numberofShards; i++) {
             if ((shard + i)->boolian) {
                 draw_shard(shard + i);
-                move_shard(shard + i, map);
+                if (!pause_flag) move_shard(shard + i, map);
                 for (int l = 0; l < 2; l++)
                     if ((map->tanks + l)->boolian)
                         shard_collids_tanks(shard + i, map->tanks + l);
@@ -1156,14 +1175,45 @@ int main(int argc, char *argv[]) {
         if (whilePlayingMenu) {
             static int z = 0;
             static int f = 0;
-            if (start_flag) f = 0, z = 0;
             short vx[] = {MAP_WIDTH / 2 - 5 * house / 2, MAP_WIDTH / 2 - 5 * house / 2,
                           MAP_WIDTH / 2 + 5 * house / 2, MAP_WIDTH / 2 + 5 * house / 2};
             short vy[] = {MAP_HEIGHT / 2 - 4 * house / 2, MAP_HEIGHT / 2 + 4 * house / 2,
                           MAP_HEIGHT / 2 + 4 * house / 2, MAP_HEIGHT / 2 - 4 * house / 2};
             filledPolygonRGBA(renderer, vx, vy, 4, red_white - rback, green_white - gback, blue_white - bback, 220);
 
-            if (saveGame_flag) {
+            if (pause_flag) {
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Game paused!") * 4,
+                           MAP_HEIGHT / 2 - house / 4, "Game paused!", rback, gback, bback, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("To continue the game, press Enter") * 4,
+                           MAP_HEIGHT / 2 + house / 4, "To continue the game, press Enter", rback, gback, bback, a);
+                if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
+                    whilePlayingMenu = false;
+                    pause_flag = false;
+                }
+            } else if (alert_flag) {
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Ctrl + N to change Night Mode") * 4,
+                           MAP_HEIGHT / 2 - house / 2 - house / 2, "Press Ctrl + N to change Night Mode", rback, gback,
+                           bback, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Ctrl + S to save the game") * 4,
+                           MAP_HEIGHT / 2 - house / 4 - house / 2, "Press Ctrl + S to save the game", rback, gback,
+                           bback, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Ctrl + P to pause the game") * 4,
+                           MAP_HEIGHT / 2 - house / 2, "Press Ctrl + P to pause the game", rback, gback, bback, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Esc to go to the main menu") * 4,
+                           MAP_HEIGHT / 2 + house / 4 - house / 2, "Press Esc to go to the main menu", rback, gback,
+                           bback, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Enter to start the game") * 4,
+                           MAP_HEIGHT / 2 + house, "Press Enter to start the game", rback, gback, bback, a);
+                if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
+                    static int n = 0;
+                    n++;
+                    if (n >= 10) {
+                        whilePlayingMenu = false;
+                        alert_flag = false;
+                        n = 0;
+                    }
+                }
+            } else if (saveGame_flag) {
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Give me the name for saving the file:") * 4,
                            MAP_HEIGHT / 2 - house / 4, "Give me the name for saving the file:", rback, gback, bback, a);
 
@@ -1245,12 +1295,13 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && score[0] && f) {
-                    whilePlayingMenu = false;
+                    //whilePlayingMenu = false;
                     winnerScore = 0;
+                    alert_flag = true;
                     f = 0;
                     z = 0;
                     for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
-                    printf("%d\n", winnerScore);
+                    printf("winnerScore: %d\n", winnerScore);
                 }
 
                 if (score[0]) {
@@ -1287,6 +1338,11 @@ int main(int argc, char *argv[]) {
                 n = 0;
                 nextGame(map->tanks, map->tanks->bullets, map, map->walls);
             }
+        }
+
+        if ((state[224] || state[228]) && state[SDL_SCANCODE_P]) {
+            whilePlayingMenu = true;
+            pause_flag = true;
         }
 
         if ((state[224] || state[228]) && state[SDL_SCANCODE_S]) {
