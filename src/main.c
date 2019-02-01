@@ -1137,15 +1137,15 @@ int main(int argc, char *argv[]) {
             (sample + k)->lazer = (map->tanks + k)->lazer;
             (sample + k)->fragBomb = (map->tanks + k)->fragBomb;
             if ((map->tanks + k)->boolian) {
+                draw_tank(map->tanks + k);
                 if (!whilePlayingMenu) move_tank(map->tanks + k, map);
                 if (!whilePlayingMenu) turn_tank(map->tanks + k, map);
-                draw_tank(map->tanks + k);
                 draw_lazer(tank + k, tank + numberofTanks - 1 - k);
             }
             for (int i = 0; i < numberofBullets; i++) {
+                draw_bullet((map->tanks + k)->bullets + i);
                 bullet_collids_walls((map->tanks + k)->bullets + i, map);
                 if (!pause_flag) move_bullet((map->tanks + k)->bullets + i);
-                draw_bullet((map->tanks + k)->bullets + i);
                 bullet_collids_tanks((map->tanks + k)->bullets + i, map->tanks, shard);
             }
             draw_tank(sample + k);

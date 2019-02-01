@@ -308,13 +308,13 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
         int i = b[j];
         if ((map->walls + i)->boolian) {
             ////////////////////collision
-            if ((abs(bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) - (map->walls + i)->x1) <=
+            if ((abs(bullet->x + bullet->rad * sign_x - (map->walls + i)->x1) <=
                  thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                  abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
 
-            else if ((bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) >=
+            else if ((bullet->x + bullet->rad * sign_x >=
                       (map->walls + i)->x1 + thick) &&
                      (bullet->x + bullet->rad * sign_x <= (map->walls + i)->x1 - thick) &&
                      ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
@@ -322,13 +322,13 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                       abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
 
-            if ((abs(bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
+            if ((abs(bullet->y + bullet->rad * sign_y - (map->walls + i)->y1) <=
                  thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
                 (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
                  abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
 
-            else if ((bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) >=
+            else if ((bullet->y + bullet->rad * sign_y >=
                       (map->walls + i)->y1 + thick) &&
                      (bullet->y + bullet->rad * sign_y <= (map->walls + i)->y1 - thick) &&
                      ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
@@ -359,20 +359,20 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
         int i = b[j];
         if (i != -1 && (map->walls + i)->boolian) {
             if ((map->walls + i)->x1 - (map->walls + i)->x2 == 0)
-                if ((pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
-                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
+                if ((pow((map->walls + i)->x1 - (bullet->x), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y), 2) <=
                      (bullet->rad + thick) * (bullet->rad + thick)) ||
-                    (pow((map->walls + i)->x2 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
-                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
+                    (pow((map->walls + i)->x2 - (bullet->x), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y), 2) <=
                      (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = 2 * M_PI - bullet->angle;
 
             if ((map->walls + i)->y1 - (map->walls + i)->y2 == 0)
-                if ((pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
-                     pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
+                if ((pow((map->walls + i)->y1 - (bullet->y), 2) +
+                     pow((map->walls + i)->x1 - (bullet->x), 2) <=
                      (bullet->rad + thick) * (bullet->rad + thick)) ||
-                    (pow((map->walls + i)->y2 - (bullet->y + step_bullet * sin(bullet->angle)), 2) +
-                     pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) <=
+                    (pow((map->walls + i)->y2 - (bullet->y), 2) +
+                     pow((map->walls + i)->x1 - (bullet->x), 2) <=
                      (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = M_PI - bullet->angle;
         }
