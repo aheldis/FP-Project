@@ -22,7 +22,7 @@ void quit_window() {
 }
 
 SDL_Keycode handle_events(Map *map) {
-    static int width = 900, height = 810;
+    static int width = 800, height = 800;
     if (MAP_HEIGHT != height || MAP_WIDTH != width) {
         width = MAP_WIDTH;
         height = MAP_HEIGHT;

@@ -73,9 +73,11 @@ void DFS(struct Graph *graph, int vertex, Wall *walls) {
     }
 }
 
-void read_map_array(Map *map) {
-    numberofRows = rand() % 3 + 5;
-    numberofColumns = rand() % 7 + 5;
+void read_map_array(Map *map, bool flag) {
+    if (!flag) {
+        numberofRows = rand() % 3 + 5;
+        numberofColumns = rand() % 7 + 5;
+    }
     MAP_WIDTH = (numberofColumns + 2) * house;
     MAP_HEIGHT = (numberofRows + 1) * house;
     numberofWalls = (numberofRows + 1) * numberofColumns + (numberofColumns + 1) * numberofRows;
@@ -90,7 +92,7 @@ void read_map_array(Map *map) {
             (map->walls + n)->y1 = i * house + house / 2;
             (map->walls + n)->x2 = j * house + house / 2;
             (map->walls + n)->y2 = (i + 1) * house + house / 2;
-            if (rend == 1 && j != 0 && j != numberofColumns) (map->walls + n)->boolian = false;
+            if (rend == 1 && j != 0 && j != numberofColumns && !flag) (map->walls + n)->boolian = false;
             else (map->walls + n)->boolian = true;
             n++;
         }
@@ -103,22 +105,24 @@ void read_map_array(Map *map) {
             (map->walls + n)->y1 = i * house + house / 2;
             (map->walls + n)->x2 = (j + 1) * house + house / 2;
             (map->walls + n)->y2 = i * house + house / 2;
-            if (rend == 1 && i != 0 && i != numberofRows) (map->walls + n)->boolian = false;
+            if (rend == 1 && i != 0 && i != numberofRows && !flag) (map->walls + n)->boolian = false;
             else (map->walls + n)->boolian = true;
             n++;
         }
     }
-    struct Graph *graph = createGraph(numberofRows * numberofColumns);
-    for (int j = 0; j < numberofRows; j++) {
-        for (int i = j * numberofColumns; i < (j + 1) * numberofColumns; i++) {
-            if (i != (j + 1) * numberofColumns - 1) addEdge(graph, i, i + 1);
-            if (j != numberofRows - 1) addEdge(graph, i, i + numberofColumns);
+
+    if (!flag) {
+        struct Graph *graph = createGraph(numberofRows * numberofColumns);
+        for (int j = 0; j < numberofRows; j++) {
+            for (int i = j * numberofColumns; i < (j + 1) * numberofColumns; i++) {
+                if (i != (j + 1) * numberofColumns - 1) addEdge(graph, i, i + 1);
+                if (j != numberofRows - 1) addEdge(graph, i, i + numberofColumns);
+            }
         }
+
+        int rend = rand() % numberofRows * numberofColumns;
+        DFS(graph, rend, map->walls);
     }
-
-    int rend = rand() % numberofRows * numberofColumns;
-    DFS(graph, rend, map->walls);
-
 }
 
 
@@ -143,7 +147,7 @@ void nextGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls) {
     ///////////////for reading from file. it works correctly
     //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
-    read_map_array(map);
+    read_map_array(map, false);
 
     for (int i = 0; i < 2; i++) {
         (tank + i)->x = rand() % numberofColumns * house + house;
@@ -381,9 +385,13 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                             }
                             p++;
                             if (p == 2) p = 0;
-                        } else {
+                        } else if (keycode != SDLK_BACKSPACE) {
                             (tank + k)->name[z] = *SDL_GetKeyName(keycode) * (z == 0) +
-                                                  (*SDL_GetKeyName(keycode) - 'A' + 'a') * (z != 0);
+                                                  (*SDL_GetKeyName(keycode) >= 'A' && *SDL_GetKeyName(keycode) <= 'Z') *
+                                                  (*SDL_GetKeyName(keycode) - 'A' + 'a') * (z != 0) +
+                                                  !(*SDL_GetKeyName(keycode) >= 'A' &&
+                                                    *SDL_GetKeyName(keycode) <= 'Z') *
+                                                  *SDL_GetKeyName(keycode);
                             if (z < 9) z++;
                             f[k] = 1;
                         }
@@ -423,7 +431,7 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     ///////////////for reading from file. it works correctly
     //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
 
-    read_map_array(map);
+    read_map_array(map, false);
 
     for (int i = 0; i < 2; i++) {
         (tank + i)->x = rand() % numberofColumns * house + house;
@@ -459,8 +467,320 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     return flag;
 }
 
+int numberofchars(char *name) {
+    int i = 0;
+    while (name[i] != 0) i++;
+    return i;
+}
 
-bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
+
+int argham(int n) {
+    int m = n / 10, ragham = 1;
+    while (m / 10) {
+        ragham++;
+        m /= 10;
+    }
+    return ragham;
+}
+
+void makingstring(int n, char *score, int ragham) {
+    int i = 0;
+    *(score + ragham) = 0;
+    while (ragham) {
+        *(score + ragham - 1) = n % 10 + '0';
+        n /= 10;
+        ragham--;
+    }
+}
+
+bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Shard *shard, Mine *mine, bool flag) {
+    FILE *file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames.txt", "r");
+    int n;
+    fscanf(file1, "%d", &n);
+    fclose(file1);
+    Tank *sample = malloc(numberofTanks * sizeof(Tank));
+    char fileName[100] = {0};
+    char c = 0;
+    bool once = true;
+    while (flag) {
+        SDL_Keycode keycode;
+        keycode = handle_events(map);
+        static int j = 1;
+
+        enum {
+            up, down
+        } k;
+
+        int r = red_white - 120, g = green_white - 120, b = blue_white - 120;
+        if (rback == 225) r = red_white - r, g = green_white - g, b = blue_white - b;
+
+        int red[] = {r, r};
+        int green[] = {g, g};
+        int blue[] = {b, b};
+
+        if (state[SDL_SCANCODE_RETURN] && fileName[0] != 0) {
+            static int f = 0;
+            f++;
+            if (f >= 5) {
+                SDL_Delay(200);
+                flag = true;
+
+                tank->bullets = bullet;
+                (tank + 1)->bullets = bullet + numberofBullets;
+                map->tanks = tank;
+                map->walls = walls;
+
+                file1 = fopen(fileName, "r");
+                fscanf(file1, "winnerScore: %d\n", &winnerScore);
+                for (int i = 0; i < numberofTanks; i++) {
+                    fscanf(file1, "tank%d->r: %d\n", &i, &(tank + i)->r);
+                    fscanf(file1, "tank%d->g: %d\n", &i, &(tank + i)->g);
+                    fscanf(file1, "tank%d->b: %d\n", &i, &(tank + i)->b);
+                    fscanf(file1, "tank%d->right: %d\n", &i, &(tank + i)->right);
+                    fscanf(file1, "tank%d->left: %d\n", &i, &(tank + i)->left);
+                    fscanf(file1, "tank%d->up: %d\n", &i, &(tank + i)->up);
+                    fscanf(file1, "tank%d->down: %d\n", &i, &(tank + i)->down);
+                    fscanf(file1, "tank%d->shoot: %d\n", &i, &(tank + i)->shoot);
+                    fscanf(file1, "tank%d->name: %s\n", &i, &(tank + i)->name);
+                    fscanf(file1, "tank%d->score: %d\n", &i, &(tank + i)->score);
+                }
+
+                for (int i = 0; i < numberofTanks; i++) {
+                    fscanf(file1, "tank%d->x: %d\n", &i, &(tank + i)->x);
+                    fscanf(file1, "tank%d->y: %d\n", &i, &(tank + i)->y);
+                    fscanf(file1, "tank%d->boolian: %d\n", &i, &(tank + i)->boolian);
+                    fscanf(file1, "tank%d->item: %d\n", &i, &(tank + i)->item);
+                    fscanf(file1, "tank%d->fragBomb: %d\n", &i, &(tank + i)->fragBomb);
+                    fscanf(file1, "tank%d->mine: %d\n", &i, &(tank + i)->mine);
+                    fscanf(file1, "tank%d->lazer: %d\n", &i, &(tank + i)->lazer);
+                    fscanf(file1, "tank%d->lazerTime: %d\n", &i, &(tank + i)->lazerTime);
+                    fscanf(file1, "tank%d->angle %f\n", &i, &(tank + i)->angle);
+                }
+
+                fscanf(file1, "numberofColumns: %d\n", &numberofColumns);
+                fscanf(file1, "numberofRows: %d\n", &numberofRows);
+
+                ///////////////for reading from file. it works correctly
+                //read_map_file(map, "D:\\programming\\c\\University\\project\\project\\src\\map.txt");
+
+                read_map_array(map, true);
+
+                walls = map->walls;
+
+                for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
+                    fscanf(file1, "wall%d: %d\n", &i, &(walls + i)->boolian);
+
+                for (int i = 0; i < numberofTanks * numberofBullets; i++) {
+                    fscanf(file1, "bullet%d->x: %d\n", &i, &(bullet + i)->x);
+                    fscanf(file1, "bullet%d->y: %d\n", &i, &(bullet + i)->y);
+                    fscanf(file1, "bullet%d->angle: %f\n", &i, &(bullet + i)->angle);
+                    fscanf(file1, "bullet%d->n: %d\n", &i, &(bullet + i)->n);
+                    fscanf(file1, "bullet%d->rad: %d\n", &i, &(bullet + i)->rad);
+                    fscanf(file1, "bullet%d->boolian: %d\n", &i, &(bullet + i)->boolian);
+                }
+
+                for (int i = 0; i < numberofItems; i++) {
+                    fscanf(file1, "item%d->x: %d\n", &i, &(item + i)->x);
+                    fscanf(file1, "item%d->y: %d\n", &i, &(item + i)->y);
+                    fscanf(file1, "item%d->n: %d\n", &i, &(item + i)->n);
+                    fscanf(file1, "item%d->type: %d\n", &i, &(item + i)->type);
+                    fscanf(file1, "item%d->boolian: %d\n", &i, &(item + i)->boolian);
+                }
+
+                for (int i = 0; i < numberofItems; i++) {
+                    fscanf(file1, "mine%d->x: %d\n", &i, &(mine + i)->x);
+                    fscanf(file1, "mine%d->y: %d\n", &i, &(mine + i)->y);
+                    fscanf(file1, "mine%d->r: %d\n", &i, &(mine + i)->r);
+                    fscanf(file1, "mine%d->g: %d\n", &i, &(mine + i)->g);
+                    fscanf(file1, "mine%d->b: %d\n", &i, &(mine + i)->b);
+                    fscanf(file1, "mine%d->n: %d\n", &i, &(mine + i)->n);
+                    fscanf(file1, "mine%d->boolian: %d\n", &i, &(mine + i)->boolian);
+                }
+
+                for (int i = 0; i < numberofTanks * numberofShards; i++) {
+                    fscanf(file1, "shard%d->x: %d\n", &i, &(shard + i)->x);
+                    fscanf(file1, "shard%d->y: %d\n", &i, &(shard + i)->y);
+                    fscanf(file1, "shard%d->angle: %f\n", &i, &(shard + i)->angle);
+                    fscanf(file1, "shard%d->boolian: %d\n", &i, &(shard + i)->boolian);
+                }
+                fclose(file1);
+                printf("no bug\n");
+                return flag;
+                f = 0;
+            }
+        }
+
+        if (state[SDL_SCANCODE_ESCAPE]) {
+            SDL_Delay(200);
+            flag = false;
+            return flag;
+        }
+
+        if (state[SDL_SCANCODE_DOWN]) {
+            static int f = 0;
+            f++;
+            if (f >= 5) {
+                if (j < n) {
+                    j++;
+                    once = true;
+                    k = down;
+                }
+                f = 0;
+            }
+        }
+        if (state[SDL_SCANCODE_UP]) {
+            static int f = 0;
+            f++;
+            if (f >= 5) {
+                if (j > 1) {
+                    j--;
+                    once = true;
+                    k = up;
+                }
+                f = 0;
+            }
+        }
+
+        red[k] = red_white - rback, green[k] = green_white - gback, blue[k] = blue_white - bback;
+
+        if (once) {
+            file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\fileNames.txt", "r");
+            for (int i = 0; i < j; i++) {
+                int k;
+                for (k = 0; k < 100; k++) fileName[k] = 0;
+                k = 0;
+                while (c != '\n') {
+                    fscanf(file1, "%c", &c);
+                    fileName[k] = c;
+                    k++;
+                }
+                c = 0;
+            }
+            fclose(file1);
+            fileName[numberofchars(fileName) - 1] = '\0';
+            file1 = fopen(fileName, "r");
+            fscanf(file1, "winnerScore: %d\n", &winnerScore);
+            for (int i = 0; i < numberofTanks; i++) {
+                fscanf(file1, "tank%d->r: %d\n", &i, &(sample + i)->r);
+                fscanf(file1, "tank%d->g: %d\n", &i, &(sample + i)->g);
+                fscanf(file1, "tank%d->b: %d\n", &i, &(sample + i)->b);
+                fscanf(file1, "tank%d->right: %d\n", &i, &(sample + i)->right);
+                fscanf(file1, "tank%d->left: %d\n", &i, &(sample + i)->left);
+                fscanf(file1, "tank%d->up: %d\n", &i, &(sample + i)->up);
+                fscanf(file1, "tank%d->down: %d\n", &i, &(sample + i)->down);
+                fscanf(file1, "tank%d->shoot: %d\n", &i, &(sample + i)->shoot);
+                fscanf(file1, "tank%d->name: %s\n", &i, &(sample + i)->name);
+                fscanf(file1, "tank%d->score: %d\n", &i, &(sample + i)->score);
+                (sample + i)->angle = 3 * M_PI / 2;
+            }
+            fclose(file1);
+            once = false;
+        }
+        stringRGBA(renderer, 2 * house - numberofchars(fileName + 48) * 5,
+                   MAP_HEIGHT / 3 - house - house / 4, fileName + 48, red_white - rback, green_white - gback,
+                   blue_white - bback, a);
+        SDL_RenderSetScale(renderer, 1.2, 1.2);
+        stringRGBA(renderer, (MAP_WIDTH / 2 - numberofchars("Winner's Score: ") * 6 - argham(winnerScore) * 6) / 1.2,
+                   (MAP_HEIGHT / 3 - house) / 1.2, "Winner's Score: ", red_white - rback, green_white - gback,
+                   blue_white - bback, a);
+        stringRGBA(renderer, (MAP_WIDTH / 2 - numberofchars("Press enter to load the game") * 5) / 1.2,
+                   (2 * MAP_HEIGHT / 3 + house) / 1.2, "Press enter to load the game", red_white - rback,
+                   green_white - gback,
+                   blue_white - bback, a);
+        char *winScore = malloc(argham(winnerScore) * sizeof(char));
+        makingstring(winnerScore, winScore, argham(winnerScore));
+        //printf("winnerScore: %d\n", winnerScore);
+        stringRGBA(renderer, (MAP_WIDTH / 2 + numberofchars("Winner's Score: ") * 6) / 1.2,
+                   (MAP_HEIGHT / 3 - house) / 1.2, winScore, red_white - rback, green_white - gback, blue_white - bback,
+                   a);
+        free(winScore);
+        SDL_RenderSetScale(renderer, 1, 1);
+        int x = MAP_WIDTH / 3, y = MAP_HEIGHT / 3;
+        for (int i = 0; i < numberofTanks; i++) {
+            (sample + i)->x = x;
+            (sample + i)->y = y;
+            draw_tank(sample + i);
+            y += 35;
+            stringRGBA(renderer, x - numberofchars((sample + i)->name) * 4, y, (sample + i)->name, (sample + i)->r,
+                       (sample + i)->g, (sample + i)->b, a);
+            y += 100;
+            short vx[] = {x - 20, x + 20, x + 20, x - 20};
+            short vy[] = {y - 20, y - 20, y + 20, y + 20};
+            filledPolygonRGBA(renderer, vx, vy, 4, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            int x1 = x;
+            if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->up))) > 4) x1 -= 16;
+            else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->up)));
+            stringRGBA(renderer, x1, y, SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->up)), rback, gback, bback,
+                       a);
+
+            for (int k = 0; k < 4; k++) vx[k] -= 110;
+            filledPolygonRGBA(renderer, vx, vy, 4, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            x1 = x - 110;
+            if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->shoot))) > 4) x1 -= 16;
+            else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->shoot)));
+            stringRGBA(renderer, x1, y, SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->shoot)), rback, gback,
+                       bback, a);
+
+            y += 50;
+            for (int k = 0; k < 4; k++) {
+                vx[k] += 110;
+                vy[k] += 50;
+            }
+            filledPolygonRGBA(renderer, vx, vy, 4, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            x1 = x;
+            if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->down))) > 4) x1 -= 16;
+            else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->down)));
+            stringRGBA(renderer, x1, y, SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->down)), rback, gback, bback,
+                       a);
+
+            for (int k = 0; k < 4; k++) vx[k] -= 50;
+            filledPolygonRGBA(renderer, vx, vy, 4, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            x1 = x - 50;
+            if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->left))) > 4) x1 -= 16;
+            else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->left)));
+            stringRGBA(renderer, x1, y, SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->left)), rback, gback, bback,
+                       a);
+
+            for (int k = 0; k < 4; k++) vx[k] += 100;
+            filledPolygonRGBA(renderer, vx, vy, 4, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            x1 = x + 50;
+            if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->right))) > 4) x1 -= 16;
+            else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->right)));
+            stringRGBA(renderer, x1, y, SDL_GetKeyName(SDL_GetKeyFromScancode((sample + i)->right)), rback, gback,
+                       bback, a);
+
+
+            y += 80;
+            x1 = x;
+            stringRGBA(renderer, x1 - numberofchars("Score: ") * 5, y, "Score:", (sample + i)->r, (sample + i)->g,
+                       (sample + i)->b, a);
+            x1 += numberofchars("Score: ") * 5;
+            char *score = malloc(argham((sample + i)->score) * sizeof(char));
+            makingstring((sample + i)->score, score, argham((sample + i)->score));
+            stringRGBA(renderer, x1, y, score, (sample + i)->r, (sample + i)->g, (sample + i)->b, a);
+            free(score);
+
+            x += MAP_WIDTH / 3;
+            y = MAP_HEIGHT / 3;
+        }
+
+        x = MAP_WIDTH / 2, y = house / 2 + house / 4;
+        short vx[] = {x, x + 10, x - 10};
+        short vy[] = {y - 10, y + 10, y + 10};
+        filledPolygonRGBA(renderer, vx, vy, 3, red[up], green[up], blue[up], a);
+
+        vy[0] = y + 10, vy[1] = y - 10, vy[2] = y - 10;
+        for (int i = 0; i < 3; i++) vy[i] += MAP_HEIGHT - 3 * house / 2;
+
+        filledPolygonRGBA(renderer, vx, vy, 3, red[down], green[down], blue[down], a);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(30);
+    }
+    return flag;
+}
+
+
+bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Shard *shard, Mine *mine, bool flag) {
     int width = MAP_WIDTH, height = MAP_HEIGHT;
     bool f = flag;
     Tank *sample1 = malloc(sizeof(Tank));
@@ -481,7 +801,7 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         sample2->b = 180;
     }
     enum {
-        new, load, end, game
+        new, load, end
     } j = 0;
     while (flag) {
         handle_events(map);
@@ -512,7 +832,8 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         }
 
         if (state[SDL_SCANCODE_RETURN]) {
-            if (j == new || j == load) flag = !newGame(tank, bullet, map, walls, flag);
+            if (j == new) flag = !newGame(tank, bullet, map, walls, flag);
+            if (j == load) flag = !loadGame(tank, bullet, map, walls, item, shard, mine, flag);
             if (j == end) {
                 flag = false;
                 quit_window();
@@ -564,31 +885,6 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
     return flag;
 }
 
-int numberofchars(char *name) {
-    int i = 0;
-    while (name[i] != 0) i++;
-    return i;
-}
-
-int argham(int n) {
-    int m = n / 10, ragham = 1;
-    while (m / 10) {
-        ragham++;
-        m /= 10;
-    }
-    return ragham;
-}
-
-void makingstring(int n, char *score, int ragham) {
-    int i = 0;
-    *(score + ragham) = 0;
-    while (ragham) {
-        *(score + ragham - 1) = n % 10 + '0';
-        n /= 10;
-        ragham--;
-    }
-}
-
 int isEqual(char *c1, char *c2, int n) {
     if (n == 0) return 1;
     if (*c1 != *c2 || numberofchars(c1) - 1 != numberofchars(c2)) return 0;
@@ -608,13 +904,13 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
     char c = 0;
     int n;
     bool flag = true;
-    FILE *file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames", "r");
+    FILE *file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames.txt", "r");
     fscanf(file1, "%d", &n);
     fclose(file1);
     file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\fileNames.txt", "r");
     for (int i = 0; i < n; i++) {
         int j = 0;
-        while (c != '\n') {
+        while (c != '.') {
             fscanf(file1, "%c", &c);
             name[j] = c;
             j++;
@@ -628,27 +924,23 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
         file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\fileNames.txt", "a");
         fprintf(file1, "D:\\programming\\c\\University\\project\\project\\src\\");
         fputs(fileName, file1);
+        fputs(".txt", file1);
         fprintf(file1, "\n");
         fclose(file1);
     }
     if (flag) {
-        file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames", "w");
+        file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames.txt", "w");
         fprintf(file1, "%d", n + 1);
         fclose(file1);
     }
     copy(name, "D:\\programming\\c\\University\\project\\project\\src\\");
     copy(name + 48, fileName);
     copy(name + 48 + numberofchars(fileName), ".txt");
+    name[48 + numberofchars(fileName) + 4] = 0;
     printf("%s", name);
     file1 = fopen(name, "w+");
-    fprintf(file1, "winnerScore: %d", winnerScore);
-    fprintf(file1, "numberofColumns: %d\n", numberofColumns);
-    fprintf(file1, "numberofRows: %d\n", numberofRows);
-    for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
-        fprintf(file1, "wall%d: %d\n", i, (walls + i)->boolian);
+    fprintf(file1, "winnerScore: %d\n", winnerScore);
     for (int i = 0; i < numberofTanks; i++) {
-        fprintf(file1, "tank%d->x: %d\n", i, (tank + i)->x);
-        fprintf(file1, "tank%d->y: %d\n", i, (tank + i)->y);
         fprintf(file1, "tank%d->r: %d\n", i, (tank + i)->r);
         fprintf(file1, "tank%d->g: %d\n", i, (tank + i)->g);
         fprintf(file1, "tank%d->b: %d\n", i, (tank + i)->b);
@@ -659,6 +951,11 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
         fprintf(file1, "tank%d->shoot: %d\n", i, (tank + i)->shoot);
         fprintf(file1, "tank%d->name: %s\n", i, (tank + i)->name);
         fprintf(file1, "tank%d->score: %d\n", i, (tank + i)->score);
+    }
+
+    for (int i = 0; i < numberofTanks; i++) {
+        fprintf(file1, "tank%d->x: %d\n", i, (tank + i)->x);
+        fprintf(file1, "tank%d->y: %d\n", i, (tank + i)->y);
         fprintf(file1, "tank%d->boolian: %d\n", i, (tank + i)->boolian);
         fprintf(file1, "tank%d->item: %d\n", i, (tank + i)->item);
         fprintf(file1, "tank%d->fragBomb: %d\n", i, (tank + i)->fragBomb);
@@ -667,6 +964,12 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
         fprintf(file1, "tank%d->lazerTime: %d\n", i, (tank + i)->lazerTime);
         fprintf(file1, "tank%d->angle %f\n", i, (tank + i)->angle);
     }
+
+    fprintf(file1, "numberofColumns: %d\n", numberofColumns);
+    fprintf(file1, "numberofRows: %d\n", numberofRows);
+
+    for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
+        fprintf(file1, "wall%d: %d\n", i, (walls + i)->boolian);
 
     for (int i = 0; i < numberofTanks * numberofBullets; i++) {
         fprintf(file1, "bullet%d->x: %d\n", i, (bullet + i)->x);
@@ -730,7 +1033,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         int red = 150, green = 150, blue = 150;
         if (rback == 225) red = red_white - red, green = green_white - green, blue = blue_white - blue;
-        flag = menu(tank, bullet, map, walls, flag);
+        flag = menu(tank, bullet, map, walls, item, shard, mine, flag);
         static int time = 0;
         if (!whilePlayingMenu) time++;
 
@@ -860,8 +1163,16 @@ int main(int argc, char *argv[]) {
                         }
                         p++;
                         if (p == 2) p = 0;
-                    } else {
-                        fileName[z] = *SDL_GetKeyName(keycode);
+                    } else if (keycode != SDLK_BACKSPACE) {
+                        if ((state[SDL_SCANCODE_RSHIFT] || state[SDL_SCANCODE_LSHIFT]) &&
+                            (keycode != SDLK_RSHIFT || keycode != SDLK_LSHIFT))
+                            fileName[z] = *SDL_GetKeyName(keycode);
+                        else if (keycode != SDLK_RSHIFT && keycode != SDLK_LSHIFT)
+                            fileName[z] =
+                                    (*SDL_GetKeyName(keycode) >= 'A' && *SDL_GetKeyName(keycode) <= 'Z') *
+                                    (*SDL_GetKeyName(keycode) - 'A' + 'a') +
+                                    !(*SDL_GetKeyName(keycode) >= 'A' && *SDL_GetKeyName(keycode) <= 'Z') *
+                                    *SDL_GetKeyName(keycode);
                         if (z < 9) z++;
                         f = 1;
                     }
