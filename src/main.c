@@ -120,7 +120,8 @@ void read_map_array(Map *map, bool flag) {
             }
         }
 
-        int rend = rand() % numberofRows * numberofColumns;
+        //int rend = (rand() % (numberofRows - 2) + 1) * (rand() % (numberofColumns - 2) + 1);
+        int rend = numberofRows / 2 *  numberofColumns + numberofColumns / 2;
         DFS(graph, rend, map->walls);
     }
 }

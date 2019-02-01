@@ -11,9 +11,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="938c104e-ec0f-49c0-b4f9-d5985cb9e416" name="Default Changelist" comment="some changes in appearance">
+    <list default="true" id="938c104e-ec0f-49c0-b4f9-d5985cb9e416" name="Default Changelist" comment="bulle">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/logic.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/logic.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project.dir/src/main.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project.dir/src/main.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/libproject.dll.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/libproject.dll.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/project.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/project.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/project.exe.stackdump" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/project.exe.stackdump" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -26,11 +30,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2657">
-              <caret line="1178" column="13" lean-forward="true" selection-start-line="1178" selection-start-column="13" selection-end-line="1178" selection-end-column="13" />
+            <state relative-caret-position="193">
+              <caret line="125" column="5" lean-forward="true" selection-start-line="125" selection-start-column="5" selection-end-line="125" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -89,11 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/logic.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="374" column="58" selection-start-line="374" selection-start-column="58" selection-end-line="374" selection-end-column="58" />
+            <state relative-caret-position="262">
+              <caret line="312" column="68" selection-start-line="312" selection-start-column="68" selection-end-line="312" selection-end-column="68" />
             </state>
           </provider>
         </entry>
@@ -177,8 +181,8 @@
         <option value="$PROJECT_DIR$/src/numberofFileNames.txt" />
         <option value="$PROJECT_DIR$/src/view.c" />
         <option value="$PROJECT_DIR$/src/physics.c" />
-        <option value="$PROJECT_DIR$/src/main.c" />
         <option value="$PROJECT_DIR$/src/logic.c" />
+        <option value="$PROJECT_DIR$/src/main.c" />
       </list>
     </option>
   </component>
@@ -323,7 +327,7 @@
       <workItem from="1548987893765" duration="13247000" />
       <workItem from="1549017551182" duration="15967000" />
       <workItem from="1549033801633" duration="307000" />
-      <workItem from="1549034285162" duration="6901000" />
+      <workItem from="1549034285162" duration="7834000" />
     </task>
     <task id="LOCAL-00001" summary="first trial">
       <created>1545427560056</created>
@@ -651,7 +655,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="426902000" />
+    <option name="totallyTimeSpent" value="427835000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -666,7 +670,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25100672" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.25100672" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -873,13 +877,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2657">
-          <caret line="1178" column="13" lean-forward="true" selection-start-line="1178" selection-start-column="13" selection-end-line="1178" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/view.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1630">
@@ -889,8 +886,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/logic.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="374" column="58" selection-start-line="374" selection-start-column="58" selection-end-line="374" selection-end-column="58" />
+        <state relative-caret-position="262">
+          <caret line="312" column="68" selection-start-line="312" selection-start-column="68" selection-end-line="312" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="125" column="5" lean-forward="true" selection-start-line="125" selection-start-column="5" selection-end-line="125" selection-end-column="5" />
         </state>
       </provider>
     </entry>
