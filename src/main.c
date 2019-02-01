@@ -589,13 +589,118 @@ void makingstring(int n, char *score, int ragham) {
     }
 }
 
+int isEqual(char *c1, char *c2, int n) {
+    if (n == 0) return 1;
+    if (*c1 != *c2 || numberofchars(c1) - 1 != numberofchars(c2)) return 0;
+    return isEqual(c1 + 1, c2 + 1, n - 1);
+}
 
-void saveGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, char *fileName) {
-//    char name[20];
-//    for (int j = 0; j < numberofchars(fileName); j++)
-//        name[j] = fileName[j];
-    FILE *file1 = fopen("src/fileNames.txt", "w");
-    fprintf(file1,"src/%s", fileName);
+void copy(char *c, char *b) {
+    int i = 0;
+    while (b[i]) {
+        c[i] = b[i];
+        i++;
+    }
+}
+
+void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard, Mine *mine, char *fileName) {
+    char name[100] = {0};
+    char c = 0;
+    int n;
+    bool flag = true;
+    FILE *file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames", "r");
+    fscanf(file1, "%d", &n);
+    fclose(file1);
+    file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\fileNames.txt", "r");
+    for (int i = 0; i < n; i++) {
+        int j = 0;
+        while (c != '\n') {
+            fscanf(file1, "%c", &c);
+            name[j] = c;
+            j++;
+        }
+        if (isEqual(name + 48, fileName, numberofchars(fileName))) flag = false;
+        for (j = 0; j < 48 + numberofchars(fileName); j++) name[j] = 0;
+        c = 0;
+    }
+    fclose(file1);
+    if (flag) {
+        file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\fileNames.txt", "a");
+        fprintf(file1, "D:\\programming\\c\\University\\project\\project\\src\\");
+        fputs(fileName, file1);
+        fprintf(file1, "\n");
+        fclose(file1);
+    }
+    if (flag) {
+        file1 = fopen("D:\\programming\\c\\University\\project\\project\\src\\numberofFileNames", "w");
+        fprintf(file1, "%d", n + 1);
+        fclose(file1);
+    }
+    copy(name, "D:\\programming\\c\\University\\project\\project\\src\\");
+    copy(name + 48, fileName);
+    copy(name + 48 + numberofchars(fileName), ".txt");
+    printf("%s", name);
+    file1 = fopen(name, "w+");
+    fprintf(file1, "winnerScore: %d", winnerScore);
+    fprintf(file1, "numberofColumns: %d\n", numberofColumns);
+    fprintf(file1, "numberofRows: %d\n", numberofRows);
+    for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
+        fprintf(file1, "wall%d: %d\n", i, (walls + i)->boolian);
+    for (int i = 0; i < numberofTanks; i++) {
+        fprintf(file1, "tank%d->x: %d\n", i, (tank + i)->x);
+        fprintf(file1, "tank%d->y: %d\n", i, (tank + i)->y);
+        fprintf(file1, "tank%d->r: %d\n", i, (tank + i)->r);
+        fprintf(file1, "tank%d->g: %d\n", i, (tank + i)->g);
+        fprintf(file1, "tank%d->b: %d\n", i, (tank + i)->b);
+        fprintf(file1, "tank%d->right: %d\n", i, (tank + i)->right);
+        fprintf(file1, "tank%d->left: %d\n", i, (tank + i)->left);
+        fprintf(file1, "tank%d->up: %d\n", i, (tank + i)->up);
+        fprintf(file1, "tank%d->down: %d\n", i, (tank + i)->down);
+        fprintf(file1, "tank%d->shoot: %d\n", i, (tank + i)->shoot);
+        fprintf(file1, "tank%d->name: %s\n", i, (tank + i)->name);
+        fprintf(file1, "tank%d->score: %d\n", i, (tank + i)->score);
+        fprintf(file1, "tank%d->boolian: %d\n", i, (tank + i)->boolian);
+        fprintf(file1, "tank%d->item: %d\n", i, (tank + i)->item);
+        fprintf(file1, "tank%d->fragBomb: %d\n", i, (tank + i)->fragBomb);
+        fprintf(file1, "tank%d->mine: %d\n", i, (tank + i)->mine);
+        fprintf(file1, "tank%d->lazer: %d\n", i, (tank + i)->lazer);
+        fprintf(file1, "tank%d->lazerTime: %d\n", i, (tank + i)->lazerTime);
+        fprintf(file1, "tank%d->angle %f\n", i, (tank + i)->angle);
+    }
+
+    for (int i = 0; i < numberofTanks * numberofBullets; i++) {
+        fprintf(file1, "bullet%d->x: %d\n", i, (bullet + i)->x);
+        fprintf(file1, "bullet%d->y: %d\n", i, (bullet + i)->y);
+        fprintf(file1, "bullet%d->angle: %f\n", i, (bullet + i)->angle);
+        fprintf(file1, "bullet%d->n: %d\n", i, (bullet + i)->n);
+        fprintf(file1, "bullet%d->rad: %d\n", i, (bullet + i)->rad);
+        fprintf(file1, "bullet%d->boolian: %d\n", i, (bullet + i)->boolian);
+    }
+
+    for (int i = 0; i < numberofItems; i++) {
+        fprintf(file1, "item%d->x: %d\n", i, (item + i)->x);
+        fprintf(file1, "item%d->y: %d\n", i, (item + i)->y);
+        fprintf(file1, "item%d->n: %d\n", i, (item + i)->n);
+        fprintf(file1, "item%d->type: %d\n", i, (item + i)->type);
+        fprintf(file1, "item%d->boolian: %d\n", i, (item + i)->boolian);
+    }
+
+    for (int i = 0; i < numberofItems; i++) {
+        fprintf(file1, "mine%d->x: %d\n", i, (mine + i)->x);
+        fprintf(file1, "mine%d->y: %d\n", i, (mine + i)->y);
+        fprintf(file1, "mine%d->r: %d\n", i, (mine + i)->r);
+        fprintf(file1, "mine%d->g: %d\n", i, (mine + i)->g);
+        fprintf(file1, "mine%d->b: %d\n", i, (mine + i)->b);
+        fprintf(file1, "mine%d->n: %d\n", i, (mine + i)->n);
+        fprintf(file1, "mine%d->boolian: %d\n", i, (mine + i)->boolian);
+    }
+
+    for (int i = 0; i < numberofTanks * numberofShards; i++) {
+        fprintf(file1, "shard%d->x: %d\n", i, (shard + i)->x);
+        fprintf(file1, "shard%d->y: %d\n", i, (shard + i)->y);
+        fprintf(file1, "shard%d->angle: %f\n", i, (shard + i)->angle);
+        fprintf(file1, "shard%d->boolian: %d\n", i, (shard + i)->boolian);
+    }
     fclose(file1);
 }
 
@@ -762,11 +867,11 @@ int main(int argc, char *argv[]) {
                     }
                 }
                 if ((state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) && fileName[0] && f) {
+                    saveGame(map->tanks, map->tanks->bullets, map->walls, item, shard, mine, fileName);
                     whilePlayingMenu = false;
-                    saveGame_flag = false;
+                    for (int j = 0; j < 10; j++) fileName[j] = 0;
                     f = 0;
                     z = 0;
-                    saveGame(map->tanks, map->tanks->bullets, map, map->walls, item, fileName);
                 }
 
                 if (fileName[0]) {
