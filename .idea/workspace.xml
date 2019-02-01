@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="project" targetName="project" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="938c104e-ec0f-49c0-b4f9-d5985cb9e416" name="Default Changelist" comment="some changes in appearance">
+      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/structs.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/structs.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/view.c" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="1111" column="22" lean-forward="true" selection-start-line="1111" selection-start-column="22" selection-end-line="1111" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fileNames.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/view.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1326">
+              <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/numberofFileNames.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/structs.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1479">
+              <caret line="87" column="18" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/view.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/physics.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2210">
+              <caret line="130" column="36" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>tank-&gt;angle</find>
+      <find>fragBomb</find>
+      <find>MAP_</find>
+      <find>5</find>
+      <find>newGame_flag</find>
+      <find>item</find>
+      <find>mine</find>
+      <find>tank</find>
+      <find>flag</find>
+      <find>winnerScore</find>
+      <find>i</find>
+      <find>fprintf</find>
+      <find>(tank</find>
+      <find>i,</find>
+      <find>(walls</find>
+      <find>(bullet</find>
+      <find>(item</find>
+      <find>(mine</find>
+      <find>(shard</find>
+      <find>sample + i</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>(tank + 1)</replace>
+      <replace>deg</replace>
+      <replace>bullet</replace>
+      <replace>bullet-&gt;rad</replace>
+      <replace>(tank + i)</replace>
+      <replace>mineItem</replace>
+      <replace>Item</replace>
+      <replace>item</replace>
+      <replace>6</replace>
+      <replace>tank1</replace>
+      <replace>whilePlayingMenue</replace>
+      <replace>whilePlayingMenu</replace>
+      <replace>mine</replace>
+      <replace>shard</replace>
+      <replace>shard`</replace>
+      <replace>sample</replace>
+      <replace>k</replace>
+      <replace>fscanf</replace>
+      <replace>&amp;(tank</replace>
+      <replace>&amp;i,</replace>
+      <replace>&amp;(walls</replace>
+      <replace>&amp;(bullet</replace>
+      <replace>&amp;(item</replace>
+      <replace>&amp;(mine</replace>
+      <replace>&amp;(shard</replace>
+      <replace>tank + k</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/simple_snake.c" />
+        <option value="$PROJECT_DIR$/logic.c" />
+        <option value="$PROJECT_DIR$/physics.h" />
+        <option value="$PROJECT_DIR$/structs.h" />
+        <option value="$PROJECT_DIR$/view.h" />
+        <option value="$PROJECT_DIR$/logic.h" />
+        <option value="$PROJECT_DIR$/main.c" />
+        <option value="$PROJECT_DIR$/view.c" />
+        <option value="$PROJECT_DIR$/src/map.txt" />
+        <option value="$PROJECT_DIR$/src/physics.h" />
+        <option value="$PROJECT_DIR$/src/view.h" />
+        <option value="$PROJECT_DIR$/src/logic.c" />
+        <option value="$PROJECT_DIR$/src/logic.h" />
+        <option value="$PROJECT_DIR$/src/physics.c" />
+        <option value="$PROJECT_DIR$/src/numberofFileNames" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/structs.h" />
+        <option value="$PROJECT_DIR$/src/fileNames.txt" />
+        <option value="$PROJECT_DIR$/src/numberofFileNames.txt" />
+        <option value="$PROJECT_DIR$/src/view.c" />
+        <option value="$PROJECT_DIR$/src/main.c" />
+      </list>
+    </option>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="210" />
+    <option name="y" value="-20" />
+    <option name="width" value="1750" />
+    <option name="height" value="980" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="sdl2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.spelling" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="project" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="project" TARGET_NAME="project" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="project" RUN_TARGET_NAME="project">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="938c104e-ec0f-49c0-b4f9-d5985cb9e416" name="Default Changelist" comment="" />
+      <created>1545072393470</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1545072393470</updated>
+      <workItem from="1545072394756" duration="173000" />
+      <workItem from="1545072593606" duration="40000" />
+      <workItem from="1545072637098" duration="2889000" />
+      <workItem from="1545076727659" duration="2729000" />
+      <workItem from="1545216884228" duration="1614000" />
+      <workItem from="1545218501151" duration="1190000" />
+      <workItem from="1545222557620" duration="383000" />
+      <workItem from="1545222980618" duration="1619000" />
+      <workItem from="1545226178138" duration="1000000" />
+      <workItem from="1545227190890" duration="8617000" />
+      <workItem from="1545287474838" duration="7717000" />
+      <workItem from="1545298840111" duration="5233000" />
+      <workItem from="1545379078838" duration="11031000" />
+      <workItem from="1545499325205" duration="12920000" />
+      <workItem from="1545544860731" duration="3443000" />
+      <workItem from="1545557088693" duration="284000" />
+      <workItem from="1545570702307" duration="13455000" />
+      <workItem from="1545631914688" duration="40000" />
+      <workItem from="1545632211830" duration="4272000" />
+      <workItem from="1545647164556" duration="8639000" />
+      <workItem from="1545667884265" duration="620000" />
+      <workItem from="1545668821210" duration="6203000" />
+      <workItem from="1545807493355" duration="2790000" />
+      <workItem from="1545812133629" duration="6738000" />
+      <workItem from="1545893816634" duration="1925000" />
+      <workItem from="1545977923076" duration="4605000" />
+      <workItem from="1546076465185" duration="4989000" />
+      <workItem from="1546097594310" duration="109000" />
+      <workItem from="1546098058282" duration="1290000" />
+      <workItem from="1546168471812" duration="884000" />
+      <workItem from="1546265309681" duration="6935000" />
+      <workItem from="1546349618715" duration="3869000" />
+      <workItem from="1546354720434" duration="1814000" />
+      <workItem from="1546418481549" duration="129000" />
+      <workItem from="1546437522486" duration="812000" />
+      <workItem from="1546796749408" duration="702000" />
+      <workItem from="1547916830986" duration="944000" />
+      <workItem from="1547926141375" duration="5001000" />
+      <workItem from="1547965861117" duration="6940000" />
+      <workItem from="1548071916332" duration="14991000" />
+      <workItem from="1548097032170" duration="6224000" />
+      <workItem from="1548104764196" duration="8279000" />
+      <workItem from="1548151498037" duration="12852000" />
+      <workItem from="1548195377667" duration="7144000" />
+      <workItem from="1548241990756" duration="2486000" />
+      <workItem from="1548247658401" duration="6638000" />
+      <workItem from="1548258258225" duration="1886000" />
+      <workItem from="1548266585144" duration="2212000" />
+      <workItem from="1548283901110" duration="5645000" />
+      <workItem from="1548319044054" duration="295000" />
+      <workItem from="1548501486033" duration="18172000" />
+      <workItem from="1548524305812" duration="9237000" />
+      <workItem from="1548566332223" duration="5739000" />
+      <workItem from="1548601177573" duration="6529000" />
+      <workItem from="1548670811612" duration="20783000" />
+      <workItem from="1548766348179" duration="12282000" />
+      <workItem from="1548789234375" duration="10857000" />
+      <workItem from="1548843699308" duration="9850000" />
+      <workItem from="1548841680069" duration="4866000" />
+      <workItem from="1548846578802" duration="1718000" />
+      <workItem from="1548861355469" duration="173000" />
+      <workItem from="1548861858800" duration="36296000" />
+      <workItem from="1548931688573" duration="40739000" />
+      <workItem from="1548987893765" duration="13247000" />
+      <workItem from="1549017551182" duration="15967000" />
+      <workItem from="1549033801633" duration="307000" />
+      <workItem from="1549034285162" duration="299000" />
+    </task>
+    <task id="LOCAL-00001" summary="first trial">
+      <created>1545427560056</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1545427560057</updated>
+    </task>
+    <task id="LOCAL-00002" summary="keyboard keys!!!">
+      <created>1545505813620</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1545505813620</updated>
+    </task>
+    <task id="LOCAL-00003" summary="vasvashaye TA">
+      <created>1545509522239</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1545509522239</updated>
+    </task>
+    <task id="LOCAL-00004" summary="phase 3 ended!">
+      <created>1545547708702</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1545547708703</updated>
+    </task>
+    <task id="LOCAL-00005" summary="in wall situation">
+      <created>1545575759689</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1545575759689</updated>
+    </task>
+    <task id="LOCAL-00006" summary="walls are created finally! phase 4">
+      <created>1545597077442</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1545597077442</updated>
+    </task>
+    <task id="LOCAL-00007" summary="working on phase 5">
+      <created>1545601576469</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1545601576470</updated>
+    </task>
+    <task id="LOCAL-00008" summary="good but not perfect (phase 5)">
+      <created>1545670574972</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1545670574972</updated>
+    </task>
+    <task id="LOCAL-00009" summary="still want to work on it (phase 5)">
+      <created>1545981947407</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1545981947407</updated>
+    </task>
+    <task id="LOCAL-00010" summary="walls completed and keyboard keys got better! (phase 5)">
+      <created>1546268015574</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1546268015575</updated>
+    </task>
+    <task id="LOCAL-00011" summary="don't expect more details! (phase 5)">
+      <created>1546271585657</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1546271585658</updated>
+    </task>
+    <task id="LOCAL-00012" summary="another more details">
+      <created>1546272149817</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1546272149817</updated>
+    </task>
+    <task id="LOCAL-00013" summary="bullets got better (phase 5)">
+      <created>1546353493547</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1546353493547</updated>
+    </task>
+    <task id="LOCAL-00014" summary="got better (phase 5)">
+      <created>1546355014734</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1546355014734</updated>
+    </task>
+    <task id="LOCAL-00015" summary="a little bug (phase 5)">
+      <created>1546355617161</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1546355617161</updated>
+    </task>
+    <task id="LOCAL-00016" summary="it stops when both up and down are pressed! such a wow!&#10;(phase 5)">
+      <created>1546356227194</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1546356227195</updated>
+    </task>
+    <task id="LOCAL-00017" summary="adding some changes in phase 1">
+      <created>1548101645328</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1548101645329</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added menu">
+      <created>1548154362049</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1548154362049</updated>
+    </task>
+    <task id="LOCAL-00019" summary="added night mode">
+      <created>1548158808377</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1548158808377</updated>
+    </task>
+    <task id="LOCAL-00020" summary="menu &amp; bullets">
+      <created>1548290824739</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1548290824739</updated>
+    </task>
+    <task id="LOCAL-00021" summary="some minor changes">
+      <created>1548502885472</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1548502885472</updated>
+    </task>
+    <task id="LOCAL-00022" summary="some minor changes">
+      <created>1548503900067</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1548503900067</updated>
+    </task>
+    <task id="LOCAL-00023" summary="some minor changes in degree">
+      <created>1548507845702</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1548507845702</updated>
+    </task>
+    <task id="LOCAL-00024" summary="some changes in collision">
+      <created>1548697279751</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1548697279751</updated>
+    </task>
+    <task id="LOCAL-00025" summary="some changes in collision">
+      <created>1548703823276</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1548703823276</updated>
+    </task>
+    <task id="LOCAL-00026" summary="some changes in collision">
+      <created>1548708909949</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1548708909949</updated>
+    </task>
+    <task id="LOCAL-00027" summary="bullets collid walls">
+      <created>1548715864748</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1548715864748</updated>
+    </task>
+    <task id="LOCAL-00028" summary="collision">
+      <created>1548766816487</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1548766816487</updated>
+    </task>
+    <task id="LOCAL-00029" summary="bullets collid tanks and some minor changes">
+      <created>1548791803421</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1548791803421</updated>
+    </task>
+    <task id="LOCAL-00030" summary="some more changes in movements">
+      <created>1548795109306</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1548795109306</updated>
+    </task>
+    <task id="LOCAL-00031" summary="adding item">
+      <created>1548846963622</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1548846963623</updated>
+    </task>
+    <task id="LOCAL-00032" summary="fragBomb completed">
+      <created>1548869753563</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1548869753563</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Mine completed">
+      <created>1548883428148</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1548883428148</updated>
+    </task>
+    <task id="LOCAL-00034" summary="items finished">
+      <created>1548900500165</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1548900500165</updated>
+    </task>
+    <task id="LOCAL-00035" summary="map got better">
+      <created>1548939349534</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1548939349534</updated>
+    </task>
+    <task id="LOCAL-00036" summary="added name :))">
+      <created>1548944672310</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1548944672310</updated>
+    </task>
+    <task id="LOCAL-00037" summary="added final score">
+      <created>1548952665259</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1548952665259</updated>
+    </task>
+    <task id="LOCAL-00038" summary="added final score">
+      <created>1548952735642</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1548952735642</updated>
+    </task>
+    <task id="LOCAL-00039" summary="some minor changes">
+      <created>1548955390992</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1548955390992</updated>
+    </task>
+    <task id="LOCAL-00040" summary="some minor changes that did great">
+      <created>1548975313554</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1548975313554</updated>
+    </task>
+    <task id="LOCAL-00041" summary="some minor changes that did great">
+      <created>1548975485038</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1548975485038</updated>
+    </task>
+    <task id="LOCAL-00042" summary="some minor changes that did great">
+      <created>1548975667371</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1548975667371</updated>
+    </task>
+    <task id="LOCAL-00043" summary="some minor changes that did great">
+      <created>1548975963199</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1548975963199</updated>
+    </task>
+    <task id="LOCAL-00044" summary="save game">
+      <created>1548981670438</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1548981670438</updated>
+    </task>
+    <task id="LOCAL-00045" summary="added save file">
+      <created>1548992080348</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1548992080348</updated>
+    </task>
+    <task id="LOCAL-00046" summary="added load game">
+      <created>1549028666690</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1549028666690</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="420300000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25100672" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.20679887" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3286119" />
+      <window_info anchor="bottom" id="CMake" order="12" weight="0.3286119" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="it stops when both up and down are pressed! such a wow!&#10;(phase 5)" />
+    <MESSAGE value="adding some changes in phase 1" />
+    <MESSAGE value="added menu" />
+    <MESSAGE value="added night mode" />
+    <MESSAGE value="menu &amp; bullets" />
+    <MESSAGE value="some minor changes in degree" />
+    <MESSAGE value="some changes in collision" />
+    <MESSAGE value="bullets collid walls" />
+    <MESSAGE value="collision" />
+    <MESSAGE value="bullets collid tanks and some minor changes" />
+    <MESSAGE value="some more changes in movements" />
+    <MESSAGE value="adding item" />
+    <MESSAGE value="fragBomb completed" />
+    <MESSAGE value="Mine completed" />
+    <MESSAGE value="items finished" />
+    <MESSAGE value="map got better" />
+    <MESSAGE value="added name :))" />
+    <MESSAGE value="added final score" />
+    <MESSAGE value="some minor changes" />
+    <MESSAGE value="some minor changes that did great" />
+    <MESSAGE value="save game" />
+    <MESSAGE value="added save file" />
+    <MESSAGE value="added load game" />
+    <MESSAGE value="some bugs got better" />
+    <MESSAGE value="some changes in appearance" />
+    <option name="LAST_COMMIT_MESSAGE" value="some changes in appearance" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/physics.c" />
+    <entry file="file://$PROJECT_DIR$/physics.h" />
+    <entry file="file://$PROJECT_DIR$/logic.c" />
+    <entry file="file://$PROJECT_DIR$/logic.h" />
+    <entry file="file://$PROJECT_DIR$/main.c" />
+    <entry file="file://$PROJECT_DIR$/structs.h" />
+    <entry file="file://$PROJECT_DIR$/src/simple_snake.c" />
+    <entry file="file://$PROJECT_DIR$/view.h" />
+    <entry file="file://$PROJECT_DIR$/view.c" />
+    <entry file="file://$PROJECT_DIR$/sdl2/sdl2-include/SDL.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="92" column="28" selection-start-line="92" selection-start-column="28" selection-end-line="92" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hhh.h" />
+    <entry file="file://$PROJECT_DIR$/sdl2/sdl2-gfx-include/SDL2_gfxPrimitives.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="213" column="33" selection-start-line="213" selection-start-column="33" selection-end-line="213" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mapmap.txt" />
+    <entry file="file://$PROJECT_DIR$/src/map.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="647">
+          <caret line="95" selection-start-line="95" selection-end-line="95" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../mabani/sample exam/main.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmake_win.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/physics.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="46" selection-start-line="7" selection-start-column="46" selection-end-line="7" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sdl2/sdl2-include/SDL_video.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="134" column="50" lean-forward="true" selection-start-line="134" selection-start-column="50" selection-end-line="134" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fileNamesCopy.txt" />
+    <entry file="file://$PROJECT_DIR$/../../mabani/mabani8/asghar shop/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-525">
+          <caret line="23" column="43" lean-forward="true" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../mabani/mabani8/Editor/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-15">
+          <caret line="13" column="21" lean-forward="true" selection-start-line="13" selection-start-column="21" selection-end-line="13" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/logic.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="45" selection-start-line="11" selection-start-column="45" selection-end-line="11" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/logic.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="502" column="46" selection-start-line="502" selection-start-column="46" selection-end-line="502" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HANIYEH" />
+    <entry file="file://$PROJECT_DIR$/src/HANIYEH.txt" />
+    <entry file="file://$PROJECT_DIR$/src/HANIYEH.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/K.txt" />
+    <entry file="file://$PROJECT_DIR$/src/mm.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="39" column="16" selection-start-line="39" selection-start-column="16" selection-end-line="39" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Khaste.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="31" column="13" lean-forward="true" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="1111" column="22" lean-forward="true" selection-start-line="1111" selection-start-column="22" selection-end-line="1111" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1326">
+          <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/numberofFileNames.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/structs.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="87" column="18" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/view.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="7" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/physics.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2210">
+          <caret line="130" column="36" selection-start-line="130" selection-start-column="36" selection-end-line="130" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fileNames.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

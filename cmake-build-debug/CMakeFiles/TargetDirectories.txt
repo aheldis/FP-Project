@@ -1,0 +1,3 @@
+/cygdrive/d/programming/c/University/project/project/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/d/programming/c/University/project/project/cmake-build-debug/CMakeFiles/project.dir
+/cygdrive/d/programming/c/University/project/project/cmake-build-debug/CMakeFiles/edit_cache.dir

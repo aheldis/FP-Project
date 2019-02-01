@@ -61,6 +61,33 @@ void draw_tank(Tank *tank) {
         circleRGBA(renderer, tank->x, tank->y, radius_circle, red, green, blue, a);
         circleRGBA(renderer, tank->x, tank->y, radius_circle - 1, red, green, blue, a);
     }
+    if (tank->mine) {
+        int r = 6, c = 2;
+        circleRGBA(renderer, tank->x, tank->y, r, 50, 50, 50, a);
+        double alpha = M_PI / 2;
+        for (int i = 0; i < 3; i++) {
+            int x = tank->x + r * cos(alpha);
+            int y = tank->y + r * sin(alpha);
+            double prim = alpha - M_PI / 2;
+            thickLineRGBA(renderer, x - c * cos(prim), y - c * sin(prim), x + c * cos(prim), y + c * sin(prim), thick,
+                          50, 50, 50, a);
+            alpha += 2 * M_PI / 3;
+        }
+    }
+    if (tank->lazer) {
+        int x = tank->x;
+        int y = tank->y - 6;
+        int r = 6;
+        for (int i = 0; i < 3; i++) {
+            thickLineRGBA(renderer, x - r, y, x + r, y, thick, 50, 50, 50, a);
+            y += 6;
+        }
+    }
+    if (tank->fragBomb) {
+        SDL_RenderSetScale(renderer, 1.5, 1.5);
+        stringRGBA(renderer, (tank->x - 5) / 1.5, (tank->y - 4) / 1.5, "*", 50, 50, 50, a);
+        SDL_RenderSetScale(renderer, 1, 1);
+    }
 }
 
 void draw_bullet(Bullet *bullet) {

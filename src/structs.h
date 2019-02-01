@@ -16,7 +16,7 @@
 #define green_black 0
 #define blue_black 0
 #define a 255
-#define FPS 200
+#define FPS 300
 #define house 90
 #define numberofBullets 5
 #define numberofMaps 3

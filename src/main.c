@@ -4,7 +4,7 @@
 #undef main
 #endif
 
-bool whilePlayingMenu = false, saveGame_flag = false;
+bool whilePlayingMenu = false, saveGame_flag = false, load_flag = false;
 int winner = 0;
 
 //////////////for random map
@@ -258,8 +258,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                 }
             }
             if ((tank + k)->left) {
-                if (SDL_GetKeyFromScancode((tank + k)->left) > 200) x1 = x + 2;
-                else x1 = x + 20;
+                x1 = x + 20;
+                if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->left))) > 4) x1 -= 16;
+                else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->left)));
                 stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->left)), rback, gback,
                            bback, a);
             }
@@ -280,8 +281,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                 }
             }
             if ((tank + k)->down) {
-                if (SDL_GetKeyFromScancode((tank + k)->down) > 200) x1 = x + 2;
-                else x1 = x + 20;
+                x1 = x + 20;
+                if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->down))) > 4) x1 -= 16;
+                else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->down)));
                 stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->down)), rback, gback,
                            bback, a);
             }
@@ -303,8 +305,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                 }
             }
             if ((tank + k)->up) {
-                if (SDL_GetKeyFromScancode((tank + k)->up) > 200) x1 = x + 2;
-                else x1 = x + 20;
+                x1 = x + 20;
+                if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->up))) > 4) x1 -= 16;
+                else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->up)));
                 stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->up)), rback, gback,
                            bback, a);
             }
@@ -330,8 +333,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                 }
             }
             if ((tank + k)->right) {
-                if (SDL_GetKeyFromScancode((tank + k)->right) > 200) x1 = x + 2;
-                else x1 = x + 20;
+                x1 = x + 20;
+                if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->right))) > 4) x1 -= 16;
+                else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->right)));
                 stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->right)), rback,
                            gback, bback, a);
             }
@@ -357,8 +361,9 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
                 }
             }
             if ((tank + k)->shoot) {
-                if (SDL_GetKeyFromScancode((tank + k)->shoot) > 200) x1 = x + 2;
-                else x1 = x + 20;
+                x1 = x + 20;
+                if (numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->shoot))) > 4) x1 -= 16;
+                else x1 -= 4 * numberofchars(SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->shoot)));
                 stringRGBA(renderer, x1, y + 20, SDL_GetKeyName(SDL_GetKeyFromScancode((tank + k)->shoot)), rback,
                            gback, bback, a);
             }
@@ -518,13 +523,14 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
         int green[] = {g, g};
         int blue[] = {b, b};
 
-        if (state[SDL_SCANCODE_RETURN] && fileName[0] != 0) {
+        if ((state[SDL_SCANCODE_RETURN] && fileName[0] != 0) || once) {
             static int f = 0;
             f++;
-            if (f >= 5) {
+            if (once) f = 0;
+            if (f >= 5 && !once) {
                 SDL_Delay(200);
                 flag = true;
-
+                load_flag = true;
                 tank->bullets = bullet;
                 (tank + 1)->bullets = bullet + numberofBullets;
                 map->tanks = tank;
@@ -605,8 +611,9 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
                 }
                 fclose(file1);
                 printf("no bug\n");
-                return flag;
+                remaining = numberofTanks;
                 f = 0;
+                return flag;
             }
         }
 
@@ -887,7 +894,7 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Shard *
 
 int isEqual(char *c1, char *c2, int n) {
     if (n == 0) return 1;
-    if (*c1 != *c2 || numberofchars(c1) - 1 != numberofchars(c2)) return 0;
+    if (*c1 != *c2 || numberofchars(c1) != numberofchars(c2)) return 0;
     return isEqual(c1 + 1, c2 + 1, n - 1);
 }
 
@@ -912,11 +919,14 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
         int j = 0;
         while (c != '.') {
             fscanf(file1, "%c", &c);
-            name[j] = c;
-            j++;
+            if (c != '.') {
+                name[j] = c;
+                j++;
+            }
         }
+        fscanf(file1, "txt\n");
         if (isEqual(name + 48, fileName, numberofchars(fileName))) flag = false;
-        for (j = 0; j < 48 + numberofchars(fileName); j++) name[j] = 0;
+        for (j; j >= 0; j--) name[j] = 0;
         c = 0;
     }
     fclose(file1);
@@ -1097,6 +1107,9 @@ int main(int argc, char *argv[]) {
             (sample + k)->r = (map->tanks + k)->r;
             (sample + k)->g = (map->tanks + k)->g;
             (sample + k)->b = (map->tanks + k)->b;
+            (sample + k)->mine = (map->tanks + k)->mine;
+            (sample + k)->lazer = (map->tanks + k)->lazer;
+            (sample + k)->fragBomb = (map->tanks + k)->fragBomb;
             if ((map->tanks + k)->boolian) {
                 if (!whilePlayingMenu) move_tank(map->tanks + k, map);
                 if (!whilePlayingMenu) turn_tank(map->tanks + k, map);
@@ -1143,6 +1156,7 @@ int main(int argc, char *argv[]) {
         if (whilePlayingMenu) {
             static int z = 0;
             static int f = 0;
+            if (start_flag) f = 0, z = 0;
             short vx[] = {MAP_WIDTH / 2 - 5 * house / 2, MAP_WIDTH / 2 - 5 * house / 2,
                           MAP_WIDTH / 2 + 5 * house / 2, MAP_WIDTH / 2 + 5 * house / 2};
             short vy[] = {MAP_HEIGHT / 2 - 4 * house / 2, MAP_HEIGHT / 2 + 4 * house / 2,
@@ -1167,7 +1181,7 @@ int main(int argc, char *argv[]) {
                         if ((state[SDL_SCANCODE_RSHIFT] || state[SDL_SCANCODE_LSHIFT]) &&
                             (keycode != SDLK_RSHIFT || keycode != SDLK_LSHIFT))
                             fileName[z] = *SDL_GetKeyName(keycode);
-                        else if (keycode != SDLK_RSHIFT && keycode != SDLK_LSHIFT)
+                        else if (keycode != SDLK_RSHIFT || keycode != SDLK_LSHIFT)
                             fileName[z] =
                                     (*SDL_GetKeyName(keycode) >= 'A' && *SDL_GetKeyName(keycode) <= 'Z') *
                                     (*SDL_GetKeyName(keycode) - 'A' + 'a') +
