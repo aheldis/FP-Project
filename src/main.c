@@ -242,6 +242,12 @@ bool newGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, bool flag) {
         draw_tank(tank);
         (tank + 1)->y = 550;
         (tank + 1)->x = 166;
+        tank->mine = 0;
+        tank->lazer = 0;
+        tank->fragBomb = 0;
+        (tank + 1)->mine = 0;
+        (tank + 1)->lazer = 0;
+        (tank + 1)->fragBomb = 0;
         draw_tank(tank + 1);
 
         x = 466, y = 305;
