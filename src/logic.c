@@ -308,13 +308,17 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
         int i = b[j];
         if ((map->walls + i)->boolian) {
             ////////////////////collision
-            if ((abs(bullet->x + bullet->rad * sign_x - (map->walls + i)->x1) <=
-                 thick) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
+            if (((abs(bullet->x + bullet->rad * sign_x - (map->walls + i)->x1) <=
+                  thick) ||
+                 (abs(bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) - (map->walls + i)->x1) <=
+                  thick)) && ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
                 (abs(bullet->y - ((map->walls + i)->y1 + (map->walls + i)->y2) / 2) <=
                  abs((map->walls + i)->y1 - (map->walls + i)->y2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = M_PI - bullet->angle;
 
             else if ((bullet->x + bullet->rad * sign_x >=
+                      (map->walls + i)->x1 + thick ||
+                      bullet->x + bullet->rad * sign_x + step_bullet * cos(bullet->angle) >=
                       (map->walls + i)->x1 + thick) &&
                      (bullet->x + bullet->rad * sign_x <= (map->walls + i)->x1 - thick) &&
                      ((map->walls + i)->x1 - (map->walls + i)->x2 == 0) &&
@@ -323,17 +327,21 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                 bullet->angle = M_PI - bullet->angle;
 
             if ((abs(bullet->y + bullet->rad * sign_y - (map->walls + i)->y1) <=
-                 thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
-                (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                 abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
+                 thick ||
+                 abs(bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) - (map->walls + i)->y1) <=
+                  thick) && ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                 (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                  abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
 
-            else if ((bullet->y + bullet->rad * sign_y >=
-                      (map->walls + i)->y1 + thick) &&
-                     (bullet->y + bullet->rad * sign_y <= (map->walls + i)->y1 - thick) &&
-                     ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
-                     (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
-                      abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
+                    else if ((bullet->y + bullet->rad * sign_y >=
+                              (map->walls + i)->y1 + thick ||
+                              bullet->y + bullet->rad * sign_y + step_bullet * sin(bullet->angle) >=
+                               (map->walls + i)->y1 + thick) &&
+                              (bullet->y + bullet->rad * sign_y <= (map->walls + i)->y1 - thick) &&
+                              ((map->walls + i)->y1 - (map->walls + i)->y2 == 0) &&
+                              (abs(bullet->x - ((map->walls + i)->x1 + (map->walls + i)->x2) / 2) <=
+                               abs((map->walls + i)->x1 - (map->walls + i)->x2) / 2 + bullet->rad + thick * 2))
                 bullet->angle = 2 * M_PI - bullet->angle;
         }
     }
@@ -364,6 +372,12 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                      (bullet->rad + thick) * (bullet->rad + thick)) ||
                     (pow((map->walls + i)->x2 - (bullet->x), 2) +
                      pow((map->walls + i)->y1 - (bullet->y), 2) <=
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
+                    (pow((map->walls + i)->x1 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
+                    (pow((map->walls + i)->x2 - (bullet->x + step_bullet * cos(bullet->angle)), 2) +
+                     pow((map->walls + i)->y1 - (bullet->y + step_bullet * sin(bullet->angle)), 2) <=
                      (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = 2 * M_PI - bullet->angle;
 
@@ -373,7 +387,13 @@ void bullet_collids_walls(Bullet *bullet, Map *map) {
                      (bullet->rad + thick) * (bullet->rad + thick)) ||
                     (pow((map->walls + i)->y2 - (bullet->y), 2) +
                      pow((map->walls + i)->x1 - (bullet->x), 2) <=
-                     (bullet->rad + thick) * (bullet->rad + thick)))
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
+                    (pow((map->walls + i)->y1 - (bullet->y), 2) +
+                     pow((map->walls + i)->x1 - (bullet->x), 2) <=
+                     (bullet->rad + thick) * (bullet->rad + thick)) ||
+                        (pow((map->walls + i)->y2 - (bullet->y), 2) +
+                         pow((map->walls + i)->x1 - (bullet->x), 2) <=
+                         (bullet->rad + thick) * (bullet->rad + thick)))
                     bullet->angle = M_PI - bullet->angle;
         }
     }
@@ -555,8 +575,8 @@ void lazer_collids_walls(Tank *tank1, Tank *tank2, int *x, int *y) {
     if (*x < house / 2) *x = house / 2;
     if (*y < house / 2) *y = house / 2;
 
-    double m = (double)(*y - tank1->y) / (double)(*x - tank1->x);
-    double b = (double)tank1->y - m * (double)tank1->x;
+    double m = (double) (*y - tank1->y) / (double) (*x - tank1->x);
+    double b = (double) tank1->y - m * (double) tank1->x;
     if (fabs((double) tank2->y - m * (double) tank2->x - b) / sqrt(1 + m * m) <= radius_circle + thick * 2) {
         tank2->boolian = false;
         if (remaining > 1) remaining--;

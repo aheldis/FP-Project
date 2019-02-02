@@ -1312,7 +1312,7 @@ int main(int argc, char *argv[]) {
                     z = 0;
                     for (int i = 0; i < numberofchars(score); i++) winnerScore = winnerScore * 10 + score[i] - '0';
                     for (int i = 0; i < argham(winnerScore); i++) score[i] = 0;
-                    printf("winnerScore: %d\n", winnerScore);
+                    //printf("winnerScore: %d\n", winnerScore);
                 }
 
                 if (score[0]) {
