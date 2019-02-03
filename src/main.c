@@ -5,7 +5,7 @@
 #endif
 
 bool whilePlayingMenu = false, saveGame_flag = false, load_flag = false, alert_flag = false, pause_flag = false;
-int winner = 0;
+int winner = 0, totalTime = 0;
 
 //////////////for random map
 
@@ -74,6 +74,7 @@ void DFS(struct Graph *graph, int vertex, Wall *walls) {
 }
 
 void read_map_array(Map *map, bool flag) {
+    totalTime = 0;
     if (!flag) {
         numberofRows = rand() % 3 + 5;
         numberofColumns = rand() % 7 + 5;
@@ -1279,8 +1280,18 @@ int main(int argc, char *argv[]) {
                            (tank + winner - 1)->name, red, green, blue, a);
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars(" won the game!") * 2, MAP_HEIGHT / 2 - house / 4,
                            " won the game!", red, green, blue, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Time taken: ") * 4, MAP_HEIGHT / 2,
+                           "Time taken: ", red, green, blue, a);
+
+                char *timechar;
+                timechar = malloc(argham(totalTime / 1000) * sizeof(char));
+                makingstring(totalTime / 1000, timechar, argham(totalTime / 1000));
+                stringRGBA(renderer, MAP_WIDTH / 2 + numberofchars("Time taken: ") * 4, MAP_HEIGHT / 2,
+                           timechar, red, green, blue, a);
                 stringRGBA(renderer, MAP_WIDTH / 2 - numberofchars("Press Enter to continue") * 4,
                            MAP_HEIGHT / 2 + house / 4, "Press Enter to continue", red, green, blue, a);
+                stringRGBA(renderer, MAP_WIDTH / 2 + numberofchars("Time taken: ") * 4 + argham(totalTime) * 4,
+                           MAP_HEIGHT / 2, "(s)", red, green, blue, a);
                 if (state[SDL_SCANCODE_RETURN] || keycode == SDLK_RETURN) {
                     whilePlayingMenu = false;
                     winner = 0;
@@ -1328,7 +1339,7 @@ int main(int argc, char *argv[]) {
                     stringRGBA(renderer, x1 - numberofchars(score) * 3, y1, score, rback, gback, bback, a);
                 }
             }
-        }
+        } else totalTime += 1000 / FPS;
 
         if (remaining == 1) {
             static int n = 0;
