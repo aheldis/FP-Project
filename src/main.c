@@ -74,7 +74,6 @@ void DFS(struct Graph *graph, int vertex, Wall *walls) {
 }
 
 void read_map_array(Map *map, bool flag) {
-    totalTime = 0;
     if (!flag) {
         numberofRows = rand() % 3 + 5;
         numberofColumns = rand() % 7 + 5;
@@ -589,7 +588,7 @@ bool loadGame(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Sha
 
                 walls = map->walls;
 
-                for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
+                for (int i = 0; i < (numberofColumns + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
                     fscanf(file1, "wall%d: %d\n", &i, &(walls + i)->boolian);
 
                 for (int i = 0; i < numberofTanks * numberofBullets; i++) {
@@ -865,6 +864,7 @@ bool menu(Tank *tank, Bullet *bullet, Map *map, Wall *walls, Item *item, Shard *
         }
 
         if (state[SDL_SCANCODE_RETURN]) {
+            totalTime = 0;
             if (j == new) flag = !newGame(tank, bullet, map, walls, flag);
             if (j == load) flag = !loadGame(tank, bullet, map, walls, item, shard, mine, flag);
             if (j == end) {
@@ -1004,7 +1004,7 @@ void saveGame(Tank *tank, Bullet *bullet, Wall *walls, Item *item, Shard *shard,
     fprintf(file1, "numberofColumns: %d\n", numberofColumns);
     fprintf(file1, "numberofRows: %d\n", numberofRows);
 
-    for (int i = 0; i < (numberofRows + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
+    for (int i = 0; i < (numberofColumns + 1) * numberofRows + (numberofRows + 1) * numberofColumns; i++)
         fprintf(file1, "wall%d: %d\n", i, (walls + i)->boolian);
 
     for (int i = 0; i < numberofTanks * numberofBullets; i++) {

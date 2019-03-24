@@ -1,6 +1,2 @@
-D:\programming\c\University\project\project\src\HANIYEH.txt
-D:\programming\c\University\project\project\src\HASTI.txt
-D:\programming\c\University\project\project\src\Khaste.txt
-D:\programming\c\University\project\project\src\mm.txt
-D:\programming\c\University\project\project\src\e.txt
-D:\programming\c\University\project\project\src\bashe..txt
+D:\programming\c\University\project\project\src\savePedram.txt
+D:\programming\c\University\project\project\src\dlslf.txt
